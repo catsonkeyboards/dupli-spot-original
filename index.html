@@ -3,13 +3,18 @@
 <html>
 <head>
   <title>Spotify Cross-Playlist De-Duplicator</title>
+
+  <script src="marked.js"></script>
+  
   <style>
     /* CSS styles for the page */
     body {
       text-align: center;
       font-family: Arial, sans-serif;
-      background-color: #1E2124;
-      color: white;
+      background-color: #ffffff;
+      color: #ffffff; /* Change text color */
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
     }
     
     header {
@@ -20,6 +25,15 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    }
+    
+    .main-title {
+      font-size: 4rem; /* Increase font size */
+      font-weight: bold; /* Apply bold font weight */
+      text-align: center;
+      line-height: 1;
+      margin-top: 1rem;
+      max-width: 500px;
     }
     
     .title {
@@ -62,10 +76,30 @@
       margin-right: 10px;
       vertical-align: -6px;
     }
+
+    footer {
+      background-color: #ffffff;
+      padding: 30px;
+      color: rgb(93, 93, 93);
+      border-top: 1px solid #ccc; /* Add top border */
+      text-align: center; /* Center align the text */
+    }
+
+    .readme {
+      padding: 20px;
+      text-align: left;
+      max-width: 800px;
+      margin: 0 auto;
+      color: black; /* Change text color to black */
+    }
   </style>
+
 </head>
 <body>
   <header>
+    <!-- Main title -->
+    <h1 class="main-title">Dupli-Spot</h1>
+    
     <!-- Page title -->
     <h1 class="title">Spotify Cross-Playlist<br>De-Duplicator</h1>
     
@@ -88,8 +122,29 @@
     </div>
   </header>
   
-  <!-- Rest of your web app's content goes here -->
-  
-  <script src="script.js"></script>
+  <!-- README section -->
+  <section class="readme">
+    <h2>README</h2>
+    <div id="readme-content"></div>
+  </section>
+
+  <footer>
+    <p>© 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    fetch('README.md')
+      .then(response => response.text())
+      .then(text => {
+        const readmeContent = document.getElementById('readme-content');
+        readmeContent.innerHTML = marked(text);
+      })
+      .catch(error => {
+        console.error('Error loading README:', error);
+      });
+  </script>
+
+<script src="script.js"></script>
+
 </body>
 </html>
