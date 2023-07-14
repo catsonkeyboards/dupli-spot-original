@@ -39,7 +39,7 @@
     }
     
     .login-button button {
-      background-color: #1DB954;
+      background-color: #139a42;
       color: white;
       padding: 10px 20px;
       font-size: 1.5rem;
@@ -48,7 +48,13 @@
       border-radius: 4px;
       display: flex;
       align-items: center;
+      transition: background-color 0.3s ease; /* Add a smooth transition effect */
+      cursor: pointer; /* Add the cursor property to make it appear clickable */
     }
+
+    .login-button button:hover {
+      background-color: #1ad35a; /* Change to a lighter shade of green */
+    } 
     
     .login-button svg {
       width: 26px;
