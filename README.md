@@ -1,4 +1,6 @@
-# Spotify Cross-Playlist De-Duplicator
+# Dupli-Spot
+
+Spotify Cross-Playlist De-Duplicator
 
 🎵 My First Project! 🚀
 
