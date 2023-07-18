@@ -1,0 +1,25 @@
+<!-- redirect.html -->
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  window.onload = function() {
+    // Parse the access token from the URL
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    
+    // Log the parsed access token
+    console.log('Parsed access token:', accessToken);
+
+    if (accessToken) {
+      // Pass the access token to the parent window
+      window.opener.postMessage({ access_token: accessToken }, '*');
+    }
+
+    // Close the pop-up window
+    window.close();
+  }
+</script>
+</body>
+</html>

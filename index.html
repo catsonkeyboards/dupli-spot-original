@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Spotify Cross-Playlist De-Duplicator</title>
+  <title>Dupli-Spot</title>
 
   <script src="marked.js"></script>
   
@@ -84,6 +84,14 @@
       border-top: 1px solid #ccc; /* Add top border */
       text-align: center; /* Center align the text */
     }
+      /* Add style for your new playlists section */
+    #playlists {
+      padding: 20px;
+      text-align: left;
+      max-width: 800px;
+      margin: 0 auto;
+      color: black; /* Change text color to black */
+    }
 
     .readme {
       padding: 20px;
@@ -122,6 +130,12 @@
     </div>
   </header>
   
+     <!-- New playlists section -->
+     <section id="playlists">
+      <h2>Playlists</h2>
+      <!-- The playlists will be inserted here -->
+    </section>
+    
   <!-- README section -->
   <section class="readme">
     <h2>README</h2>
@@ -131,6 +145,8 @@
   <footer>
     <p>© 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved.</p>
   </footer>
+
+  <!-- ...existing scripts... -->
 
   <script>
     fetch('README.md')
