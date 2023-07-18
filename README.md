@@ -25,8 +25,8 @@ This web application, built with the help of ChatGPT and some googling, allows y
 1. Clone the repository.
 2. Open the `index.html` file in a web browser.
 3. Follow the on-screen instructions to log in to your Spotify account and select playlists.
-4. Click the "Check for duplicate tracks" button to detect duplicates.
-5. Review the results and remove duplicates if desired.
+4. Click the "Show Duplicates" button to show duplicate tracks within the selected playlists.
+5. Review the results and remove duplicates if desired, with the ability to select from which playlist you'd like the duplicates to be removed from.
 
 Feel free to contribute to the project by submitting pull requests or opening issues. Contributions and suggestions are welcome! 😄
 
