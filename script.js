@@ -37,6 +37,10 @@ document.getElementById("login-button").addEventListener("click", function() {
     // Save the access token to the accessToken variable
     accessToken = event.data.access_token;
 
+      // Get references to the 'Playlists' section and the login button
+  const playlistsSection = document.getElementById('playlists');
+  const loginButton = document.getElementById('login-button');
+
     // Perform further actions with the access token
     // Add your code here to interact with the Spotify API using the access token
       
@@ -45,6 +49,10 @@ document.getElementById("login-button").addEventListener("click", function() {
         
     // Call fetchPlaylists after successful authentication
     fetchPlaylists();
+
+      // Show the 'Playlists' section and hide the login button
+  playlistsSection.style.display = 'block';
+  loginButton.style.display = 'none';
 
   };
   
