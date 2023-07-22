@@ -1,9 +1,45 @@
+// Global variables
+
 let accessToken;
 let offset = 0;
 const limit = 40;
 let selectedPlaylists = [];
 let selectedDuplicates = [];
 
+// Utility functions
+
+// Function to update the "Show Duplicates" button's state
+function updateDuplicatesButtonState() {
+  const showDuplicatesButton = document.getElementById('show-duplicates');
+
+  if (selectedPlaylists.length >= 2 && selectedPlaylists.length <= 3) {
+    showDuplicatesButton.classList.remove('disabled');
+    showDuplicatesButton.classList.add('enabled');
+    showDuplicatesButton.disabled = false; // Enable the button
+  } else {
+    showDuplicatesButton.classList.remove('enabled');
+    showDuplicatesButton.classList.add('disabled');
+    showDuplicatesButton.disabled = true; // Disable the button
+  }
+}
+
+// Function to update the "Remove Duplicates" button's state
+function updateRemoveDuplicatesButtonState() {
+  const removeDuplicatesButton = document.getElementById('remove-duplicates');
+  if (removeDuplicatesButton) {
+    if (selectedDuplicates.length >= 1) {
+      removeDuplicatesButton.classList.remove('disabled');
+      removeDuplicatesButton.classList.add('enabled');
+      removeDuplicatesButton.disabled = false; // Enable the button
+    } else {
+      removeDuplicatesButton.classList.remove('enabled');
+      removeDuplicatesButton.classList.add('disabled');
+      removeDuplicatesButton.disabled = true; // Disable the button
+    }
+  }
+}
+
+// Function to fetch playlists from Spotify API
 function fetchPlaylists(offset = 0) {
   // Fetch the playlists from the Spotify API
   fetch(`https://api.spotify.com/v1/me/playlists?limit=${limit}&offset=${offset}`, {
@@ -71,36 +107,7 @@ function fetchPlaylists(offset = 0) {
     });
 }
 
-// Function to update the "Show Duplicates" button's state
-function updateDuplicatesButtonState() {
-  const showDuplicatesButton = document.getElementById('show-duplicates');
-
-  if (selectedPlaylists.length >= 2 && selectedPlaylists.length <= 3) {
-    showDuplicatesButton.classList.remove('disabled');
-    showDuplicatesButton.classList.add('enabled');
-    showDuplicatesButton.disabled = false; // Enable the button
-  } else {
-    showDuplicatesButton.classList.remove('enabled');
-    showDuplicatesButton.classList.add('disabled');
-    showDuplicatesButton.disabled = true; // Disable the button
-  }
-}
-
-// Function to update the "Remove Duplicates" button's state
-function updateRemoveDuplicatesButtonState() {
-  const removeDuplicatesButton = document.getElementById('remove-duplicates');
-
-  if (selectedDuplicates.length >= 1) {
-    removeDuplicatesButton.classList.remove('disabled');
-    removeDuplicatesButton.classList.add('enabled');
-    removeDuplicatesButton.disabled = false; // Enable the button
-  } else {
-    removeDuplicatesButton.classList.remove('enabled');
-    removeDuplicatesButton.classList.add('disabled');
-    removeDuplicatesButton.disabled = true; // Disable the button
-  }
-}
-
+// Function to fetch tracks from a playlist
 function fetchTracks(playlistId) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
     headers: {
@@ -112,12 +119,37 @@ function fetchTracks(playlistId) {
     .catch(error => console.error('Error:', error));
 }
 
+// Function to remove duplicates from a playlist
+function removeDuplicatesFromPlaylist(playlistId, trackIds) {
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+  const headers = {
+    'Authorization': 'Bearer ' + accessToken,
+    'Content-Type': 'application/json'
+  };
+
+  const requestBody = {
+    tracks: trackIds.map(id => ({ uri: `spotify:track:${id}` }))
+  };
+
+  return fetch(url, {
+    method: 'DELETE',
+    headers: headers,
+    body: JSON.stringify(requestBody)
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to remove duplicates from playlist.');
+      }
+    });
+}
+
+// Event listener for the login button click
 document.getElementById("login-button").addEventListener("click", function () {
   // Spotify authentication process
   // Replace YOUR_CLIENT_ID with your actual Spotify API client ID
 
   // Define the Spotify authorization URL
-  const scope = 'playlist-read-private';
+  const scope = 'playlist-read-private playlist-modify-private';
   const authUrl = `https://accounts.spotify.com/authorize?client_id=9fdba1a5111447ebad9b2213859f814a&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=http://localhost:5500/redirect.html`;
 
   // Calculate the window size based on the content
@@ -160,12 +192,14 @@ document.getElementById("login-button").addEventListener("click", function () {
   window.addEventListener("message", handleCallback);
 });
 
+// Event listener for the "Load More" button click
 document.getElementById("load-more").addEventListener("click", function () {
   // Increase the offset by the limit and fetch the next batch of playlists
   offset += limit;
   fetchPlaylists(offset);
 });
 
+// Event listener for the "Show Duplicates" (and later "Remove Duplicates") button click
 document.getElementById('show-duplicates').addEventListener('click', function () {
   const playlist1Id = selectedPlaylists[0];
   const playlist2Id = selectedPlaylists[1];
@@ -225,29 +259,86 @@ document.getElementById('show-duplicates').addEventListener('click', function ()
           updateRemoveDuplicatesButtonState();
         });
       });
+
+      // Add event listener for the "Remove Duplicates" button (here after it's been added to the DOM)
+      document.getElementById('remove-duplicates').addEventListener('click', function () {
+        // Get the selected duplicate track IDs
+        const selectedDuplicateTrackIds = selectedDuplicates;
+
+        // Perform the remove duplicates action with the selected track IDs
+        removeDuplicatesFromPlaylist(selectedPlaylists[1], selectedDuplicateTrackIds)
+          .then(() => {
+            // Successfully removed duplicates, so display a message or perform any other action as needed
+            console.log('Duplicates removed successfully');
+
+            // Clear the selected duplicates array
+            selectedDuplicates = [];
+
+            // Update the button state
+            updateRemoveDuplicatesButtonState();
+          })
+          .catch(error => {
+            // Handle error while removing duplicates
+            console.error('Error removing duplicates:', error);
+          });
+
+      // Change 'Remove Duplicates' button to 'Start Over'
+const removeDuplicatesButton = document.getElementById('remove-duplicates');
+if (removeDuplicatesButton) {
+  removeDuplicatesButton.innerHTML = 'Start Over';
+  removeDuplicatesButton.id = 'start-over-button'; // Change the id of the button
+}
+
+// Hide the Load More button
+const loadMoreButton = document.getElementById('load-more');
+loadMoreButton.style.display = 'none';
+
+// Hide the duplicates section
+const duplicatesSection = document.getElementById('duplicates');
+duplicatesSection.style.display = 'none';
+
+// Show the success message in the body of the page
+const successMessage = document.createElement('p');
+successMessage.innerHTML = 'Duplicates have been removed!';
+successMessage.style.textAlign = 'center';
+duplicatesSection.parentNode.insertBefore(successMessage, duplicatesSection.nextSibling);
+
+// Show the "Start Over" button
+const startOverButton = document.getElementById('start-over-button');
+if (startOverButton) {
+  startOverButton.classList.remove('enabled');
+  startOverButton.classList.add('disabled');
+  startOverButton.disabled = true; // Disable the button
+  startOverButton.innerHTML = 'Start Over';
+  startOverButton.id = 'start-over-button'; // Change the id of the button
+}
+
+// Clear the selected duplicates array
+selectedDuplicates = [];
+
+// Update the button state
+updateRemoveDuplicatesButtonState();
+
+      });
     });
-});
-
-document.getElementById('remove-duplicates').addEventListener('click', function () {
-  // Get the selected duplicate track IDs
-  const selectedDuplicateTrackIds = selectedDuplicates;
-
-  // Perform the remove duplicates action with the selected track IDs
-  // Add your code here to remove duplicates using the Spotify API
-
-  // Clear the selected duplicates array
-  selectedDuplicates = [];
-
-  // Update the button state
-  updateRemoveDuplicatesButtonState();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
   // Update the button state initially
   updateRemoveDuplicatesButtonState();
+
+// Check for the existence of the "Start Over" button
+const startOverButton = document.getElementById('start-over-button');
+  
+if(startOverButton) {
+  startOverButton.addEventListener('click', function() {
+      // Here is where the event handling logic goes.
+      window.location.reload();
+  });
+}
 });
 
-// Add event listener to checkboxes in the duplicates section
+// Event listener for checkboxes in the duplicates section
 document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
   checkbox.addEventListener('change', (event) => {
     if (event.target.checked) {

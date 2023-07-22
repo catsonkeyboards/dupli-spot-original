@@ -1,132 +1,12 @@
 <!-- index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Dupli-Spot</title>
 
   <script src="marked.js"></script>
   
-  <style>
-    /* CSS styles for the page */
-    body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      color: #ffffff; /* Change text color */
-      margin: 0; /* Remove default margin */
-      padding: 0; /* Remove default padding */
-    }
-    
-    header {
-      background-color: #222E3C;
-      padding: 20px;
-      height: 40vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .main-title {
-      font-size: 4rem; /* Increase font size */
-      font-weight: bold; /* Apply bold font weight */
-      text-align: center;
-      line-height: 1;
-      margin-top: 1rem;
-      max-width: 500px;
-    }
-    
-    .title {
-      font-size: 2.5rem;
-      font-weight: bold;
-      text-align: center;
-      line-height: 1;
-      margin-top: 1rem;
-      max-width: 500px;
-    }
-    
-    .login-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    
-    .login-button button {
-      background-color: #139a42;
-      color: white;
-      padding: 10px 20px;
-      font-size: 1.5rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      transition: background-color 0.3s ease; /* Add a smooth transition effect */
-      cursor: pointer; /* Add the cursor property to make it appear clickable */
-    }
-
-    .login-button button:hover {
-      background-color: #1ad35a; /* Change to a lighter shade of green */
-    } 
-    
-    .login-button svg {
-      width: 26px;
-      height: 26px;
-      margin-right: 10px;
-      vertical-align: -6px;
-    }
-
-    footer {
-      background-color: #ffffff;
-      padding: 30px;
-      color: rgb(93, 93, 93);
-      border-top: 1px solid #ccc; /* Add top border */
-      text-align: center; /* Center align the text */
-    }
-      /* Add style for your new playlists section */
-    #playlists {
-      padding: 20px;
-      text-align: left;
-      max-width: 800px;
-      margin: 0 auto;
-      color: black; /* Change text color to black */
-    }
-
-      /* Style our "Show Duplicates" and "Remove Duplicates" button and what it looks like when disable and enabled. */
-      .disabled {
-  background-color: #9c9c9c !important;
-  color: #fff !important;
-  cursor: not-allowed !important;
-}
-
-.enabled {
-  background-color: #139a42 !important;
-  color: #fff !important;
-  cursor: pointer !important;
-}
-
-    
-    .readme {
-      padding: 20px;
-      text-align: left;
-      max-width: 800px;
-      margin: 0 auto;
-      color: black; /* Change text color to black */
-    }
-
-          #sign-out-button {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background-color: transparent;
-        border: none;
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-      }
-
-  </style>
+  <link rel="stylesheet" href="styles.css">
 
 </head>
 <body>
@@ -174,8 +54,13 @@
   <div id="duplicate-tracks">
     <!-- Duplicate tracks will be inserted here -->
   </div>
-  <button id="remove-selected">Remove Selected</button>
 </div>
+
+<!-- Success message -->
+<div id="success-message" style="display: none; text-align: center;">
+  Duplicates have been removed!
+</div>
+
 
 <!-- Load More button -->
 <div style="padding: 20px;">
@@ -192,7 +77,7 @@
     <p>© 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved.</p>
   </footer>
 
-  <!-- ...existing scripts... -->
+  <!-- Scripts -->
 
   <script>
     fetch('README.md')
