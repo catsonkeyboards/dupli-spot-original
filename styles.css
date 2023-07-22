@@ -107,14 +107,3 @@ footer {
   margin: 0 auto;
   color: black; /* Change text color to black */
 }
-
-#sign-out-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: transparent;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-}

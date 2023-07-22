@@ -164,11 +164,10 @@ document.getElementById("login-button").addEventListener("click", function () {
     // Save the access token to the accessToken variable
     accessToken = event.data.access_token;
 
-    // Get references to the 'Playlists' section, the login button, the README section, and the sign out button
+    // Get references to the 'Playlists' section, the login button, the README section
     const playlistsSection = document.getElementById('playlists');
     const loginButton = document.getElementById('login-button');
     const readmeSection = document.querySelector('.readme');
-    const signOutButton = document.getElementById('sign-out-button');
     const showDuplicatesButton = document.getElementById('show-duplicates');
 
     // Perform further actions with the access token
@@ -180,11 +179,10 @@ document.getElementById("login-button").addEventListener("click", function () {
     // Call fetchPlaylists after successful authentication
     fetchPlaylists(offset);
 
-    // Show the 'Playlists' section, the 'Show Duplicates' button, and the sign out button, and hide the login button and the README section
+    // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
     playlistsSection.style.display = 'block';
     loginButton.style.display = 'none';
     readmeSection.style.display = 'none';
-    signOutButton.style.display = 'block';
     showDuplicatesButton.style.display = 'block';
   };
 
