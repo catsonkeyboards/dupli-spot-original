@@ -58,7 +58,7 @@ function fetchPlaylists(offset = 0) {
 
       // If there are more playlists to fetch, show the Load More button. Otherwise, hide it.
       if (data.items.length === limit) {
-        loadMoreButton.style.display = 'block';
+        loadMoreButton.style.display = 'inline-block';
       } else {
         loadMoreButton.style.display = 'none';
       }

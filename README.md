@@ -10,7 +10,7 @@ This web application, built with the help of ChatGPT and some googling, allows y
 
 1. **Login with Spotify:** Click on the "Log in with Spotify" button to authenticate with your Spotify account. This will allow the app to access your playlists.
 2. **Select Playlists:** After logging in, you will see a list of your playlists. Choose a minimum of two playlists from the list.
-3. **Check for Duplicate Tracks:** Click the "Check for duplicate tracks between playlists" button. The app will analyze the selected playlists and return a list of tracks that are present in both playlists.
+3. **Show Duplicates:** Click the "Show Duplicates" button. The app will analyze the selected playlists and return a list of tracks that are present in both playlists.
 4. **Remove Duplicates:** You will have the option to remove the duplicate tracks from your selected playlist.
 
 ## Technologies Used
