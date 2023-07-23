@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* CSS styles for the page */
+/* Global styles */
 body {
   text-align: center;
   font-family: Arial, sans-serif;
@@ -10,6 +10,7 @@ body {
   padding: 0; /* Remove default padding */
 }
 
+/* Header styles */
 header {
   background-color: #222E3C;
   padding: 20px;
@@ -38,6 +39,7 @@ header {
   max-width: 500px;
 }
 
+/* Login button styles */
 .login-button {
   display: flex;
   align-items: center;
@@ -70,24 +72,25 @@ header {
   vertical-align: -6px;
 }
 
+/* Footer styles */
 footer {
   background-color: #ffffff;
   padding: 30px;
   color: rgb(93, 93, 93);
   border-top: 1px solid #ccc; /* Add top border */
-  text-align: center; /* Center align the text */
+  text-align: center;
 }
 
-/* Add style for your new playlists section */
+/* Playlists section styles */
 #playlists {
   padding: 20px;
   text-align: left;
   max-width: 800px;
   margin: 0 auto;
-  color: black; /* Change text color to black */
+  color: black;
 }
 
-/* Style our "Show Duplicates" and "Remove Duplicates" button and what it looks like when disabled and enabled. */
+/* Duplicate buttons styles */
 .disabled {
   background-color: #9c9c9c !important;
   color: #fff !important;
@@ -100,10 +103,11 @@ footer {
   cursor: pointer !important;
 }
 
+/* Readme section styles */
 .readme {
   padding: 20px;
   text-align: left;
   max-width: 800px;
   margin: 0 auto;
-  color: black; /* Change text color to black */
+  color: black;
 }

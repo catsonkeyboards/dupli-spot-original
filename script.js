@@ -1,5 +1,4 @@
 // Global variables
-
 let accessToken;
 let offset = 0;
 const limit = 40;
@@ -8,34 +7,40 @@ let selectedDuplicates = [];
 
 // Utility functions
 
+// Utility function: Check if a playlist is selected
+function isPlaylistSelected(playlistId) {
+  return selectedPlaylists.includes(playlistId);
+}
+
+// Utility function: Check if a duplicate track is selected
+function isDuplicateTrackSelected(trackId) {
+  return selectedDuplicates.includes(trackId);
+}
+
+// Utility function: Enable or disable a button
+function toggleButtonState(buttonId, enable) {
+  const button = document.getElementById(buttonId);
+  if (button) {
+    const stateClass = enable ? 'enabled' : 'disabled';
+    button.classList.remove(enable ? 'disabled' : 'enabled');
+    button.classList.add(stateClass);
+    button.disabled = !enable;
+  }
+}
+
 // Function to update the "Show Duplicates" button's state
 function updateDuplicatesButtonState() {
   const showDuplicatesButton = document.getElementById('show-duplicates');
-
-  if (selectedPlaylists.length >= 2 && selectedPlaylists.length <= 3) {
-    showDuplicatesButton.classList.remove('disabled');
-    showDuplicatesButton.classList.add('enabled');
-    showDuplicatesButton.disabled = false; // Enable the button
-  } else {
-    showDuplicatesButton.classList.remove('enabled');
-    showDuplicatesButton.classList.add('disabled');
-    showDuplicatesButton.disabled = true; // Disable the button
-  }
+  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 3;
+  toggleButtonState('show-duplicates', enableButton);
 }
 
 // Function to update the "Remove Duplicates" button's state
 function updateRemoveDuplicatesButtonState() {
   const removeDuplicatesButton = document.getElementById('remove-duplicates');
   if (removeDuplicatesButton) {
-    if (selectedDuplicates.length >= 1) {
-      removeDuplicatesButton.classList.remove('disabled');
-      removeDuplicatesButton.classList.add('enabled');
-      removeDuplicatesButton.disabled = false; // Enable the button
-    } else {
-      removeDuplicatesButton.classList.remove('enabled');
-      removeDuplicatesButton.classList.add('disabled');
-      removeDuplicatesButton.disabled = true; // Disable the button
-    }
+    const enableButton = selectedDuplicates.length >= 1;
+    toggleButtonState('remove-duplicates', enableButton);
   }
 }
 
@@ -197,8 +202,43 @@ document.getElementById("load-more").addEventListener("click", function () {
   fetchPlaylists(offset);
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  // Update the button state initially
+  updateRemoveDuplicatesButtonState();
+
+// Check for the existence of the "Start Over" button
+const startOverButton = document.getElementById('start-over-button');
+  
+if(startOverButton) {
+  startOverButton.addEventListener('click', function() {
+      // Here is where the event handling logic goes.
+      window.location.reload();
+  });
+}
+});
+
+// Event listener for checkboxes in the duplicates section
+document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
+  checkbox.addEventListener('change', (event) => {
+    if (event.target.checked) {
+      selectedDuplicates.push(event.target.value);
+    } else {
+      const index = selectedDuplicates.indexOf(event.target.value);
+      if (index > -1) {
+        selectedDuplicates.splice(index, 1);
+      }
+    }
+
+    // Call updateRemoveDuplicatesButtonState after a checkbox's state changes
+    updateRemoveDuplicatesButtonState();
+  });
+});
+
 // Event listener for the "Show Duplicates" (and later "Remove Duplicates") button click
-document.getElementById('show-duplicates').addEventListener('click', function () {
+document.getElementById('show-duplicates').addEventListener('click', function handleShowDuplicatesButtonClick() {
+  // Remove the event listener to prevent unintended triggering of the button click
+  this.removeEventListener('click', handleShowDuplicatesButtonClick);
+
   const playlist1Id = selectedPlaylists[0];
   const playlist2Id = selectedPlaylists[1];
 
@@ -259,7 +299,10 @@ document.getElementById('show-duplicates').addEventListener('click', function ()
       });
 
       // Add event listener for the "Remove Duplicates" button (here after it's been added to the DOM)
-      document.getElementById('remove-duplicates').addEventListener('click', function () {
+      document.getElementById('remove-duplicates').addEventListener('click', function handleRemoveDuplicatesButtonClick() {
+        // Remove the event listener to prevent unintended triggering of the button click
+        this.removeEventListener('click', handleRemoveDuplicatesButtonClick);
+
         // Get the selected duplicate track IDs
         const selectedDuplicateTrackIds = selectedDuplicates;
 
@@ -280,75 +323,11 @@ document.getElementById('show-duplicates').addEventListener('click', function ()
             console.error('Error removing duplicates:', error);
           });
 
-      // Change 'Remove Duplicates' button to 'Start Over'
-const removeDuplicatesButton = document.getElementById('remove-duplicates');
-if (removeDuplicatesButton) {
-  removeDuplicatesButton.innerHTML = 'Start Over';
-  removeDuplicatesButton.id = 'start-over-button'; // Change the id of the button
-}
-
-// Hide the Load More button
-const loadMoreButton = document.getElementById('load-more');
-loadMoreButton.style.display = 'none';
-
-// Hide the duplicates section
-const duplicatesSection = document.getElementById('duplicates');
-duplicatesSection.style.display = 'none';
-
-// Show the success message in the body of the page
-const successMessage = document.createElement('p');
-successMessage.innerHTML = 'Duplicates have been removed!';
-successMessage.style.textAlign = 'center';
-duplicatesSection.parentNode.insertBefore(successMessage, duplicatesSection.nextSibling);
-
-// Show the "Start Over" button
-const startOverButton = document.getElementById('start-over-button');
-if (startOverButton) {
-  startOverButton.classList.remove('enabled');
-  startOverButton.classList.add('disabled');
-  startOverButton.disabled = true; // Disable the button
-  startOverButton.innerHTML = 'Start Over';
-  startOverButton.id = 'start-over-button'; // Change the id of the button
-}
-
-// Clear the selected duplicates array
-selectedDuplicates = [];
-
-// Update the button state
-updateRemoveDuplicatesButtonState();
-
+        // Add the event listener back for the "Show Duplicates" button click
+        document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
       });
+
+      // Add the event listener back for the "Show Duplicates" button click
+      document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
     });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Update the button state initially
-  updateRemoveDuplicatesButtonState();
-
-// Check for the existence of the "Start Over" button
-const startOverButton = document.getElementById('start-over-button');
-  
-if(startOverButton) {
-  startOverButton.addEventListener('click', function() {
-      // Here is where the event handling logic goes.
-      window.location.reload();
-  });
-}
-});
-
-// Event listener for checkboxes in the duplicates section
-document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
-  checkbox.addEventListener('change', (event) => {
-    if (event.target.checked) {
-      selectedDuplicates.push(event.target.value);
-    } else {
-      const index = selectedDuplicates.indexOf(event.target.value);
-      if (index > -1) {
-        selectedDuplicates.splice(index, 1);
-      }
-    }
-
-    // Call updateRemoveDuplicatesButtonState after a checkbox's state changes
-    updateRemoveDuplicatesButtonState();
-  });
 });
