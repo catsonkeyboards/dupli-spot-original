@@ -1,0 +1,113 @@
+/* styles.css */
+
+/* Global styles */
+body {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  color: #ffffff; /* Change text color */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+/* Header styles */
+header {
+  background-color: #222E3C;
+  padding: 20px;
+  height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-title {
+  font-size: 4rem; /* Increase font size */
+  font-weight: bold; /* Apply bold font weight */
+  text-align: center;
+  line-height: 1;
+  margin-top: 1rem;
+  max-width: 500px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1;
+  margin-top: 1rem;
+  max-width: 500px;
+}
+
+/* Login button styles */
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.login-button button {
+  background-color: #139a42;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease; /* Add a smooth transition effect */
+  cursor: pointer; /* Add the cursor property to make it appear clickable */
+}
+
+.login-button button:hover {
+  background-color: #1ad35a; /* Change to a lighter shade of green */
+}
+
+.login-button svg {
+  width: 26px;
+  height: 26px;
+  margin-right: 10px;
+  vertical-align: -6px;
+}
+
+/* Footer styles */
+footer {
+  background-color: #ffffff;
+  padding: 30px;
+  color: rgb(93, 93, 93);
+  border-top: 1px solid #ccc; /* Add top border */
+  text-align: center;
+}
+
+/* Playlists section styles */
+#playlists {
+  padding: 20px;
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+  color: black;
+}
+
+/* Duplicate buttons styles */
+.disabled {
+  background-color: #9c9c9c !important;
+  color: #fff !important;
+  cursor: not-allowed !important;
+}
+
+.enabled {
+  background-color: #139a42 !important;
+  color: #fff !important;
+  cursor: pointer !important;
+}
+
+/* Readme section styles */
+.readme {
+  padding: 20px;
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+  color: black;
+}
