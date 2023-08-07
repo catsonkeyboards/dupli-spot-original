@@ -31,7 +31,7 @@ function toggleButtonState(buttonId, enable) {
 // Function to update the "Show Duplicates" button's state
 function updateDuplicatesButtonState() {
   const showDuplicatesButton = document.getElementById('show-duplicates');
-  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 100;
+  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 6;
   toggleButtonState('show-duplicates', enableButton);
 }
 
