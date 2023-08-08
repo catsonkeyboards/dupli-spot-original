@@ -260,6 +260,19 @@ document.getElementById('show-duplicates').addEventListener('click', function ha
   const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
   const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
   
+// Create an HTML string for the selected playlists
+const selectedPlaylistsHTML = `
+  <div class="selected-playlists">
+    <strong>Compared Playlists:</strong> ${playlist1Name}, ${playlist2Name}
+  </div>
+`;
+
+// Get the duplicates section
+const duplicatesSection = document.getElementById('duplicates');
+
+// Prepend the selected playlists HTML to the duplicates section
+duplicatesSection.innerHTML = selectedPlaylistsHTML + duplicatesSection.innerHTML;
+
   Promise.all([fetchAllTracks(playlist1Id, playlist1Name), fetchAllTracks(playlist2Id, playlist2Name)])
   .then(([tracks1, tracks2]) => {
       const track1Ids = new Set(tracks1.map(track => track.id));
