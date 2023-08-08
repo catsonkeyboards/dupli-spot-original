@@ -267,6 +267,7 @@ const selectedPlaylistsHTML = `
   </div>
 `;
 
+
 // Get the duplicates section
 const duplicatesSection = document.getElementById('duplicates');
 
@@ -358,8 +359,5 @@ duplicatesSection.innerHTML = selectedPlaylistsHTML + duplicatesSection.innerHTM
         // Add the event listener back for the "Show Duplicates" button click
         document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
       });
-
-      // Add the event listener back for the "Show Duplicates" button click
-      document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
-    });
+});
 });
