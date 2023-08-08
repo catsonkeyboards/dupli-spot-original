@@ -221,15 +221,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update the button state initially
   updateRemoveDuplicatesButtonState();
 
-// Check for the existence of the "Start Over" button
-const startOverButton = document.getElementById('start-over-button');
-  
-if(startOverButton) {
-  startOverButton.addEventListener('click', function() {
-      // Here is where the event handling logic goes.
+  // Check for the existence of the "Start Over" button
+  const startOverButton = document.getElementById('start-over-button');
+  if (startOverButton) {
+    startOverButton.addEventListener('click', function() {
       window.location.reload();
-  });
-}
+    });
+  }
+
+  // Add the event listener for the "Show Duplicates" button click
+  document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
 });
 
 // Event listener for checkboxes in the duplicates section
@@ -259,20 +260,19 @@ document.getElementById('show-duplicates').addEventListener('click', function ha
 
   const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
   const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
-  
-// Create an HTML string for the selected playlists
-const selectedPlaylistsHTML = `
-  <div class="selected-playlists">
-    <strong>Compared Playlists:</strong> ${playlist1Name}, ${playlist2Name}
-  </div>
-`;
 
+  // Create an HTML string for the selected playlists
+  const selectedPlaylistsHTML = `
+    <div class="selected-playlists">
+      <strong>Compared Playlists:</strong> ${playlist1Name}, ${playlist2Name}
+    </div>
+  `;
 
-// Get the duplicates section
-const duplicatesSection = document.getElementById('duplicates');
+  // Get the duplicates section
+  const duplicatesSection = document.getElementById('duplicates');
 
-// Prepend the selected playlists HTML to the duplicates section
-duplicatesSection.innerHTML = selectedPlaylistsHTML + duplicatesSection.innerHTML;
+  // Prepend the selected playlists HTML to the duplicates section
+  duplicatesSection.innerHTML = selectedPlaylistsHTML + duplicatesSection.innerHTML;
 
   Promise.all([fetchAllTracks(playlist1Id, playlist1Name), fetchAllTracks(playlist2Id, playlist2Name)])
   .then(([tracks1, tracks2]) => {
@@ -355,9 +355,6 @@ duplicatesSection.innerHTML = selectedPlaylistsHTML + duplicatesSection.innerHTM
             // Handle error while removing duplicates
             console.error('Error removing duplicates:', error);
           });
-
-        // Add the event listener back for the "Show Duplicates" button click
-        document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
       });
 });
 });
