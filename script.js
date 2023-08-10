@@ -269,6 +269,12 @@ function updateUIAfterComparison() {
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
   duplicatesSection.style.display = 'block';
+
+  // Set the text for the playlist from which tracks will be removed
+  const playlist2Name = document.querySelector(`label[for="${selectedPlaylists[1]}"]`).textContent;
+  const removalPlaylistText = document.getElementById('removal-playlist-text');
+  removalPlaylistText.textContent = `Removing from '${playlist2Name}'`;
+  removalPlaylistText.style.display = 'block';
 }
 
 // Event listener for the login button click
