@@ -203,19 +203,19 @@ function displayDuplicates(duplicates) {
   // Add event listener for checkboxes in the duplicates section
   document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
     checkbox.addEventListener('change', (event) => {
-      if (event.target.checked) {
-        selectedDuplicates.push(event.target.value);
-      } else {
-        const index = selectedDuplicates.indexOf(event.target.value);
-        if (index > -1) {
-          selectedDuplicates.splice(index, 1);
-        }
-      }
-  
-      // Call updateRemoveDuplicatesButtonState after a checkbox's state changes
-      updateRemoveDuplicatesButtonState();
-    });  
-  });
+       if (event.target.checked) {
+          selectedDuplicates.push(event.target.value);
+       } else {
+          const index = selectedDuplicates.indexOf(event.target.value);
+          if (index > -1) {
+             selectedDuplicates.splice(index, 1);
+          }
+          // Uncheck the "Select All" checkbox if any individual track is unchecked
+          document.getElementById('select-all-duplicates').checked = false;
+       }
+       updateRemoveDuplicatesButtonState();
+    });
+ });
 }
 
 
@@ -360,6 +360,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add the event listener for the "Show Duplicates" button click
     document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
   });
+
+ // Event listener for the "Select All" checkbox
+  document.getElementById('select-all-duplicates').addEventListener('change', function(event) {
+    const allDuplicateCheckboxes = document.querySelectorAll('#duplicates input[name="duplicate"]');
+    if (event.target.checked) {
+       allDuplicateCheckboxes.forEach(checkbox => {
+          checkbox.checked = true;
+          if (!selectedDuplicates.includes(checkbox.value)) {
+             selectedDuplicates.push(checkbox.value);
+          }
+       });
+    } else {
+       allDuplicateCheckboxes.forEach(checkbox => {
+          checkbox.checked = false;
+          const index = selectedDuplicates.indexOf(checkbox.value);
+          if (index > -1) {
+             selectedDuplicates.splice(index, 1);
+          }
+       });
+    }
+    updateRemoveDuplicatesButtonState();
+ });
+ 
 
     // Add the event listener for the "Remove Duplicates" button click
 document.getElementById('remove-duplicates').addEventListener('click', function() {
