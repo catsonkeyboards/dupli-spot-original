@@ -4,6 +4,8 @@ let offset = 0;
 const limit = 50;
 let selectedPlaylists = [];
 let selectedDuplicates = [];
+let startOverButton;
+
 
 // Utility functions
 
@@ -347,13 +349,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update the button state initially
     updateRemoveDuplicatesButtonState();
 
-    // Check for the existence of the "Start Over" button
-    const startOverButton = document.getElementById('start-over-button');
-    if (startOverButton) {
-        startOverButton.addEventListener('click', function() {
-            window.location.reload();
-        });
-    }
+ // Assign the element to the startOverButton variable
+ startOverButton = document.getElementById('start-over-button');
+ if (startOverButton) {
+     startOverButton.addEventListener('click', function() {
+         window.location.reload();
+     });
+ }
 
     // Add the event listener for the "Show Duplicates" button click
     document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
