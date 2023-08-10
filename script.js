@@ -346,50 +346,50 @@ document.getElementById("load-more").addEventListener("click", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Update the button state initially
-    updateRemoveDuplicatesButtonState();
+  // Update the button state initially
+  updateRemoveDuplicatesButtonState();
 
- // Assign the element to the startOverButton variable
- startOverButton = document.getElementById('start-over-button');
- if (startOverButton) {
-     startOverButton.addEventListener('click', function() {
-         window.location.reload();
-     });
- }
+  // Assign the element to the startOverButton variable
+  startOverButton = document.getElementById('start-over-button');
+  if (startOverButton) {
+      startOverButton.addEventListener('click', function() {
+          window.location.reload();
+      });
+  }
 
-    // Add the event listener for the "Show Duplicates" button click
-    document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
-  });
+  // Add the event listener for the "Show Duplicates" button click
+  document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
 
- // Event listener for the "Select All" checkbox
+  // Event listener for the "Select All" checkbox
   document.getElementById('select-all-duplicates').addEventListener('change', function(event) {
-    const allDuplicateCheckboxes = document.querySelectorAll('#duplicates input[name="duplicate"]');
-    if (event.target.checked) {
-       allDuplicateCheckboxes.forEach(checkbox => {
-          checkbox.checked = true;
-          if (!selectedDuplicates.includes(checkbox.value)) {
-             selectedDuplicates.push(checkbox.value);
-          }
-       });
-    } else {
-       allDuplicateCheckboxes.forEach(checkbox => {
-          checkbox.checked = false;
-          const index = selectedDuplicates.indexOf(checkbox.value);
-          if (index > -1) {
-             selectedDuplicates.splice(index, 1);
-          }
-       });
-    }
-    updateRemoveDuplicatesButtonState();
- });
- 
+      const allDuplicateCheckboxes = document.querySelectorAll('#duplicates input[name="duplicate"]');
+      if (event.target.checked) {
+          allDuplicateCheckboxes.forEach(checkbox => {
+              checkbox.checked = true;
+              if (!selectedDuplicates.includes(checkbox.value)) {
+                  selectedDuplicates.push(checkbox.value);
+              }
+          });
+      } else {
+          allDuplicateCheckboxes.forEach(checkbox => {
+              checkbox.checked = false;
+              const index = selectedDuplicates.indexOf(checkbox.value);
+              if (index > -1) {
+                  selectedDuplicates.splice(index, 1);
+              }
+          });
+      }
+      updateRemoveDuplicatesButtonState();
+  });
+});
 
-    // Add the event listener for the "Remove Duplicates" button click
+// Add the event listener for the "Remove Duplicates" button click
 document.getElementById('remove-duplicates').addEventListener('click', function() {
   // Here, you'll call the removeDuplicatesFromPlaylist function for each selected playlist
   // and each selected duplicate track.
-  
+
   selectedPlaylists.forEach(playlistId => {
       removeDuplicatesFromPlaylist(playlistId, selectedDuplicates);
   });
 });
+
