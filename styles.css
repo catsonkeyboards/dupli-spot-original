@@ -151,7 +151,7 @@ footer {
 .duplicate-track {
   display: flex;
   align-items: center; /* Vertically center the child elements */
-  justify-content: space-between; /* Distribute the child containers evenly */
+  /* justify-content: space-between; /* Distribute the child containers evenly */
   padding: 10px 0; /* Add some vertical padding for spacing */
 }
 
