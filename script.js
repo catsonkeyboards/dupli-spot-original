@@ -64,15 +64,16 @@ function fetchPlaylists(offset = 0) {
       // Log the playlist data to the console for now
       console.log(data);
 
-      // Create an HTML string with the playlist data
-      let html = '';
-      data.items.forEach(playlist => {
-        html += `
-        <div>
-          <input type="checkbox" id="${playlist.id}" value="${playlist.id}" name="playlist">
-          <label for="${playlist.id}"><strong>${playlist.name}</strong> - ${playlist.tracks.total} tracks</label>
-        </div>`;
-      });
+     // Create an HTML string with the playlist data
+let html = '';
+data.items.forEach(playlist => {
+    html += `
+    <div class="playlist-item">
+      <input type="checkbox" id="${playlist.id}" value="${playlist.id}" name="playlist">
+      <label for="${playlist.id}"><strong>${playlist.name}</strong> - ${playlist.tracks.total} tracks</label>
+    </div>`;
+});
+
 
       // Get the playlists section
       const playlistsSection = document.getElementById('playlists');
@@ -117,6 +118,33 @@ function fetchPlaylists(offset = 0) {
     .catch(error => {
       console.error('Error:', error);
     });
+}
+
+// Function to filter playlists in the Search Bar
+function filterPlaylists() {
+  console.log("Filtering playlists..."); // Debugging log
+  const searchTerm = document.getElementById('playlist-search').value.toLowerCase();
+  console.log("Search Term:", searchTerm); // Debugging log
+  const playlists = document.querySelectorAll('.playlist-item'); 
+  playlists.forEach(playlist => {
+      const playlistName = playlist.textContent || playlist.innerText;
+      if (playlistName.toLowerCase().indexOf(searchTerm) !== -1) {
+          playlist.style.display = '';
+      } else {
+          playlist.style.display = 'none';
+      }
+  });
+}
+
+//Function to add delay when playlists are searched in the search bar
+function debounce(func, delay) {
+  let debounceTimer;
+  return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => func.apply(context, args), delay);
+  };
 }
 
 // Function to fetch all tracks from a playlist
@@ -221,6 +249,10 @@ function displayDuplicates(duplicates) {
 
 // Define the handleShowDuplicatesButtonClick function separately
 function handleShowDuplicatesButtonClick() {
+
+   // Hide the playlists section
+   document.getElementById('playlists').style.display = 'none';
+
   // Remove the event listener to prevent unintended triggering of the button click
   this.removeEventListener('click', handleShowDuplicatesButtonClick);
 
@@ -359,6 +391,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Add the event listener for the "Show Duplicates" button click
   document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
+
+  // Playlist Search Bar Event Listener
+  document.getElementById('playlist-search').addEventListener('input', debounce(filterPlaylists, 300));
 
   // Event listener for the "Select All" checkbox
   document.getElementById('select-all-duplicates').addEventListener('change', function(event) {

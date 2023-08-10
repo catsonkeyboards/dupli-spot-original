@@ -1,20 +1,29 @@
 /* styles.css */
 
+/* Custom Fonts */
+@font-face {
+  font-family: 'groovy'; 
+  src: url('fonts/Morsan-4BDo4.ttf') format('truetype');}
+  
+@font-face {
+  font-family: 'gazpacho'; 
+  src: url('fonts/Gazpacho\ Regular.ttf') format('truetype');}
+
 /* Global styles */
 body {
   text-align: center;
   font-family: Arial, sans-serif;
-  background-color: #ffffff;
-  color: #ffffff; /* Change text color */
+  background-color: #242324;  ;
+  color: #f9e2f9; /* Change text color */
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove default padding */
 }
 
 /* Header styles */
 header {
-  background-image: url('images/bg.jpg');
+  /* background-image: url('images/bg.jpg'); */
   background-repeat: repeat;
-  background-color: #ef6d26;
+  background-color: #f9e2f9;
   padding: 20px;
   height: 50vh;
   display: flex;
@@ -24,32 +33,34 @@ header {
 }
 
 .main-title {
-  font-size: 4rem; /* Increase font size */
+  font-family: 'groovy', Arial, sans-serif;
+  font-size: 6rem; /* Increase font size */
   font-weight: bold; /* Apply bold font weight */
   text-align: center;
-  color: white;
-  text-shadow: 
-    -3px -3px 0 #682f00,  
-    3px -3px 0 #682f00,
-    -3px 3px 0 #682f00,
-    3px 3px 0 #682f00;
+  color: #242324;
+   /* text-shadow: 
+    -3px -3px 0 #512806,  
+    3px -3px 0 #512806,
+    -3px 3px 0 #512806,
+    3px 3px 0 #512806; */
   line-height: 1;
-  margin-top: 20px;
+  margin-top: 0px;
   max-width: 500px;
 }
 
 .title {
+  font-family: 'groovy', Arial, sans-serif;
   font-size: 2.5rem;
   font-weight: bold;
   text-align: center;
-  color: white;
-  text-shadow: 
-    -2px -2px 0 #682f00,  
-    2px -2px 0 #682f00,
-    -2px 2px 0 #682f00,
-    2px 2px 0 #682f00;
+  color: #242324;
+  /* text-shadow: 
+    -3px -3px 0 #512806,  
+    3px -3px 0 #512806,
+    -3px 3px 0 #512806,
+    3px 3px 0 #512806; */
   line-height: 1;
-  margin-top: 1rem;
+  margin-top: 0px;
   max-width: 500px;
 }
 
@@ -62,8 +73,8 @@ header {
 }
 
 .login-button button {
-  background-color: #139a42;
-  color: white;
+  background-color: #242324;
+  color: #f9e2f9;
   padding: 10px 20px;
   font-size: 1.5rem;
   font-weight: bold;
@@ -76,7 +87,7 @@ header {
 }
 
 .login-button button:hover {
-  background-color: #1ad35a; /* Change to a lighter shade of green */
+  background-color: #ae6a35; /* Change to a lighter shade of green */
 }
 
 .login-button svg {
@@ -88,9 +99,9 @@ header {
 
 /* Footer styles */
 footer {
-  background-color: #ffffff;
+  background-color: #f9e2f9;
   padding: 30px;
-  color: rgb(93, 93, 93);
+  color: #242324;
   border-top: 1px solid #ccc; /* Add top border */
   text-align: center;
 }
@@ -98,44 +109,51 @@ footer {
 /* Playlists section styles */
 #playlists {
   padding: 20px;
+  color: #f9e2f9;
   text-align: left;
   max-width: 800px;
   margin: 0 auto;
-  color: black;
 }
 
 /* Duplicate buttons styles */
 .disabled {
-  background-color: #9c9c9c !important;
-  color: #fff !important;
+  background-color: #707070 !important;
+  color: #d0bcd0 !important;
   cursor: not-allowed !important;
 }
 
 .enabled {
-  background-color: #139a42 !important;
-  color: #fff !important;
+  background-color: #9d7556 !important;
+  color: #f9e2f9 !important;
+  cursor: pointer !important;
+}
+
+.enabled:hover {
+  background-color: #c37234 !important;
+  color: #f9e2f9 !important;
   cursor: pointer !important;
 }
 
 /* Readme section styles */
 .readme {
+  font-family: 'gazpacho';
   padding: 20px;
   text-align: left;
   max-width: 800px;
   margin: 0 auto;
-  color: black;
+  color: #f9e2f9;
 }
 
 .selected-playlists {
-  background-color: #f2f2f2;
+  background-color: #f9e2f9;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
 }
 
 .loader {
-  border: 6px solid #ffffff; /* Light grey */
-  border-top: 6px solid #3eac56; /* Blue */
+  border: 6px solid #f9e2f9; /* Light grey */
+  border-top: 6px solid #242324; /* Blue */
   border-radius: 50%;
   padding: 0,3px;
   width: 20px;
@@ -183,8 +201,8 @@ footer {
 }
 
 #start-over-button {
-  background-color: #139a42; /* Green background */
-  color: white; /* White text */
+  background-color: #f9e2f9;
+  color: #242324; 
   padding: 8px 16px; /* Smaller padding than the Show Duplicates button */
   font-size: 1.2rem; /* Adjust font size as needed */
   font-weight: bold;
@@ -198,10 +216,29 @@ footer {
 }
 
 #start-over-button:hover {
-  background-color: #1ad35a; /* Lighter shade of green on hover */
+  background-color: #ae6a35; /* Lighter shade of green on hover */
 }
-
 
 #select-all-duplicates {
   margin-bottom: 10px;  /* Adjust as needed */
+}
+
+#load-more {
+  background-color: #f9e2f9; 
+  color: #242324; 
+  padding: 8px 16px; /* Smaller padding than the Show Duplicates button */
+  font-size: 1.2rem; /* Adjust font size as needed */
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  display: none; /* Initially hidden */
+  margin: 20px auto; /* Center the button and add margin at the top */
+  max-width: 200px; /* Adjust width as needed */
+}
+
+#load-more:hover {
+  background-color: #ae6a35; /* Lighter shade of green on hover */
+  color: #f9e2f9; 
 }
