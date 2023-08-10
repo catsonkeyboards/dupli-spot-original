@@ -180,12 +180,18 @@ function displayDuplicates(duplicates) {
   // Create an HTML string with the duplicate track data
   let html = '';
   duplicates.forEach(track => {
-      html += `
-        <div>
-          <input type="checkbox" id="${track.id}" value="${track.id}" name="duplicate">
-          <img src="${track.album.images[2].url}" alt="${track.name} cover">
-          <strong>${track.name}</strong> by ${track.artists[0].name}
-        </div>`;
+    html += `
+    <div class="duplicate-track">
+      <div class="checkbox-container">
+        <input type="checkbox" id="${track.id}" value="${track.id}" name="duplicate">
+      </div>
+      <div class="image-container">
+        <img src="${track.album.images[2].url}" alt="${track.name} cover">
+      </div>
+      <div class="text-container">
+        <strong>${track.name}</strong> by ${track.artists[0].name}
+      </div>
+    </div>`;
   });
   
   // Set the HTML string to the duplicates section

@@ -144,3 +144,26 @@ footer {
   text-align: center; /* Center the text */
   margin-top: 10px; /* Add some space above the text */
 }
+
+
+/* Display of duplicate tracks list */
+
+.duplicate-track {
+  display: flex;
+  align-items: center; /* Vertically center the child elements */
+  justify-content: space-between; /* Distribute the child containers evenly */
+  padding: 10px 0; /* Add some vertical padding for spacing */
+}
+
+.checkbox-container,
+.image-container,
+.text-container {
+  display: flex;
+  align-items: center; /* Vertically center the content */
+  justify-content: center; /* Horizontally center the content */
+}
+
+.image-container img {
+  max-width: 60px; /* Adjust the image size if necessary */
+  height: auto;
+}
