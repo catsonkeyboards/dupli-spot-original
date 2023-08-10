@@ -275,7 +275,7 @@ function updateUIAfterComparison() {
   document.getElementById('remove-duplicates').style.display = 'block';
 
   // After showing the duplicates, display the "Start Over" button
-  startOverButton.style.display = 'block';
+  document.getElementById('start-over').style.display = 'block';
 
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
@@ -331,7 +331,7 @@ document.getElementById("login-button").addEventListener("click", function () {
     showDuplicatesButton.style.display = 'block';
 
     // At the beginning or after the page reloads, hide the "Start Over" button
-    startOverButton.style.display = 'none';
+    document.getElementById('start-over').style.display = 'none';
   };
 
   // Listen for the callback message from the authentication window
