@@ -1,7 +1,7 @@
 // Global variables
 let accessToken;
 let offset = 0;
-const limit = 40;
+const limit = 2;
 let selectedPlaylists = [];
 let selectedDuplicates = [];
 
