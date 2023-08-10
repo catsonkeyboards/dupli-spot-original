@@ -133,3 +133,14 @@ footer {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+#remove-duplicates {
+  display: block;
+  margin: 0 auto; /* Center the button if needed */
+}
+
+#removal-playlist-text {
+  display: block;
+  text-align: center; /* Center the text */
+  margin-top: 10px; /* Add some space above the text */
+}
