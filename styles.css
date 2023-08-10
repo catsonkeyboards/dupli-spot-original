@@ -168,9 +168,25 @@ footer {
   height: auto;
 }
 
-#start-over {
-  margin-top: 20px;  /* Adjust as needed */
+#start-over-button {
+  background-color: #139a42; /* Green background */
+  color: white; /* White text */
+  padding: 8px 16px; /* Smaller padding than the Show Duplicates button */
+  font-size: 1.2rem; /* Adjust font size as needed */
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  display: none; /* Initially hidden */
+  margin: 20px auto; /* Center the button and add margin at the top */
+  max-width: 200px; /* Adjust width as needed */
 }
+
+#start-over-button:hover {
+  background-color: #1ad35a; /* Lighter shade of green on hover */
+}
+
 
 #select-all-duplicates {
   margin-bottom: 10px;  /* Adjust as needed */
