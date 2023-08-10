@@ -161,7 +161,6 @@ function removeDuplicatesFromPlaylist(playlistId, trackIds) {
       }
     });
 }
-
 // Fetch tracks from the two selected playlists and compare them to find duplicates
 function fetchAndCompareTracks(playlist1Id, playlist2Id) {
   return Promise.all([fetchAllTracks(playlist1Id), fetchAllTracks(playlist2Id)])
@@ -182,6 +181,23 @@ function displayDuplicates(duplicates) {
           <img src="${track.album.images[2].url}" alt="${track.name} cover">
           <strong>${track.name}</strong> by ${track.artists[0].name}
         </div>`;
+
+        // Event listener for checkboxes in the duplicates section
+document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
+  checkbox.addEventListener('change', (event) => {
+    if (event.target.checked) {
+      selectedDuplicates.push(event.target.value);
+    } else {
+      const index = selectedDuplicates.indexOf(event.target.value);
+      if (index > -1) {
+        selectedDuplicates.splice(index, 1);
+      }
+    }
+
+    // Call updateRemoveDuplicatesButtonState after a checkbox's state changes
+    updateRemoveDuplicatesButtonState();
+  });
+});
   });
   
   // Set the HTML string to the duplicates section
@@ -236,7 +252,7 @@ function updateUIAfterComparison() {
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
   duplicatesSection.style.display = 'block';
-  
+
     // Hide the "Load More" button
     document.getElementById('load-more').style.display = 'none';
 }
@@ -309,21 +325,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add the event listener for the "Show Duplicates" button click
     document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
-});
-
-// Event listener for checkboxes in the duplicates section
-document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
-  checkbox.addEventListener('change', (event) => {
-    if (event.target.checked) {
-      selectedDuplicates.push(event.target.value);
-    } else {
-      const index = selectedDuplicates.indexOf(event.target.value);
-      if (index > -1) {
-        selectedDuplicates.splice(index, 1);
-      }
-    }
-
-    // Call updateRemoveDuplicatesButtonState after a checkbox's state changes
-    updateRemoveDuplicatesButtonState();
+  });
+  
+    // Add the event listener for the "Remove Duplicates" button click
+document.getElementById('remove-duplicates').addEventListener('click', function() {
+  // Here, you'll call the removeDuplicatesFromPlaylist function for each selected playlist
+  // and each selected duplicate track.
+  
+  selectedPlaylists.forEach(playlistId => {
+      removeDuplicatesFromPlaylist(playlistId, selectedDuplicates);
   });
 });
