@@ -218,19 +218,19 @@ document.getElementById("load-more").addEventListener("click", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Update the button state initially
-  updateRemoveDuplicatesButtonState();
+    // Update the button state initially
+    updateRemoveDuplicatesButtonState();
 
-  // Check for the existence of the "Start Over" button
-  const startOverButton = document.getElementById('start-over-button');
-  if (startOverButton) {
-    startOverButton.addEventListener('click', function() {
-      window.location.reload();
-    });
-  }
+    // Check for the existence of the "Start Over" button
+    const startOverButton = document.getElementById('start-over-button');
+    if (startOverButton) {
+        startOverButton.addEventListener('click', function() {
+            window.location.reload();
+        });
+    }
 
-  // Add the event listener for the "Show Duplicates" button click
-  document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
+    // Add the event listener for the "Show Duplicates" button click
+    document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
 });
 
 // Event listener for checkboxes in the duplicates section
@@ -251,7 +251,8 @@ document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbo
 });
 
 // Event listener for the "Show Duplicates" (and later "Remove Duplicates") button click
-document.getElementById('show-duplicates').addEventListener('click', function handleShowDuplicatesButtonClick() {
+// Define the handleShowDuplicatesButtonClick function separately
+function handleShowDuplicatesButtonClick() {
   // Remove the event listener to prevent unintended triggering of the button click
   this.removeEventListener('click', handleShowDuplicatesButtonClick);
 
