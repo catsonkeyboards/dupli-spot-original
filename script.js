@@ -25,6 +25,11 @@ function toggleButtonState(buttonId, enable) {
     button.classList.remove(enable ? 'disabled' : 'enabled');
     button.classList.add(stateClass);
     button.disabled = !enable;
+    if (enable) {
+      button.style.backgroundColor = 'green'; // Set the button color to green when enabled
+    } else {
+      button.style.backgroundColor = ''; // Reset to default color when disabled
+    }
   }
 }
 
@@ -181,29 +186,30 @@ function displayDuplicates(duplicates) {
           <img src="${track.album.images[2].url}" alt="${track.name} cover">
           <strong>${track.name}</strong> by ${track.artists[0].name}
         </div>`;
-
-        // Event listener for checkboxes in the duplicates section
-document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
-  checkbox.addEventListener('change', (event) => {
-    if (event.target.checked) {
-      selectedDuplicates.push(event.target.value);
-    } else {
-      const index = selectedDuplicates.indexOf(event.target.value);
-      if (index > -1) {
-        selectedDuplicates.splice(index, 1);
-      }
-    }
-
-    // Call updateRemoveDuplicatesButtonState after a checkbox's state changes
-    updateRemoveDuplicatesButtonState();
-  });
-});
   });
   
   // Set the HTML string to the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
   duplicatesSection.innerHTML += html; // Append the duplicates to the existing content
+
+  // Add event listener for checkboxes in the duplicates section
+  document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
+    checkbox.addEventListener('change', (event) => {
+      if (event.target.checked) {
+        selectedDuplicates.push(event.target.value);
+      } else {
+        const index = selectedDuplicates.indexOf(event.target.value);
+        if (index > -1) {
+          selectedDuplicates.splice(index, 1);
+        }
+      }
+  
+      // Call updateRemoveDuplicatesButtonState after a checkbox's state changes
+      updateRemoveDuplicatesButtonState();
+    });  
+  });
 }
+
 
 // Define the handleShowDuplicatesButtonClick function separately
 function handleShowDuplicatesButtonClick() {
@@ -326,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add the event listener for the "Show Duplicates" button click
     document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
   });
-  
+
     // Add the event listener for the "Remove Duplicates" button click
 document.getElementById('remove-duplicates').addEventListener('click', function() {
   // Here, you'll call the removeDuplicatesFromPlaylist function for each selected playlist
