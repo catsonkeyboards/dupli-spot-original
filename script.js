@@ -358,4 +358,4 @@ function handleShowDuplicatesButtonClick() {
           });
       });
 });
-});
+};
