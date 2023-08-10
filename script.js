@@ -113,7 +113,7 @@ function fetchPlaylists(offset = 0) {
 }
 
 // Function to fetch all tracks from a playlist
-function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
+function fetchAllTracks(playlistId, playlistName, offset = 1, limit = 2) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`, {
     headers: {
       'Authorization': 'Bearer ' + accessToken
