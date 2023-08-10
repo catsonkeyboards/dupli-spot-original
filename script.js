@@ -1,7 +1,7 @@
 // Global variables
 let accessToken;
 let offset = 0;
-const limit = 2;
+const limit = 50;
 let selectedPlaylists = [];
 let selectedDuplicates = [];
 
@@ -31,7 +31,7 @@ function toggleButtonState(buttonId, enable) {
 // Function to update the "Show Duplicates" button's state
 function updateDuplicatesButtonState() {
   const showDuplicatesButton = document.getElementById('show-duplicates');
-  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 6;
+  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 3;
   toggleButtonState('show-duplicates', enableButton);
 }
 
@@ -113,7 +113,7 @@ function fetchPlaylists(offset = 0) {
 }
 
 // Function to fetch all tracks from a playlist
-function fetchAllTracks(playlistId, playlistName, offset = 1, limit = 2) {
+function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`, {
     headers: {
       'Authorization': 'Bearer ' + accessToken
