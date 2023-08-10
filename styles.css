@@ -12,7 +12,9 @@ body {
 
 /* Header styles */
 header {
-  background-color: #3c2b22;
+  background-image: url('images/bg.jpg');
+  background-repeat: repeat;
+  background-color: #ef6d26;
   padding: 20px;
   height: 50vh;
   display: flex;
@@ -25,6 +27,12 @@ header {
   font-size: 4rem; /* Increase font size */
   font-weight: bold; /* Apply bold font weight */
   text-align: center;
+  color: white;
+  text-shadow: 
+    -3px -3px 0 #682f00,  
+    3px -3px 0 #682f00,
+    -3px 3px 0 #682f00,
+    3px 3px 0 #682f00;
   line-height: 1;
   margin-top: 20px;
   max-width: 500px;
@@ -34,6 +42,12 @@ header {
   font-size: 2.5rem;
   font-weight: bold;
   text-align: center;
+  color: white;
+  text-shadow: 
+    -2px -2px 0 #682f00,  
+    2px -2px 0 #682f00,
+    -2px 2px 0 #682f00,
+    2px 2px 0 #682f00;
   line-height: 1;
   margin-top: 1rem;
   max-width: 500px;
