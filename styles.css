@@ -120,7 +120,7 @@ footer {
 }
 
 .loader {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   border: 10px solid #a0a0a0; /* Light grey */
   border-top: 10px solid #3eac56; /* Blue */
   border-radius: 50%;
