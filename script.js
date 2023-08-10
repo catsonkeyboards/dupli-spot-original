@@ -274,12 +274,12 @@ function updateUIAfterComparison() {
   // Show the "Remove Duplicates" button
   document.getElementById('remove-duplicates').style.display = 'block';
 
-  // After showing the duplicates, display the "Start Over" button
-  document.getElementById('start-over-button').style.display = 'block';
-
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
   duplicatesSection.style.display = 'block';
+
+   // Show the "Start Over" button after displaying the duplicates
+   document.getElementById('start-over-button').style.display = 'block';
 
   // Set the text for the playlist from which tracks will be removed
   const playlist2Name = document.querySelector(`label[for="${selectedPlaylists[1]}"]`).textContent;

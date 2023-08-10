@@ -167,3 +167,7 @@ footer {
   max-width: 60px; /* Adjust the image size if necessary */
   height: auto;
 }
+
+#start-over {
+  margin-top: 20px;  /* Adjust as needed */
+}
