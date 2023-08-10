@@ -227,9 +227,9 @@ function handleShowDuplicatesButtonClick() {
   // Create an HTML string for the selected playlists
   const selectedPlaylistsHTML = `
   <div class="selected-playlists">
-    <strong>Compared Playlists:</strong> ${playlist1Name}, ${playlist2Name}
+    <strong>Compared Playlists:</strong><br>${playlist1Name}<br>${playlist2Name}
   </div>
-  `;
+`;
 
   // Get the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
