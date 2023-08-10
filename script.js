@@ -238,7 +238,7 @@ document.getElementById("login-button").addEventListener("click", function () {
 
   // Define the Spotify authorization URL
   const scope = 'playlist-read-private playlist-modify-private';
-  const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=http://localhost:5500/redirect.html`;
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=https://dupli-spot-original.vercel.app/redirect.html`;
 
   // Calculate the window size based on the content
   const windowWidth = Math.min(window.innerWidth - 100, 500); // Adjust the subtracted value as needed
