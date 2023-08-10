@@ -189,17 +189,6 @@ function displayDuplicates(duplicates) {
   duplicatesSection.innerHTML += html; // Append the duplicates to the existing content
 }
 
-// Handle UI updates after the comparison
-function updateUIAfterComparison() {
-  // Hide the playlists section
-  const playlistsSection = document.getElementById('playlists');
-  playlistsSection.style.display = 'none';
-
-  // Show the duplicates section
-  const duplicatesSection = document.getElementById('duplicates');
-  duplicatesSection.style.display = 'block';
-}
-
 // Define the handleShowDuplicatesButtonClick function separately
 function handleShowDuplicatesButtonClick() {
   // Remove the event listener to prevent unintended triggering of the button click
@@ -229,7 +218,28 @@ function handleShowDuplicatesButtonClick() {
           displayDuplicates(duplicates);
           updateUIAfterComparison();
       });
-};
+
+  // Hide the "Show Duplicates" button and display the "Remove Duplicates" button
+  document.getElementById('show-duplicates').style.display = 'none';
+  document.getElementById('remove-duplicates').style.display = 'block';
+
+  // Hide the "Load More" button
+  document.getElementById('load-more').style.display = 'none';
+}
+
+// Handle UI updates after the comparison
+function updateUIAfterComparison() {
+  // Hide the playlists section
+  const playlistsSection = document.getElementById('playlists');
+  playlistsSection.style.display = 'none';
+
+  // Show the duplicates section
+  const duplicatesSection = document.getElementById('duplicates');
+  duplicatesSection.style.display = 'block';
+  
+    // Hide the "Load More" button
+    document.getElementById('load-more').style.display = 'none';
+}
 
 // Event listener for the login button click
 document.getElementById("login-button").addEventListener("click", function () {
