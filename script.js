@@ -216,12 +216,14 @@ function handleShowDuplicatesButtonClick() {
   // Remove the event listener to prevent unintended triggering of the button click
   this.removeEventListener('click', handleShowDuplicatesButtonClick);
 
+    
   const playlist1Id = selectedPlaylists[0];
   const playlist2Id = selectedPlaylists[1];
 
   const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
   const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
 
+  
   // Create an HTML string for the selected playlists
   const selectedPlaylistsHTML = `
   <div class="selected-playlists">
@@ -235,15 +237,15 @@ function handleShowDuplicatesButtonClick() {
   // Prepend the selected playlists HTML to the duplicates section
   duplicatesSection.innerHTML = selectedPlaylistsHTML;
 
+   // Hide the "Show Duplicates" button and display the loading graphic
+   document.getElementById('show-duplicates').style.display = 'none';
+   document.getElementById('loading').style.display = 'block';
+
   fetchAndCompareTracks(playlist1Id, playlist2Id)
       .then(duplicates => {
           displayDuplicates(duplicates);
           updateUIAfterComparison();
       });
-
-  // Hide the "Show Duplicates" button and display the "Remove Duplicates" button
-  document.getElementById('show-duplicates').style.display = 'none';
-  document.getElementById('remove-duplicates').style.display = 'block';
 
   // Hide the "Load More" button
   document.getElementById('load-more').style.display = 'none';
@@ -255,12 +257,18 @@ function updateUIAfterComparison() {
   const playlistsSection = document.getElementById('playlists');
   playlistsSection.style.display = 'none';
 
+  // Hide the "Load More" button
+  document.getElementById('load-more').style.display = 'none';
+
+  // Hide the loading graphic
+  document.getElementById('loading').style.display = 'none';
+
+  // Show the "Remove Duplicates" button
+  document.getElementById('remove-duplicates').style.display = 'block';
+
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
   duplicatesSection.style.display = 'block';
-
-    // Hide the "Load More" button
-    document.getElementById('load-more').style.display = 'none';
 }
 
 // Event listener for the login button click
