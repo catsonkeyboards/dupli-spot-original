@@ -267,7 +267,7 @@ function displayDuplicates(duplicates) {
   
   // Set the HTML string to the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
-  duplicatesSection.innerHTML += html; // Append the duplicates to the existing content
+  duplicatesSection.innerHTML = html; // Replace the existing content with the new list
 
   // Add event listener for checkboxes in the duplicates section
   document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
@@ -368,6 +368,18 @@ document.getElementById('removal-playlist-dropdown').style.display = 'block';
    document.getElementById('start-over-button').style.display = 'block';
 
 }
+
+// Function for updating playlist numvers after track removal
+function fetchPlaylistDetails(playlistId) {
+  return fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+    headers: {
+      'Authorization': 'Bearer ' + accessToken
+    }
+  })
+  .then(response => response.json())
+  .catch(error => console.error('Error fetching playlist details:', error));
+}
+
 
 // Event listener for the login button click
 document.getElementById("login-button").addEventListener("click", function () {
@@ -496,8 +508,12 @@ document.body.addEventListener('click', function(event) {
     // Remove duplicates from the selected playlist
     removeDuplicatesFromPlaylist(selectedPlaylistId, selectedDuplicates)
       .then(() => {
+
         // Clear the selectedDuplicates array
         selectedDuplicates = [];
+
+        // Clear the duplicates section
+        document.getElementById('duplicates').innerHTML = '';
 
         // Fetch and compare tracks again
         const playlist1Id = selectedPlaylists[0];
@@ -506,13 +522,25 @@ document.body.addEventListener('click', function(event) {
           .then(duplicates => {
             // Display the updated list of duplicates
             displayDuplicates(duplicates);
+        
+            // Fetch updated details for both playlists
+            return Promise.all([fetchPlaylistDetails(playlist1Id), fetchPlaylistDetails(playlist2Id)]);
+          })
+          .then(([playlist1Details, playlist2Details]) => {
+            // Update the dropdown options with the new playlist names and track counts
+            const dropdown = document.getElementById('removal-playlist-dropdown');
+            dropdown.innerHTML = `
+              <option value="${playlist1Details.id}">${playlist1Details.name} - ${playlist1Details.tracks.total} tracks</option>
+              <option value="${playlist2Details.id}">${playlist2Details.name} - ${playlist2Details.tracks.total} tracks</option>
+            `;
+          })
+          .catch(error => {
+            console.error('Error:', error);
           });
-      })
-      .catch(error => {
-        console.error('Error:', error);
       });
   }
 });
+
 
 });
 
