@@ -23,12 +23,27 @@ header {
   background-image: url('images/cherry.png');
   background-repeat: no-repeat;
   background-position: center 10%;
-  background-size: 200px 200px; /* This will ensure the image scales proportionally */
-  /* Add additional styles as needed, such as padding, to ensure the title is positioned correctly */
+  background-size: 200px 200px; /* Default size for larger screens */
   padding: 50px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+/* Adjust the background size for medium screens */
+@media (max-width: 768px) {
+  header {
+    background-size: 200px 200px;
+    background-position: center 30%;
+  }
+}
+
+/* Adjust the background size for small screens */
+@media (max-width: 480px) {
+  header {
+    background-size: 200px 200px;
+    background-position: center 10%;
+  }
 }
 
 /* Title styles */
