@@ -7,7 +7,6 @@ let selectedDuplicates = [];
 let startOverButton;
 let allPlaylists = [];
 
-
 // Utility functions
 
 // Utility function: Check if a playlist is selected
@@ -188,6 +187,10 @@ function debounce(func, delay) {
   };
 }
 
+// Have some elements hidden
+document.getElementById('removal-playlist-dropdown').style.display = 'none';
+document.getElementById('dropdown-title').style.display = 'none';
+
 // Function to fetch all tracks from a playlist
 function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`, {
@@ -357,16 +360,17 @@ function updateUIAfterComparison() {
   // Show the "Remove Duplicates" button
   document.getElementById('remove-duplicates').style.display = 'block';
 
-// Show the dropdown
-document.getElementById('removal-playlist-dropdown').style.display = 'block';
-  
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
   duplicatesSection.style.display = 'block';
 
-   // Show the "Start Over" button after displaying the duplicates
-   document.getElementById('start-over-button').style.display = 'block';
+  // Show the "Start Over" button after displaying the duplicates
+  document.getElementById('start-over-button').style.display = 'block';
 
+// Show the dropdown
+document.getElementById('removal-playlist-dropdown').style.display = 'block';
+// Show the title
+document.getElementById('dropdown-title').style.display = 'block';
 }
 
 // Function for updating playlist numvers after track removal
@@ -457,8 +461,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add the event listener for the "Show Duplicates" button click
   document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
 
-// Real-time search with debounce using event delegation
-document.body.addEventListener('input', debounce(function(event) {
+  // Hide the dropdown and title
+  document.getElementById('removal-playlist-dropdown').style.display = 'none';
+  document.getElementById('dropdown-title').style.display = 'none';
+
+  // Real-time search with debounce using event delegation
+  document.body.addEventListener('input', debounce(function(event) {
   if (event.target.id === 'playlist-search') {
     filterPlaylists();
   }
