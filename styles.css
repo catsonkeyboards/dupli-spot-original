@@ -20,7 +20,12 @@ body {
 /* Header styles */
 header {
   background-color: #f9e2f9;
-  padding: 20px;
+  background-image: url('images/cherry.png');
+  background-repeat: no-repeat;
+  background-position: center 10%;
+  background-size: 200px 200px; /* This will ensure the image scales proportionally */
+  /* Add additional styles as needed, such as padding, to ensure the title is positioned correctly */
+  padding: 50px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -32,7 +37,11 @@ header {
   font-weight: bold;
   color: #242324;
   line-height: 1;
-  margin-top: 2px;
+  margin-top: 5px;
+  text-shadow: -2px -2px 0 #f9e2f9,  
+  2px -2px 0 #f9e2f9,
+  -2px 2px 0 #f9e2f9,
+  2px 2px 0 #f9e2f9; 
 }
 
 .main-title {
@@ -45,7 +54,7 @@ header {
 
 /* Login button styles */
 .login-button {
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .login-button button {
@@ -62,7 +71,7 @@ header {
 }
 
 .login-button button:hover {
-  background-color: #ae6a35;
+  background-color: #bb298a;
 }
 
 .login-button svg {
@@ -98,13 +107,13 @@ footer {
 }
 
 .enabled {
-  background-color: #9d7556 !important;
+  background-color: #d6309f !important;
   color: #f9e2f9 !important;
   cursor: pointer !important;
 }
 
 .enabled:hover {
-  background-color: #c37234 !important;
+  background-color: #bb298a !important;
   color: #f9e2f9 !important;
   cursor: pointer !important;
 }

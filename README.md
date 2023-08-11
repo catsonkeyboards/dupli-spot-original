@@ -1,9 +1,3 @@
-# Dupli-Spot
-
-Spotify Cross-Playlist De-Duplicator
-
-🎵 My First Project! 🚀
-
 This web application, built with the help of ChatGPT and google, allows you to detect and remove duplicate (matching) tracks between different Spotify playlists. 🎉
 
 ## How It Works
