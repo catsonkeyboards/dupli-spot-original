@@ -464,8 +464,6 @@ document.body.addEventListener('input', debounce(function(event) {
   }
 }, 300)); // 300ms delay
 
-
-
 // Event listener for changes within the #duplicates container
 document.getElementById('duplicates').addEventListener('change', function(event) {
   const allDuplicateCheckboxes = document.querySelectorAll('#duplicates input[name="duplicate"]');
@@ -500,47 +498,61 @@ document.getElementById('duplicates').addEventListener('change', function(event)
 
 
 // Attach an event listener to a parent element, e.g., the body
-document.body.addEventListener('click', function(event) {
-  // Check if the clicked element is the "Remove Duplicates" button
-  if (event.target.id === 'remove-duplicates') {
-    const selectedPlaylistId = document.getElementById('removal-playlist-dropdown').value;
-    
-    // Remove duplicates from the selected playlist
-    removeDuplicatesFromPlaylist(selectedPlaylistId, selectedDuplicates)
-      .then(() => {
+document.addEventListener('click', function(event) {
+    // Check if the clicked element or its parent is the "Remove Duplicates" button
+    let targetElement = event.target;
+    while (targetElement != null) {
+        if (targetElement.id === 'remove-duplicates') {
+            
+            // Fetch the selected playlist ID
+            let dropdown = document.getElementById('removal-playlist-dropdown');
+            let selectedPlaylistId = dropdown.value;
 
-        // Clear the selectedDuplicates array
-        selectedDuplicates = [];
+          // Execute the logic for removing duplicates
+          removeDuplicatesFromPlaylist(selectedPlaylistId, selectedDuplicates)
+              .then(() => {
+                  // Hide any previous error messages
+                  document.getElementById('error-message').style.display = 'none';
 
-        // Clear the duplicates section
-        document.getElementById('duplicates').innerHTML = '';
+                  // Clear the selectedDuplicates array
+                  selectedDuplicates = [];
 
-        // Fetch and compare tracks again
-        const playlist1Id = selectedPlaylists[0];
-        const playlist2Id = selectedPlaylists[1];
-        fetchAndCompareTracks(playlist1Id, playlist2Id)
-          .then(duplicates => {
-            // Display the updated list of duplicates
-            displayDuplicates(duplicates);
-        
-            // Fetch updated details for both playlists
-            return Promise.all([fetchPlaylistDetails(playlist1Id), fetchPlaylistDetails(playlist2Id)]);
-          })
-          .then(([playlist1Details, playlist2Details]) => {
-            // Update the dropdown options with the new playlist names and track counts
-            const dropdown = document.getElementById('removal-playlist-dropdown');
-            dropdown.innerHTML = `
-              <option value="${playlist1Details.id}">${playlist1Details.name} - ${playlist1Details.tracks.total} tracks</option>
-              <option value="${playlist2Details.id}">${playlist2Details.name} - ${playlist2Details.tracks.total} tracks</option>
-            `;
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-      });
+                  // Clear the duplicates section
+                  document.getElementById('duplicates').innerHTML = '';
+
+                  // Fetch and compare tracks again
+                  const playlist1Id = selectedPlaylists[0];
+                  const playlist2Id = selectedPlaylists[1];
+                  return fetchAndCompareTracks(playlist1Id, playlist2Id);
+              })
+              .then(duplicates => {
+                  // Display the updated list of duplicates
+                  displayDuplicates(duplicates);
+
+                  // Fetch updated details for both playlists
+                  const playlist1Id = selectedPlaylists[0];
+                  const playlist2Id = selectedPlaylists[1];
+                  return Promise.all([fetchPlaylistDetails(playlist1Id), fetchPlaylistDetails(playlist2Id)]);
+              })
+              .then(([playlist1Details, playlist2Details]) => {
+                  // Update the dropdown options with the new playlist names and track counts
+                  const dropdown = document.getElementById('removal-playlist-dropdown');
+                  dropdown.innerHTML = `
+                      <option value="${playlist1Details.id}">${playlist1Details.name} - ${playlist1Details.tracks.total} tracks</option>
+                      <option value="${playlist2Details.id}">${playlist2Details.name} - ${playlist2Details.tracks.total} tracks</option>
+                  `;
+              })
+              .catch(error => {
+                  console.error('Error:', error.message);
+
+                  // Display the error message
+                  const errorMessageDiv = document.getElementById('error-message');
+                  errorMessageDiv.textContent = "Failed to remove duplicates. Ensure you have the necessary permissions for this playlist.";
+                  errorMessageDiv.style.display = 'block';
+              });
+          break; // Exit the loop
+      }
+      targetElement = targetElement.parentElement;
   }
 });
-
-
 });
-
