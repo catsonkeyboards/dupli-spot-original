@@ -14,9 +14,7 @@ body {
   text-align: center;
   font-family: Arial, sans-serif;
   background-color: #242324;  ;
-  color: #f9e2f9; /* Change text color */
-  margin: 0; /* Remove default margin */
-  padding: 0; /* Remove default padding */
+  color: #f9e2f9; /* Change text color */ 
 }
 
 /* Header styles */
@@ -29,14 +27,13 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
 
 .main-title {
   font-family: 'groovy', Arial, sans-serif;
   font-size: 6rem; /* Increase font size */
   font-weight: bold; /* Apply bold font weight */
-  text-align: center;
+  
   color: #242324;
    /* text-shadow: 
     -3px -3px 0 #512806,  
@@ -45,14 +42,14 @@ header {
     3px 3px 0 #512806; */
   line-height: 1;
   margin-top: 0px;
-  max-width: 500px;
+  /*  max-width: 500px; */
 }
 
 .title {
   font-family: 'groovy', Arial, sans-serif;
   font-size: 2.5rem;
   font-weight: bold;
-  text-align: center;
+
   color: #242324;
   /* text-shadow: 
     -3px -3px 0 #512806,  
@@ -61,14 +58,12 @@ header {
     3px 3px 0 #512806; */
   line-height: 1;
   margin-top: 0px;
-  max-width: 500px;
+  /* max-width: 500px; */
 }
 
 /* Login button styles */
 .login-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center; /* This will center inline or inline-block elements */
   margin-top: 2rem;
 }
 
@@ -80,8 +75,7 @@ header {
   font-weight: bold;
   border: none;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
+  display: inline-block; /* Change to inline-block */
   transition: background-color 0.3s ease; /* Add a smooth transition effect */
   cursor: pointer; /* Add the cursor property to make it appear clickable */
 }
@@ -137,7 +131,9 @@ footer {
 /* Readme section styles */
 .readme {
   font-family: 'gazpacho';
-  padding: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 40px;
   text-align: left;
   max-width: 800px;
   margin: 0 auto;
@@ -145,17 +141,23 @@ footer {
 }
 
 .selected-playlists {
+  color: #242324;
   background-color: #f9e2f9;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
 }
 
+#loading {
+  padding: 50px;
+  justify-content: center; /* Horizontally center */
+  align-items: center;     /* Vertically center */
+}
+
 .loader {
   border: 6px solid #f9e2f9; /* Light grey */
   border-top: 6px solid #242324; /* Blue */
   border-radius: 50%;
-  padding: 0,3px;
   width: 20px;
   height: 20px;
   animation: spin 2s linear infinite;
@@ -168,23 +170,29 @@ footer {
 
 #remove-duplicates {
   display: block;
-  margin: 0 auto; /* Center the button if needed */
+  margin: 0 auto 20px auto; /* 20px margin at the bottom */
 }
 
-#removal-playlist-text {
+#removal-playlist-dropdown {
+  color: #242324;
+  margin-top: 20px; /* 20px margin at the top */
   display: block;
-  text-align: center; /* Center the text */
-  font-size: x-small; /* Font size of "Removing from.." */
-  margin-top: 30px; /* Add some space above the text */
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Display of duplicate tracks list */
 
 .duplicate-track {
   display: flex;
+  color: #f9e2f9;
   align-items: center; /* Vertically center the child elements */
-  /* justify-content: space-between; /* Distribute the child containers evenly */
   padding: 10px 0; /* Add some vertical padding for spacing */
+}
+
+.duplicate-track > *:not(:last-child) {
+  margin-right: 10px; /* Add spacing to the right of every child except the last one */
 }
 
 .checkbox-container,
@@ -220,6 +228,8 @@ footer {
 }
 
 #select-all-duplicates {
+  margin: 2px;
+  color: #f9e2f9;
   margin-bottom: 10px;  /* Adjust as needed */
 }
 
@@ -242,3 +252,23 @@ footer {
   background-color: #ae6a35; /* Lighter shade of green on hover */
   color: #f9e2f9; 
 }
+
+#search-container {
+  display: none;
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+#search-container input[type="text"] {
+  border-radius: 8px; /* This gives the input field rounded corners */
+  background-color: #f9e2f9; /* This sets the background color of the input field */
+  border: 1px solid #ccc; /* This gives a border to the input field */
+  padding: 8px 12px; /* This gives some padding inside the input field */
+  font-size: 16px; /* This sets the font size inside the input field */
+  outline: none; /* This removes the browser's default outline on focus */
+}
+
+#search-container input[type="text"]:focus {
+  border-color: #9b75da; /* This changes the border color when the input field is focused */
+}
+

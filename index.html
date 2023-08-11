@@ -36,33 +36,41 @@
       <div>
         <!-- Remove Duplicates Button -->
         <button id="remove-duplicates" style="display: none;">Remove Duplicates</button>
-        <p id="removal-playlist-text" style="display: none;"></p>
-      </div>    
-      <!-- Loading Graphic-->
-    <div id="loading" style="display: none; padding-bottom: 20px;">
-      <div class="loader"></div>
-  </div>  
+      </div>  
+
+      <div>
+        <select id="removal-playlist-dropdown" style="display: none;">
+            <!-- Options will be dynamically added here -->
+        </select>
+    </div>
   </header>
   
   <!-- Main Content -->
   <main>
   <!-- Playlists section -->
-    <section id="playlists" style="display: none;">
-      <input type="text" id="playlist-search" placeholder="Search Playlists...">
-      <!-- The playlists will be inserted here -->
-    </section>
+  <div id="search-container">
+    <input type="text" id="playlist-search" placeholder="Search for a playlist...">
+</div>
+<div id="playlists">
+    <!-- Playlists will be appended here -->
+</div>
+
+ <!-- Loading Graphic-->
+ <div id="loading" style="display: none; padding-bottom: 20px;">
+  <center><div class="loader" style="padding: 20px;"></div></center>
+</div>  
 
     <!-- Duplicates section -->
-    <div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto; color: black;">
+    <div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto;">
       <h2>Duplicate Tracks</h2>
       <div>
         <input type="checkbox" id="select-all-duplicates" />
         <label for="select-all-duplicates">Select All</label>
-     </div>
+      </div>
       <div id="duplicate-tracks">
         <!-- Duplicate tracks will be inserted here -->
       </div>
-    </div>
+    </div>    
 
       <!-- Start Over Button -->
     <button id="start-over-button">Start Over</button>
@@ -89,8 +97,8 @@
   </footer>
 
   <!-- Scripts -->
+  
   <script src="marked.js"></script>
-  <script src="script.js"></script>
 
   <script>
     fetch('README.md')
@@ -103,5 +111,8 @@
         console.error('Error loading README:', error);
       });
   </script>
+
+<script src="script.js"></script>
+
 </body>
 </html>
