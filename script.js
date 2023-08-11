@@ -249,10 +249,25 @@ function fetchAndCompareTracks(playlist1Id, playlist2Id) {
       });
 }
 
-// Display the duplicate tracks in the UI
+// Display the duplicate tracks in the UI, create an HTML string with the duplicate track data
 function displayDuplicates(duplicates) {
-  // Create an HTML string with the duplicate track data
-  let html = '<input type="checkbox" id="select-all-duplicates"> Select All<br>';
+  let html = '';
+  
+  // Success Message if there are no duplicates
+  const successMessage = document.getElementById('success-message');
+
+  // Check if there are any duplicates
+  if (duplicates.length > 0) {
+    html += '<input type="checkbox" id="select-all-duplicates"> Select All<br>';
+    // Hide the success message in case it was previously shown
+    successMessage.style.display = 'none';
+  } else {
+    // Update and display the success message to indicate no duplicates
+    successMessage.textContent = 'No duplicates found!';
+    successMessage.style.display = 'block';
+    return; // Exit the function early as there's nothing more to do
+  }
+
   duplicates.forEach(track => {
     html += `
     <div class="duplicate-track">
@@ -270,7 +285,7 @@ function displayDuplicates(duplicates) {
   
   // Set the HTML string to the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
-  duplicatesSection.innerHTML = html; // Replace the existing content with the new list
+  duplicatesSection.innerHTML = html;
 
   // Add event listener for checkboxes in the duplicates section
   document.querySelectorAll('#duplicates input[name="duplicate"]').forEach(checkbox => {
@@ -294,8 +309,8 @@ function displayDuplicates(duplicates) {
 // Define the handleShowDuplicatesButtonClick function separately
 function handleShowDuplicatesButtonClick() {
 
-   // Hide the playlists section
-   document.getElementById('playlists').style.display = 'none';
+  // Hide the playlists section
+  document.getElementById('playlists').style.display = 'none';
 
   // Remove the event listener to prevent unintended triggering of the button click
   this.removeEventListener('click', handleShowDuplicatesButtonClick);
@@ -311,29 +326,20 @@ function handleShowDuplicatesButtonClick() {
   <div class="selected-playlists">
     <strong>Compared Playlists:</strong><br>${playlist1Name}<br>${playlist2Name}
   </div>
-`;
-
-  // Populate the dropdown with the two playlists
-  const dropdown = document.getElementById('removal-playlist-dropdown');
-  dropdown.innerHTML = `
-      <option value="${playlist1Id}">${playlist1Name}</option>
-      <option value="${playlist2Id}">${playlist2Name}</option>
   `;
 
-  // Show the dropdown
-  dropdown.style.display = 'block';
   // Get the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
 
   // Prepend the selected playlists HTML to the duplicates section
   duplicatesSection.innerHTML = selectedPlaylistsHTML;
 
-// Hide the "Show Duplicates" button and display the loading graphic
-document.getElementById('show-duplicates').style.display = 'none';
-document.getElementById('loading').style.display = 'block';
+  // Hide the "Show Duplicates" button and display the loading graphic
+  document.getElementById('show-duplicates').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
 
-// Hide the search bar
-document.getElementById('search-container').style.display = 'none';
+  // Hide the search bar
+  document.getElementById('search-container').style.display = 'none';
 
   fetchAndCompareTracks(playlist1Id, playlist2Id)
       .then(duplicates => {
@@ -347,18 +353,35 @@ document.getElementById('search-container').style.display = 'none';
 
 // Handle UI updates after the comparison
 function updateUIAfterComparison() {
-  // Hide the playlists section
+
+  // Hide the playlists 
   const playlistsSection = document.getElementById('playlists');
   playlistsSection.style.display = 'none';
 
   // Hide the "Load More" button
   document.getElementById('load-more').style.display = 'none';
 
-  // Hide the loading graphic
+  // Hide the Loading graphic
   document.getElementById('loading').style.display = 'none';
 
   // Show the "Remove Duplicates" button
   document.getElementById('remove-duplicates').style.display = 'block';
+
+  // Show the dropdown
+  const playlist1Id = selectedPlaylists[0];
+const playlist2Id = selectedPlaylists[1];
+const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
+const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
+
+const dropdown = document.getElementById('removal-playlist-dropdown');
+dropdown.innerHTML = `
+    <option value="${playlist1Id}">${playlist1Name}</option>
+    <option value="${playlist2Id}">${playlist2Name}</option>
+`;
+dropdown.style.display = 'block';
+
+  // document.getElementById('removal-playlist-dropdown').style.display = 'block';
+   document.getElementById('dropdown-title').style.display = 'block';
 
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
@@ -366,11 +389,6 @@ function updateUIAfterComparison() {
 
   // Show the "Start Over" button after displaying the duplicates
   document.getElementById('start-over-button').style.display = 'block';
-
-// Show the dropdown
-document.getElementById('removal-playlist-dropdown').style.display = 'block';
-// Show the title
-document.getElementById('dropdown-title').style.display = 'block';
 }
 
 // Function for updating playlist numvers after track removal
