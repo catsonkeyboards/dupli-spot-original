@@ -253,20 +253,32 @@ function fetchAndCompareTracks(playlist1Id, playlist2Id) {
 function displayDuplicates(duplicates) {
   let html = '';
   
+  // Reference to the dropdown and its title
+  const dropdown = document.getElementById('removal-playlist-dropdown');
+  const dropdownTitle = document.getElementById('dropdown-title');
+  
   // Success Message if there are no duplicates
   const successMessage = document.getElementById('success-message');
 
-  // Check if there are any duplicates
-  if (duplicates.length > 0) {
-    html += '<input type="checkbox" id="select-all-duplicates"> Select All<br>';
-    // Hide the success message in case it was previously shown
-    successMessage.style.display = 'none';
-  } else {
-    // Update and display the success message to indicate no duplicates
-    successMessage.textContent = 'No duplicates found!';
-    successMessage.style.display = 'block';
-    return; // Exit the function early as there's nothing more to do
-  }
+ // Check if there are any duplicates
+ if (duplicates.length > 0) {
+  html += '<input type="checkbox" id="select-all-duplicates"> Select All<br>';
+  // Hide the success message in case it was previously shown
+  successMessage.style.display = 'none';
+  
+  // Show the dropdown and its title
+  dropdown.style.display = 'block';
+  dropdownTitle.style.display = 'block';
+} else {
+  // Update and display the success message to indicate no duplicates
+  successMessage.textContent = 'No duplicates found!';
+  successMessage.style.display = 'block';
+  
+  // Hide the dropdown and its title
+  dropdown.style.display = 'none';
+  dropdownTitle.style.display = 'none';
+  return; // Exit the function early as there's nothing more to do
+}
 
   duplicates.forEach(track => {
     html += `
