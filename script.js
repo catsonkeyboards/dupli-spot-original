@@ -321,6 +321,9 @@ function displayDuplicates(duplicates) {
 // Define the handleShowDuplicatesButtonClick function separately
 function handleShowDuplicatesButtonClick() {
 
+  // Hide the instruction text
+  document.getElementById('instruction-text').style.display = 'none';
+
   // Hide the playlists section
   document.getElementById('playlists').style.display = 'none';
 
@@ -358,6 +361,7 @@ function handleShowDuplicatesButtonClick() {
           displayDuplicates(duplicates);
           updateUIAfterComparison();
       });
+
 
   // Hide the "Load More" button
   document.getElementById('load-more').style.display = 'none';
@@ -451,14 +455,15 @@ document.getElementById("login-button").addEventListener("click", function () {
     // Call fetchPlaylists after successful authentication
     fetchPlaylists(offset);
 
-// Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
-playlistsSection.style.display = 'block';
-loginButton.style.display = 'none';
-readmeSection.style.display = 'none';
-document.getElementById('show-duplicates').style.display = 'inline-block';
+    // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
+    playlistsSection.style.display = 'block';
+    loginButton.style.display = 'none';
+    readmeSection.style.display = 'none';
+    document.getElementById('show-duplicates').style.display = 'inline-block';
+    document.getElementById('instruction-text').style.display = 'block';
 
-// Show the search bar
-document.getElementById('search-container').style.display = 'block';
+    // Show the search bar
+    document.getElementById('search-container').style.display = 'block';
 
     // At the beginning or after the page reloads, hide the "Start Over" button
     document.getElementById('start-over-button').style.display = 'none';
@@ -489,7 +494,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Add the event listener for the "Show Duplicates" button click
-  document.getElementById('show-duplicates').addEventListener('click', handleShowDuplicatesButtonClick);
+  document.getElementById('show-duplicates').addEventListener('click', function() {
+    // Hide the instruction text
+    document.getElementById('instruction-text').style.display = 'none';
+  
+    // Call the function to handle showing duplicates
+    handleShowDuplicatesButtonClick();
+  });
 
   // Hide the dropdown and title
   document.getElementById('removal-playlist-dropdown').style.display = 'none';

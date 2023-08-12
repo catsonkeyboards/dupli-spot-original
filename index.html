@@ -55,6 +55,12 @@
   <div id="search-container">
     <input type="text" id="playlist-search" placeholder="Search for a playlist...">
 </div>
+
+<!-- Instruction text -->
+<div id="instruction-text" style="display: none;">
+  Select two playlists from the lists to find matching tracks.
+</div>
+
 <div id="playlists">
     <!-- Playlists will be appended here -->
 </div>
@@ -64,36 +70,37 @@
   <center><div class="loader" style="padding: 20px;"></div></center>
 </div>  
 
-    <!-- Duplicates section -->
-    <div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto;">
-      <h2>Duplicate Tracks</h2>
+<div id="compared-playlists" style="display: none;">
+  <strong>Compared Playlists:</strong><br>
+  <span id="playlist1-name"></span><br>
+  <span id="playlist2-name"></span>
+</div>
+
+<!-- Duplicates section -->
+<div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto;">
+  <h2>Duplicate Tracks</h2>
      
-      <!-- <div>
-         <input type="checkbox" id="select-all-duplicates" /> 
-         <label for="select-all-duplicates">Select All</label> 
-      </div> -->
+  <div id="duplicate-tracks">
+  <!-- Duplicate tracks will be inserted here -->
+  </div>
+ </div>    
 
-      <div id="duplicate-tracks">
-        <!-- Duplicate tracks will be inserted here -->
-      </div>
-    </div>    
+ <!-- Success message -->
+  <div id="success-message" style="display: none; text-align: center;">
+  Duplicates have been removed!
+  </div>
 
-      <!-- Start Over Button -->
-    <button id="start-over-button">Start Over</button>
-    
-    <!-- Success message -->
-    <div id="success-message" style="display: none; text-align: center;">
-      Duplicates have been removed!
-    </div>
+  <!-- Start Over Button -->
+  <button id="start-over-button">Start Over</button>
 
-    <!-- Load More button -->
-    <div style="padding: 20px;">
-      <button id="load-more" style="display: none; text-align: center;">Load More</button>
-    </div>
+  <!-- Load More button -->
+  <div style="padding: 20px;">
+    <button id="load-more" style="display: none; text-align: center;">Load More</button>
+  </div>
 
-    <!-- README section -->
+  <!-- README section -->
     <section class="readme">
-      <div id="readme-content"></div>
+    <div id="readme-content"></div>
     </section>
   </main>
 
