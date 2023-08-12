@@ -22,27 +22,27 @@ header {
   background-color: #f9e2f9;
   background-image: url('images/cherry.png');
   background-repeat: no-repeat;
-  background-position: center 10%;
-  background-size: 200px 200px; /* Default size for larger screens */
-  padding: 50px 20px;
+  background-position: center 10%; /* Position the image above the title */
+  background-size: 100px 100px; /* Set the desired size for the image */
+  padding: 120px 20px 50px 20px; /* Provide space above the title for the image */
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-/* Adjust the background size for medium screens */
+/* Adjust the background size and position for medium screens */
 @media (max-width: 768px) {
   header {
-    background-size: 200px 200px;
-    background-position: center 30%;
+    background-size: 80px 80px; /* Adjust the size for medium screens */
+    background-position: center 10%; /* Keep the image above the title */
   }
 }
 
-/* Adjust the background size for small screens */
+/* Adjust the background size and position for small screens */
 @media (max-width: 480px) {
   header {
-    background-size: 200px 200px;
-    background-position: center 10%;
+    background-size: 60px 60px; /* Adjust the size for small screens */
+    background-position: center 10%; /* Keep the image above the title */
   }
 }
 
@@ -61,10 +61,13 @@ header {
 
 .main-title {
   font-size: 6rem;
+  margin-bottom: 10px; /* Adjust this value to reduce the space below the main title */
+
 }
 
 .title {
   font-size: 2.5rem;
+  margin-top: 10px; /* Adjust this value to reduce the space above the subtitle */
 }
 
 /* Login button styles */
@@ -284,7 +287,7 @@ footer {
 }
 
 #load-more:hover {
-  background-color: #ae6a35; /* Lighter shade of green on hover */
+  background-color: #bb298a; /* Lighter shade of green on hover */
   color: #f9e2f9; 
 }
 
