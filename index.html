@@ -9,14 +9,14 @@
   
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <!-- Header -->
-  <header>
-    <!-- Main title -->
-    <h1 class="main-title"><a href="index.html" style="text-decoration: none; color: #242324;">Dupli-Spot</a></h1>
-    <!-- Page title -->
-    <h1 class="title">Spotify Cross-Playlist<br>De-Duplicator</h1>    
+  </head>
+    <body>
+    <!-- Header -->
+    <header>
+      <!-- Main title -->
+      <h1 class="main-title"><a href="index.html" style="text-decoration: none; color: #242324;">Dupli-Spot</a></h1>
+      <!-- Page title -->
+      <h1 class="title">Spotify Cross-Playlist<br>De-Duplicator</h1>    
     <!-- Login button section -->
     <div class="login-button">
       <!-- Login button with Spotify logo -->
@@ -47,77 +47,76 @@
         <div id="dropdown-title" style="display: none;">Select playlist to remove from</div>
       </div>
     <div id="error-message" style="color: red; display: none;"></div>
-  </header>
-  
-  <!-- Main Content -->
-  <main>
-  <!-- Playlists section -->
-  <div id="search-container">
-    <input type="text" id="playlist-search" placeholder="Search for a playlist...">
-</div>
+    </header>
+      
+      <!-- Main Content -->
+      <main>
+      <!-- Playlists section -->
+      <div id="search-container">
+        <input type="text" id="playlist-search" placeholder="Search for a playlist...">
+      </div>
 
-<!-- Instruction text -->
-<div id="instruction-text" style="display: none;">
-  Select two playlists from the lists to find matching tracks.
-</div>
+      <!-- Instruction text -->
+      <div id="instruction-text" style="display: none;">
+      Select two playlists from the lists to find matching tracks.
+      </div>
 
-<div id="playlists">
-    <!-- Playlists will be appended here -->
-</div>
+      <div id="playlists">
+        <!-- Playlists will be appended here -->
+      </div>
 
- <!-- Loading Graphic-->
- <div id="loading" style="display: none; padding-bottom: 20px;">
-  <center><div class="loader" style="padding: 20px;"></div></center>
-</div>  
+      <!-- Loading Graphic-->
+      <div id="loading" style="display: none; padding-bottom: 20px;">
+      <center><div class="loader" style="padding: 20px;"></div></center>
+      </div>  
 
-<div id="compared-playlists" style="display: none;">
-  <strong>Compared Playlists:</strong><br>
-  <span id="playlist1-name"></span><br>
-  <span id="playlist2-name"></span>
-</div>
+      <div id="compared-playlists" style="display: none;">
+      <strong>Compared Playlists:</strong><br>
+      <span id="playlist1-name"></span><br>
+      <span id="playlist2-name"></span>
+      </div>
 
-<!-- Duplicates section -->
-<div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto;">
-  <h2>Duplicate Tracks</h2>
+      <!-- Duplicates section -->
+      <div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto;">
+      <h2>Duplicate Tracks</h2>
      
-  <div id="duplicate-tracks">
-  <!-- Duplicate tracks will be inserted here -->
-  </div>
- </div>    
+      <div id="duplicate-tracks">
+      <!-- Duplicate tracks will be inserted here -->
+      </div>
+      </div>    
 
- <!-- Success message -->
-  <div id="success-message" style="display: none; text-align: center;">
-  Duplicates have been removed!
-  </div>
+      <!-- Success message -->
+      <div id="success-message" style="display: none; text-align: center;">
+      Duplicates have been removed!
+      </div>
 
-  <!-- Start Over Button -->
-  <button id="start-over-button">Start Over</button>
+      <!-- Start Over Button -->
+      <button id="start-over-button">Start Over</button>
 
-  <!-- Load More button -->
-  <div style="padding: 20px;">
-    <button id="load-more" style="display: none; text-align: center;">Load More</button>
-  </div>
+      <!-- Load More button -->
+      <div style="padding: 20px;">
+      <button id="load-more" style="display: none; text-align: center;">Load More</button>
+      </div>
 
-  <!-- README section -->
-    <section class="readme">
-    <div id="readme-content"></div>
-    </section>
-  </main>
+      <!-- README section -->
+      <section class="readme">
+      <div id="readme-content"></div>
+      </section>
+    </main>
 
    <!-- Footer -->
-   <footer>
-    <p>This web app uses the <a href="https://developer.spotify.com/documentation/web-api">Spotify Web API</a> to manage user's playlists and saved tracks.</p>
-    <p>Dupli-Spot will only remove user-selected tracks, leaving other playlists and saved songs untouched.</p>
-    <a href="privacy-policy.html">Privacy Policy</a>
-    <p>© 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved.</p>
-  </footer>
+    <footer>
+      <p>This web app uses the <a href="https://developer.spotify.com/documentation/web-api">Spotify Web API</a> to manage user's playlists and saved tracks.</p>
+      <p>Dupli-Spot will only remove user-selected tracks, leaving other playlists and saved songs untouched.</p>
+      <p>© 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved. <a href="privacy-policy.html">Privacy Policy</a></p>
+    </footer>
 
 
-  <!-- Scripts -->
+    <!-- Scripts -->
   
-  <script src="marked.js"></script>
+    <script src="marked.js"></script>
 
-  <script>
+    <script>
     fetch('README.md')
       .then(response => response.text())
       .then(text => {
@@ -127,11 +126,11 @@
       .catch(error => {
         console.error('Error loading README:', error);
       });
-  </script>
+    </script>
 
-<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="morgan.makes" data-description="Support me on Buy me a coffee!" data-message="Come to Florence I'll give you a gelato tour!" data-color="#f9e2f9" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="morgan.makes" data-description="Support me on Buy me a coffee!" data-message="Come to Florence I'll give you a gelato tour!" data-color="#f9e2f9" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
-</body>
+  </body>
 </html>
