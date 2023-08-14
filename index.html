@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="/images/fav_new.ico" type="image/x-icon">
 
   <title>Dupli-Spot</title>
-  
+
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
-  </head>
-    <body>
-    <!-- Header -->
-    <header>
-      <!-- Main title -->
-      <h1 class="main-title"><a href="index.html" style="text-decoration: none; color: #242324;">Dupli-Spot</a></h1>
-      <!-- Page title -->
-      <h1 class="title">Spotify Cross-Playlist<br>De-Duplicator</h1>    
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <!-- Main title -->
+    <h1 class="main-title"><a href="index.html" style="text-decoration: none; color: #242324;">Dupli-Spot</a></h1>
+    <!-- Page title -->
+    <h1 class="title">Spotify Cross-Playlist<br>De-Duplicator</h1>
     <!-- Login button section -->
     <div class="login-button">
       <!-- Login button with Spotify logo -->
@@ -27,7 +29,9 @@
           <!-- Group element for scaling the logo -->
           <g transform="scale(1.0)"> <!-- Adjust the scale value to change the size -->
             <!-- Path element for the logo shape with white fill -->
-            <path fill="#ffffff" d="M83.996.277C37.747.277.253 37.77.253 84.019c0 46.251 37.494 83.741 83.743 83.741 46.254 0 83.744-37.49 83.744-83.741 0-46.246-37.49-83.738-83.745-83.738l.001-.004zm38.404 120.78a5.217 5.217 0 0 1-7.18 1.73c-19.662-12.01-44.414-14.73-73.564-8.07a5.222 5.222 0 0 1-6.249-3.93 5.213 5.213 0 0 1 3.926-6.25c31.9-7.291 59.263-4.15 81.337 9.34 2.46 1.51 3.24 4.72 1.73 7.18zm10.25-22.805c-1.89 3.075-5.91 4.045-8.98 2.155-22.51-13.839-56.823-17.846-83.448-9.764-3.453 1.043-7.1-.903-8.148-4.35a6.538 6.538 0 0 1 4.354-8.143c30.413-9.228 68.222-4.758 94.072 11.127 3.07 1.89 4.04 5.91 2.15 8.976v-.001zm.88-23.744c-26.99-16.031-71.52-17.505-97.289-9.684-4.138 1.255-8.514-1.081-9.768-5.219a7.835 7.835 0 0 1 5.221-9.771c29.581-8.98 78.756-7.245 109.83 11.202a7.823 7.823 0 0 1 2.74 10.733c-2.2 3.722-7.02 4.949-10.73 2.739z"></path>
+            <path fill="#ffffff"
+              d="M83.996.277C37.747.277.253 37.77.253 84.019c0 46.251 37.494 83.741 83.743 83.741 46.254 0 83.744-37.49 83.744-83.741 0-46.246-37.49-83.738-83.745-83.738l.001-.004zm38.404 120.78a5.217 5.217 0 0 1-7.18 1.73c-19.662-12.01-44.414-14.73-73.564-8.07a5.222 5.222 0 0 1-6.249-3.93 5.213 5.213 0 0 1 3.926-6.25c31.9-7.291 59.263-4.15 81.337 9.34 2.46 1.51 3.24 4.72 1.73 7.18zm10.25-22.805c-1.89 3.075-5.91 4.045-8.98 2.155-22.51-13.839-56.823-17.846-83.448-9.764-3.453 1.043-7.1-.903-8.148-4.35a6.538 6.538 0 0 1 4.354-8.143c30.413-9.228 68.222-4.758 94.072 11.127 3.07 1.89 4.04 5.91 2.15 8.976v-.001zm.88-23.744c-26.99-16.031-71.52-17.505-97.289-9.684-4.138 1.255-8.514-1.081-9.768-5.219a7.835 7.835 0 0 1 5.221-9.771c29.581-8.98 78.756-7.245 109.83 11.202a7.823 7.823 0 0 1 2.74 10.733c-2.2 3.722-7.02 4.949-10.73 2.739z">
+            </path>
           </g>
         </svg>
         <!-- Button text -->
@@ -38,85 +42,91 @@
       <div>
         <!-- Remove Duplicates Button -->
         <button id="remove-duplicates" style="display: none;">Remove Duplicates</button>
-      </div>  
+      </div>
 
       <div>
         <select id="removal-playlist-dropdown" style="display: none;">
-            <!-- Options will be dynamically added here -->
+          <!-- Options will be dynamically added here -->
         </select>
         <div id="dropdown-title" style="display: none;">Select playlist to remove from</div>
       </div>
-    <div id="error-message" style="color: red; display: none;"></div>
-    </header>
-      
-      <!-- Main Content -->
-      <main>
-      <!-- Playlists section -->
-      <div id="search-container">
-        <input type="text" id="playlist-search" placeholder="Search for a playlist...">
-      </div>
+      <div id="error-message" style="color: red; display: none;"></div>
+  </header>
 
-      <!-- Instruction text -->
-      <div id="instruction-text" style="display: none;">
-      Select two playlists from the lists to find matching tracks.
-      </div>
+  <!-- Main Content -->
+  <main>
+    <!-- Playlists section -->
+    <div id="search-container">
+      <input type="text" id="playlist-search" placeholder="Search for a playlist...">
+    </div>
 
-      <div id="playlists">
-        <!-- Playlists will be appended here -->
-      </div>
+    <!-- Instruction text -->
+    <div id="instruction-text" style="display: none;">
+      Select two playlists from the list to find matching tracks.<br>
+      The Search bar above will let you search from the list of playlists that's showing on screen.<br>
+      You can load more playlists by scrolling to the bottom and clicking 'Load More'.<br>
+    </div>
 
-      <!-- Loading Graphic-->
-      <div id="loading" style="display: none; padding-bottom: 20px;">
-      <center><div class="loader" style="padding: 20px;"></div></center>
-      </div>  
+    <div id="playlists">
+      <!-- Playlists will be appended here -->
+    </div>
 
-      <div id="compared-playlists" style="display: none;">
+    <!-- Loading Graphic-->
+    <div id="loading" style="display: none; padding-bottom: 20px;">
+      <center>
+        <div class="loader" style="padding: 20px;"></div>
+      </center>
+    </div>
+
+    <div id="compared-playlists" style="display: none;">
       <strong>Compared Playlists:</strong><br>
       <span id="playlist1-name"></span><br>
       <span id="playlist2-name"></span>
-      </div>
+    </div>
 
-      <!-- Duplicates section -->
-      <div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto;">
+    <!-- Duplicates section -->
+    <div id="duplicates" style="display: none; padding: 20px; text-align: left; max-width: 800px; margin: 0 auto;">
       <h2>Duplicate Tracks</h2>
-     
+
       <div id="duplicate-tracks">
-      <!-- Duplicate tracks will be inserted here -->
+        <!-- Duplicate tracks will be inserted here -->
       </div>
-      </div>    
+    </div>
 
-      <!-- Success message -->
-      <div id="success-message" style="display: none; text-align: center;">
+    <!-- Success message -->
+    <div id="success-message" style="display: none; text-align: center;">
       Duplicates have been removed!
-      </div>
+    </div>
 
-      <!-- Start Over Button -->
-      <button id="start-over-button">Start Over</button>
+    <!-- Start Over Button -->
+    <button id="start-over-button">Start Over</button>
 
-      <!-- Load More button -->
-      <div style="padding: 20px;">
+    <!-- Load More button -->
+    <div>
       <button id="load-more" style="display: none; text-align: center;">Load More</button>
-      </div>
+    </div>
 
-      <!-- README section -->
-      <section class="readme">
+    <!-- README section -->
+    <section class="readme">
       <div id="readme-content"></div>
-      </section>
-    </main>
+    </section>
+  </main>
 
-   <!-- Footer -->
-    <footer>
-      <p>This web app uses the <a href="https://developer.spotify.com/documentation/web-api">Spotify Web API</a> to manage user's playlists and saved tracks.</p>
-      <p>Dupli-Spot will only remove user-selected tracks, leaving other playlists and saved songs untouched.</p>
-      <p>© 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved. <a href="privacy-policy.html">Privacy Policy</a></p>
-    </footer>
+  <!-- Footer -->
+  <footer>
+    <p>This web app uses the <a href="https://developer.spotify.com/documentation/web-api">Spotify Web API</a> to manage
+      user's playlists and saved tracks.</p>
+    <p>Dupli-Spot will only remove user-selected tracks, leaving other playlists and saved songs untouched.</p>
+    <p>© 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved. <a href="privacy-policy.html">Privacy Policy</a>
+    </p>
+  </footer>
 
 
-    <!-- Scripts -->
-  
-    <script src="marked.js"></script>
+  <!-- Scripts -->
 
-    <script>
+  <script src="marked.js"></script>
+
+  <script>
     fetch('README.md')
       .then(response => response.text())
       .then(text => {
@@ -126,11 +136,15 @@
       .catch(error => {
         console.error('Error loading README:', error);
       });
-    </script>
+  </script>
 
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="morgan.makes" data-description="Support me on Buy me a coffee!" data-message="Come to Florence I'll give you a gelato tour!" data-color="#f9e2f9" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+    data-id="morgan.makes" data-description="Support me on Buy me a coffee!"
+    data-message="Come to Florence I'll give you a gelato tour!" data-color="#f9e2f9" data-position="Right"
+    data-x_margin="18" data-y_margin="18"></script>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 
-  </body>
+</body>
+
 </html>

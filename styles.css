@@ -1,11 +1,11 @@
 /* Custom Fonts */
 @font-face {
-  font-family: 'groovy'; 
+  font-family: 'groovy';
   src: url('fonts/Morsan-4BDo4.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'gazpacho'; 
+  font-family: 'gazpacho';
   src: url('fonts/Gazpacho Regular.ttf') format('truetype');
 }
 
@@ -22,9 +22,12 @@ header {
   background-color: #f9e2f9;
   background-image: url('images/cherry.png');
   background-repeat: no-repeat;
-  background-position: center 10%; /* Position the image above the title */
-  background-size: 100px 100px; /* Set the desired size for the image */
-  padding: 120px 20px 50px 20px; /* Provide space above the title for the image */
+  background-position: center 10%;
+  /* Position the image above the title */
+  background-size: 100px 100px;
+  /* Set the desired size for the image */
+  padding: 120px 20px 50px 20px;
+  /* Provide space above the title for the image */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -33,41 +36,48 @@ header {
 /* Adjust the background size and position for medium screens */
 @media (max-width: 768px) {
   header {
-    background-size: 80px 80px; /* Adjust the size for medium screens */
-    background-position: center 10%; /* Keep the image above the title */
+    background-size: 80px 80px;
+    /* Adjust the size for medium screens */
+    background-position: center 10%;
+    /* Keep the image above the title */
   }
 }
 
 /* Adjust the background size and position for small screens */
 @media (max-width: 480px) {
   header {
-    background-size: 60px 60px; /* Adjust the size for small screens */
-    background-position: center 10%; /* Keep the image above the title */
+    background-size: 60px 60px;
+    /* Adjust the size for small screens */
+    background-position: center 10%;
+    /* Keep the image above the title */
   }
 }
 
 /* Title styles */
-.main-title, .title {
+.main-title,
+.title {
   font-family: 'groovy', Arial, sans-serif;
   font-weight: bold;
   color: #242324;
   line-height: 1;
   margin-top: 5px;
-  text-shadow: -2px -2px 0 #f9e2f9,  
-  2px -2px 0 #f9e2f9,
-  -2px 2px 0 #f9e2f9,
-  2px 2px 0 #f9e2f9; 
+  text-shadow: -2px -2px 0 #f9e2f9,
+    2px -2px 0 #f9e2f9,
+    -2px 2px 0 #f9e2f9,
+    2px 2px 0 #f9e2f9;
 }
 
 .main-title {
   font-size: 6rem;
-  margin-bottom: 10px; /* Adjust this value to reduce the space below the main title */
+  margin-bottom: 10px;
+  /* Adjust this value to reduce the space below the main title */
 
 }
 
 .title {
   font-size: 2.5rem;
-  margin-top: 10px; /* Adjust this value to reduce the space above the subtitle */
+  margin-top: 10px;
+  /* Adjust this value to reduce the space above the subtitle */
 }
 
 /* Login button styles */
@@ -159,13 +169,17 @@ footer {
 
 #loading {
   padding: 50px;
-  justify-content: center; /* Horizontally center */
-  align-items: center;     /* Vertically center */
+  justify-content: center;
+  /* Horizontally center */
+  align-items: center;
+  /* Vertically center */
 }
 
 .loader {
-  border: 6px solid #f9e2f9; /* Light grey */
-  border-top: 6px solid #242324; /* Blue */
+  border: 6px solid #f9e2f9;
+  /* Light grey */
+  border-top: 6px solid #242324;
+  /* Blue */
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -173,13 +187,19 @@ footer {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 #remove-duplicates {
   display: block;
-  margin: 0 auto 20px auto; /* 20px margin at the bottom */
+  margin: 0 auto 20px auto;
+  /* 20px margin at the bottom */
 }
 
 #removal-playlist-dropdown {
@@ -192,18 +212,23 @@ footer {
   cursor: pointer;
   outline: none;
   width: 100%;
-  max-width: 300px; /* Adjust as needed */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow for depth */
+  max-width: 300px;
+  /* Adjust as needed */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Optional: Adds a subtle shadow for depth */
   transition: background-color 0.3s ease;
-  margin: auto; /* This helps in centering if the parent uses flexbox */
+  margin: auto;
+  /* This helps in centering if the parent uses flexbox */
 }
 
 #removal-playlist-dropdown:hover {
-  background-color: #e0cde0; /* A slightly lighter shade for hover */
+  background-color: #e0cde0;
+  /* A slightly lighter shade for hover */
 }
 
 #removal-playlist-dropdown:focus {
-  border-color: #9b75da; /* A border color when the dropdown is focused */
+  border-color: #9b75da;
+  /* A border color when the dropdown is focused */
 }
 
 #removal-playlist-dropdown option {
@@ -214,10 +239,14 @@ footer {
 
 #dropdown-title {
   display: block;
-  font-size: 0.8rem; /* Adjust to make it small */
-  color: #242324; /* Color from your palette */
-  margin-top: 8px; /* Space between the dropdown and the label */
-  text-align: center; /* Center the text */
+  font-size: 0.8rem;
+  /* Adjust to make it small */
+  color: #242324;
+  /* Color from your palette */
+  margin-top: 8px;
+  /* Space between the dropdown and the label */
+  text-align: center;
+  /* Center the text */
 }
 
 
@@ -226,70 +255,89 @@ footer {
 .duplicate-track {
   display: flex;
   color: #f9e2f9;
-  align-items: center; /* Vertically center the child elements */
-  padding: 10px 0; /* Add some vertical padding for spacing */
+  align-items: center;
+  /* Vertically center the child elements */
+  padding: 10px 0;
+  /* Add some vertical padding for spacing */
 }
 
-.duplicate-track > *:not(:last-child) {
-  margin-right: 10px; /* Add spacing to the right of every child except the last one */
+.duplicate-track>*:not(:last-child) {
+  margin-right: 10px;
+  /* Add spacing to the right of every child except the last one */
 }
 
 .checkbox-container,
 .image-container,
 .text-container {
   display: flex;
-  align-items: center; /* Vertically center the content */
-  justify-content: center; /* Horizontally center the content */
+  align-items: center;
+  /* Vertically center the content */
+  justify-content: center;
+  /* Horizontally center the content */
 }
 
 .image-container img {
-  max-width: 60px; /* Adjust the image size if necessary */
+  max-width: 60px;
+  /* Adjust the image size if necessary */
   height: auto;
 }
 
 #start-over-button {
   background-color: #f9e2f9;
-  color: #242324; 
-  padding: 8px 16px; /* Smaller padding than the Show Duplicates button */
-  font-size: 1.2rem; /* Adjust font size as needed */
+  color: #242324;
+  padding: 8px 16px;
+  /* Smaller padding than the Show Duplicates button */
+  font-size: 1.2rem;
+  /* Adjust font size as needed */
   font-weight: bold;
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s ease;
   cursor: pointer;
-  display: none; /* Initially hidden */
-  margin: 20px auto; /* Center the button and add margin at the top */
-  max-width: 200px; /* Adjust width as needed */
+  display: none;
+  /* Initially hidden */
+  margin: 20px auto;
+  /* Center the button and add margin at the top */
+  max-width: 200px;
+  /* Adjust width as needed */
 }
 
 #start-over-button:hover {
-  background-color: #ae6a35; /* Lighter shade of green on hover */
+  background-color: #ae6a35;
+  /* Lighter shade of green on hover */
 }
 
 #select-all-duplicates {
   margin: 2px;
   color: #f9e2f9;
-  margin-bottom: 10px;  /* Adjust as needed */
+  margin-bottom: 10px;
+  /* Adjust as needed */
 }
 
 #load-more {
-  background-color: #f9e2f9; 
-  color: #242324; 
-  padding: 8px 16px; /* Smaller padding than the Show Duplicates button */
-  font-size: 1.2rem; /* Adjust font size as needed */
+  background-color: #f9e2f9;
+  color: #242324;
+  padding: 8px 16px;
+  /* Smaller padding than the Show Duplicates button */
+  font-size: 1.2rem;
+  /* Adjust font size as needed */
   font-weight: bold;
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s ease;
   cursor: pointer;
-  display: none; /* Initially hidden */
-  margin: 20px auto; /* Center the button and add margin at the top */
-  max-width: 200px; /* Adjust width as needed */
+  display: none;
+  /* Initially hidden */
+  margin: 20px auto;
+  /* Center the button and add margin at the top */
+  max-width: 200px;
+  /* Adjust width as needed */
 }
 
 #load-more:hover {
-  background-color: #bb298a; /* Lighter shade of green on hover */
-  color: #f9e2f9; 
+  background-color: #bb298a;
+  /* Lighter shade of green on hover */
+  color: #f9e2f9;
 }
 
 #search-container {
@@ -299,15 +347,21 @@ footer {
 }
 
 #search-container input[type="text"] {
-  border-radius: 8px; /* This gives the input field rounded corners */
-  background-color: #f9e2f9; /* This sets the background color of the input field */
-  border: 1px solid #ccc; /* This gives a border to the input field */
-  padding: 8px 12px; /* This gives some padding inside the input field */
-  font-size: 16px; /* This sets the font size inside the input field */
-  outline: none; /* This removes the browser's default outline on focus */
+  border-radius: 8px;
+  /* This gives the input field rounded corners */
+  background-color: #f9e2f9;
+  /* This sets the background color of the input field */
+  border: 1px solid #ccc;
+  /* This gives a border to the input field */
+  padding: 8px 12px;
+  /* This gives some padding inside the input field */
+  font-size: 16px;
+  /* This sets the font size inside the input field */
+  outline: none;
+  /* This removes the browser's default outline on focus */
 }
 
 #search-container input[type="text"]:focus {
-  border-color: #9b75da; /* This changes the border color when the input field is focused */
+  border-color: #9b75da;
+  /* This changes the border color when the input field is focused */
 }
-
