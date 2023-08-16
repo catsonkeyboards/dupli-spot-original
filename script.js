@@ -6,6 +6,12 @@ let selectedDuplicates = [];
 let startOverButton;
 let allPlaylists = [];
 let allPlaylistsFetched = false;
+let retries = 0;
+let currentAudio = {
+  audio: null,
+  button: null
+};
+const maxRetries = 5;
 const limit = 50;
 const loadingGraphic = document.getElementById('loading-graphic');
 
@@ -13,7 +19,9 @@ const loadingGraphic = document.getElementById('loading-graphic');
 
 // Utility function: Check if a playlist is selected
 function isPlaylistSelected(playlistId) {
-  return selectedPlaylists.includes(playlistId);
+  const isSelected = selectedPlaylists.includes(playlistId); // Added this line
+  console.log(`Playlist ${playlistId} is selected: ${isSelected}`);
+  return isSelected;
 }
 
 // Utility function: Check if a duplicate track is selected
@@ -40,7 +48,7 @@ function toggleButtonState(buttonId, enable) {
 // Function to update the "Show Duplicates" button's state
 function updateDuplicatesButtonState() {
   const showDuplicatesButton = document.getElementById('show-duplicates');
-  const enableButton = selectedPlaylists.length >= 1 && selectedPlaylists.length <= 2;
+  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 2;
   toggleButtonState('show-duplicates', enableButton);
 }
 
@@ -71,6 +79,19 @@ function fetchPlaylists(offset = 0) {
             throw new Error('Network response was not ok');
           }
           return response.json(); // Parse the JSON from the response
+        })
+        .catch(error => {
+          if (error.status === 429 && retries < maxRetries) {
+            retries++;
+            const delay = Math.min(Math.pow(2, retries) * 1000, 30000); // Exponential backoff with a max delay of 30 seconds
+            setTimeout(() => {
+              fetchPlaylists(offset);
+            }, delay);
+          } else {
+            console.error("Failed to fetch data from Spotify API after multiple retries.");
+            loadingGraphic.style.display = 'none';
+            reject(error);
+          }
         })
         .then(data => {
           console.log(data);
@@ -183,8 +204,6 @@ function displayPlaylists(playlists) {
   });
 }
 
-
-// Function to filter playlists in the Search Bar
 // Function to filter playlists in the Search Bar
 function filterPlaylists() {
   const searchTerm = document.getElementById('playlist-search').value.toLowerCase();
@@ -263,11 +282,38 @@ function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
   })
     .then(response => response.json())
     .then(data => {
-      const tracks = data.items.map(item => ({
-        ...item.track, // Include all the track properties
-        playlistName: playlistName // Add the playlist name
-      }));
+      const trackPromises = data.items.map(item => {
+        return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { // Fetch artist details instead of album
+          headers: {
+            'Authorization': 'Bearer ' + accessToken
+          }
+        })
+          .then(response => {
+            if (!response.ok) {
+              console.warn(`Artist not found for track ${item.track.name}`);
+              return null; // Return null if artist is not found
+            }
+            return response.json();
+          })
+          .then(artistData => {
+            if (!artistData) {
+              return {
+                ...item.track,
+                playlistName: playlistName,
+                genres: [] // Empty genres array if artist is not found
+              };
+            }
+            return {
+              ...item.track,
+              playlistName: playlistName,
+              genres: artistData.genres.length ? artistData.genres : [] // Use the genres from artist details
+            };
+          });
+      });
 
+      return Promise.all(trackPromises).then(tracks => ({ tracks, data }));
+    })
+    .then(({ tracks, data }) => {
       if (data.next) {
         // If there are more tracks, fetch the next page
         return fetchAllTracks(playlistId, playlistName, offset + limit, limit)
@@ -305,10 +351,11 @@ function removeDuplicatesFromPlaylist(playlistId, trackIds) {
       }
     });
 }
+
 // Fetch tracks from the two selected playlists and compare them to find duplicates
 function fetchAndCompareTracks(playlist1Id, playlist2Id) {
   return Promise.all([fetchAllTracks(playlist1Id), fetchAllTracks(playlist2Id)])
-    .then(([tracks1, tracks2]) => {
+    .then(([tracks1 = [], tracks2 = []]) => {
       const track1Ids = new Set(tracks1.map(track => track.id));
       return tracks2.filter(track => track1Ids.has(track.id));
     });
@@ -327,6 +374,7 @@ function displayDuplicates(duplicates) {
 
   // Check if there are any duplicates
   if (duplicates.length > 0) {
+    console.log("Duplicate Tracks:", duplicates); // This line logs the duplicate tracks
     html += '<input type="checkbox" id="select-all-duplicates"> Select All<br>';
     // Hide the success message in case it was previously shown
     successMessage.style.display = 'none';
@@ -359,15 +407,18 @@ function displayDuplicates(duplicates) {
           <input type="checkbox" id="${track.id}" value="${track.id}" name="duplicate">
         </div>
         <div class="image-container">
-          <img src="${track.album.images[2].url}" alt="${track.name} cover">
-          ${playPauseButton} <!-- Insert the play/pause button only if there's a valid preview URL -->
+        <img src="${track.album.images[2].url}" alt="${track.name} cover">
+        <div class="play-pause" data-preview="${track.preview_url}">
+          <i class="play-icon">&#9658;</i>
+          <i class="pause-icon">&#10074;&#10074;</i>
         </div>
-        <div class="text-container">
-          <strong>${track.name}</strong> by ${track.artists[0].name}
-        </div>
+      </div>
+      <div class="text-container">
+      <strong>${track.name}</strong> by ${track.artists[0].name}
+      <br>Genres: ${track.genres.join(', ')}
+    </div>
       </div>`;
   });
-
 
   // Set the HTML string to the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
@@ -390,22 +441,18 @@ function displayDuplicates(duplicates) {
     });
   });
 
-  // Reference to the currently playing audio object
-  let currentAudio = {
-    audio: null,
-    button: null
-  };
+  
 
   // Add event listener for play/pause buttons
   document.querySelectorAll('.play-pause').forEach(button => {
     button.addEventListener('click', (event) => {
-      const previewUrl = event.target.getAttribute('data-preview');
+      const previewUrl = event.currentTarget.getAttribute('data-preview');
 
       // If there's a currently playing audio, stop it and update its button text
       if (currentAudio.audio) {
         currentAudio.audio.pause();
-        currentAudio.button.textContent = 'Play';
-        if (currentAudio.button === event.target) {
+        currentAudio.button.classList.remove('playing');
+        if (currentAudio.button === event.currentTarget) {
           // If the clicked button is the same as the currently playing button, just stop the audio and exit
           currentAudio.audio = null;
           currentAudio.button = null;
@@ -415,307 +462,322 @@ function displayDuplicates(duplicates) {
 
       if (previewUrl) {
         currentAudio.audio = new Audio(previewUrl);
-        currentAudio.button = event.target;
+        currentAudio.button = event.currentTarget;
         currentAudio.audio.play();
-        event.target.textContent = 'Pause';
+        event.currentTarget.classList.add('playing');
 
         currentAudio.audio.onended = () => {
-          event.target.textContent = 'Play';
+          event.currentTarget.classList.remove('playing');
           currentAudio.audio = null;
           currentAudio.button = null;
         };
       }
     });
   });
+
 }
 
-  // Define the handleShowDuplicatesButtonClick function separately
-  function handleShowDuplicatesButtonClick() {
+// Define the handleShowDuplicatesButtonClick function separately
+function handleShowDuplicatesButtonClick() {
 
-    // Hide the instruction text
-    document.getElementById('instruction-text').style.display = 'none';
+  // Hide the instruction text
+  document.getElementById('instruction-text').style.display = 'none';
 
-    // Hide the playlists section
-    document.getElementById('playlists').style.display = 'none';
+  // Hide the playlists section
+  document.getElementById('playlists').style.display = 'none';
 
-    // Remove the event listener to prevent unintended triggering of the button click
-    this.removeEventListener('click', handleShowDuplicatesButtonClick);
+  // Remove the event listener to prevent unintended triggering of the button click
+  this.removeEventListener('click', handleShowDuplicatesButtonClick);
 
-    const playlist1Id = selectedPlaylists[0];
-    const playlist2Id = selectedPlaylists[1];
+  const playlist1Id = selectedPlaylists[0];
+  const playlist2Id = selectedPlaylists[1];
 
-    const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
-    const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
+  const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
+  const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
 
-    // Create an HTML string for the selected playlists
-    const selectedPlaylistsHTML = `
+  // Create an HTML string for the selected playlists
+  const selectedPlaylistsHTML = `
   <div class="selected-playlists">
     <strong>Compared Playlists:</strong><br>${playlist1Name}<br>${playlist2Name}
   </div>
   `;
 
-    // Get the duplicates section
-    const duplicatesSection = document.getElementById('duplicates');
+  // Get the duplicates section
+  const duplicatesSection = document.getElementById('duplicates');
 
-    // Prepend the selected playlists HTML to the duplicates section
-    duplicatesSection.innerHTML = selectedPlaylistsHTML;
+  // Prepend the selected playlists HTML to the duplicates section
+  duplicatesSection.innerHTML = selectedPlaylistsHTML;
 
-    // Hide the "Show Duplicates" button and display the loading graphic
-    document.getElementById('show-duplicates').style.display = 'none';
-    document.getElementById('loading').style.display = 'block';
+  // Hide the "Show Duplicates" button and display the loading graphic
+  document.getElementById('show-duplicates').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
 
-    // Hide the search bar
-    document.getElementById('search-container').style.display = 'none';
+  // Hide the search bar
+  document.getElementById('search-container').style.display = 'none';
 
-    fetchAndCompareTracks(playlist1Id, playlist2Id)
-      .then(duplicates => {
-        displayDuplicates(duplicates);
-        updateUIAfterComparison();
-      });
+  fetchAndCompareTracks(playlist1Id, playlist2Id)
+    .then(duplicates => {
+      displayDuplicates(duplicates);
+      updateUIAfterComparison();
+    });
 
 
-    // Hide the "Load More" button
-    document.getElementById('load-more').style.display = 'none';
-  }
+  // Hide the "Load More" button
+  document.getElementById('load-more').style.display = 'none';
+}
 
-  // Handle UI updates after the comparison
-  function updateUIAfterComparison() {
+// Handle UI updates after the comparison
+function updateUIAfterComparison() {
 
-    // Hide the playlists 
-    const playlistsSection = document.getElementById('playlists');
-    playlistsSection.style.display = 'none';
+  // Hide the playlists 
+  const playlistsSection = document.getElementById('playlists');
+  playlistsSection.style.display = 'none';
 
-    // Hide the "Load More" button
-    document.getElementById('load-more').style.display = 'none';
+  // Hide the "Load More" button
+  document.getElementById('load-more').style.display = 'none';
 
-    // Hide the Loading graphic
-    document.getElementById('loading').style.display = 'none';
+  // Hide the Loading graphic
+  document.getElementById('loading').style.display = 'none';
 
-    // Show the "Remove Duplicates" button
-    document.getElementById('remove-duplicates').style.display = 'block';
+  // Show the "Remove Duplicates" button
+  document.getElementById('remove-duplicates').style.display = 'block';
 
-    // Show the dropdown
-    const playlist1Id = selectedPlaylists[0];
-    const playlist2Id = selectedPlaylists[1];
-    const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
-    const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
+  // Show the dropdown
+  const playlist1Id = selectedPlaylists[0];
+  const playlist2Id = selectedPlaylists[1];
+  const playlist1Name = document.querySelector(`label[for="${playlist1Id}"]`).textContent;
+  const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
 
-    const dropdown = document.getElementById('removal-playlist-dropdown');
-    dropdown.innerHTML = `
+  const dropdown = document.getElementById('removal-playlist-dropdown');
+  dropdown.innerHTML = `
     <option value="${playlist1Id}">${playlist1Name}</option>
     <option value="${playlist2Id}">${playlist2Name}</option>
 `;
-    dropdown.style.display = 'block';
+  dropdown.style.display = 'block';
 
-    // document.getElementById('removal-playlist-dropdown').style.display = 'block';
-    document.getElementById('dropdown-title').style.display = 'block';
+  // document.getElementById('removal-playlist-dropdown').style.display = 'block';
+  document.getElementById('dropdown-title').style.display = 'block';
 
-    // Show the duplicates section
-    const duplicatesSection = document.getElementById('duplicates');
-    duplicatesSection.style.display = 'block';
+  // Show the duplicates section
+  const duplicatesSection = document.getElementById('duplicates');
+  duplicatesSection.style.display = 'block';
 
-    // Show the "Start Over" button after displaying the duplicates
-    document.getElementById('start-over-button').style.display = 'block';
-  }
+  // Show the "Start Over" button after displaying the duplicates
+  document.getElementById('start-over-button').style.display = 'block';
+}
 
-  // Function for updating playlist numvers after track removal
-  function fetchPlaylistDetails(playlistId) {
-    return fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-      headers: {
-        'Authorization': 'Bearer ' + accessToken
-      }
-    })
-      .then(response => response.json())
-      .catch(error => console.error('Error fetching playlist details:', error));
-  }
+// Function for updating playlist numvers after track removal
+function fetchPlaylistDetails(playlistId) {
+  return fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+    headers: {
+      'Authorization': 'Bearer ' + accessToken
+    }
+  })
+    .then(response => response.json())
+    .catch(error => console.error('Error fetching playlist details:', error));
+}
 
-  // Event listener for the login button click
-  document.getElementById("login-button").addEventListener("click", function () {
-    // Spotify authentication process
-    // Replace YOUR_CLIENT_ID with your actual Spotify API client ID
+// Event listener for the login button click
+document.getElementById("login-button").addEventListener("click", function () {
+  // Spotify authentication process
+  // Replace YOUR_CLIENT_ID with your actual Spotify API client ID
 
-    // Define the Spotify authorization URL
-    const scope = 'playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private';
-    const authUrl = `https://accounts.spotify.com/authorize?client_id=9fdba1a5111447ebad9b2213859f814a&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=https://dupli-spot-original.vercel.app/redirect.html`;
+  // Define the Spotify authorization URL
+  const scope = 'user-library-modify playlist-modify-public playlist-modify-private user-library-read user-top-read playlist-read-private playlist-read-collaborative';
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=9fdba1a5111447ebad9b2213859f814a&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=https://dupli-spot-original.vercel.app/redirect.html`;
 
-    // Calculate the window size based on the content
-    const windowWidth = Math.min(window.innerWidth - 100, 500); // Adjust the subtracted value as needed
-    const windowHeight = Math.min(window.innerHeight - 100, 800); // Adjust the subtracted value as needed
+  // Calculate the window size based on the content
+  const windowWidth = Math.min(window.innerWidth - 100, 500); // Adjust the subtracted value as needed
+  const windowHeight = Math.min(window.innerHeight - 100, 800); // Adjust the subtracted value as needed
 
-    // Open the authentication window with the calculated size
-    const authWindow = window.open(authUrl, "_blank", `width=${windowWidth},height=${windowHeight}`);
+  // Open the authentication window with the calculated size
+  const authWindow = window.open(authUrl, "_blank", `width=${windowWidth},height=${windowHeight}`);
 
-    // Handle the callback from the authentication window
-    const handleCallback = (event) => {
-      // Save the access token to the accessToken variable
-      accessToken = event.data.access_token;
+  // Handle the callback from the authentication window
+  const handleCallback = (event) => {
+    // Save the access token to the accessToken variable
+    accessToken = event.data.access_token;
 
-      // Get references to the 'Playlists' section, the login button, the README section
-      const playlistsSection = document.getElementById('playlists');
-      const loginButton = document.getElementById('login-button');
-      const readmeSection = document.querySelector('.readme');
-      const showDuplicatesButton = document.getElementById('show-duplicates');
+    // Get references to the 'Playlists' section, the login button, the README section
+    const playlistsSection = document.getElementById('playlists');
+    const loginButton = document.getElementById('login-button');
+    const readmeSection = document.querySelector('.readme');
+    const showDuplicatesButton = document.getElementById('show-duplicates');
 
-      // Perform further actions with the access token
-      // Add your code here to interact with the Spotify API using the access token
+    // Perform further actions with the access token
+    // Add your code here to interact with the Spotify API using the access token
 
-      // Remove the event listener
-      window.removeEventListener("message", handleCallback);
+    // Remove the event listener
+    window.removeEventListener("message", handleCallback);
 
-      // Call fetchPlaylists after successful authentication
-      fetchPlaylists(offset);
-
-      // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
-      playlistsSection.style.display = 'block';
-      loginButton.style.display = 'none';
-      readmeSection.style.display = 'none';
-      document.getElementById('show-duplicates').style.display = 'inline-block';
-      document.getElementById('instruction-text').style.display = 'block';
-
-      // Show the search bar
-      document.getElementById('search-container').style.display = 'block';
-
-      // At the beginning or after the page reloads, hide the "Start Over" button
-      document.getElementById('start-over-button').style.display = 'none';
-    };
-
-    // Listen for the callback message from the authentication window
-    window.addEventListener("message", handleCallback);
-  });
-
-  // Event listener for the "Load More" button click
-  document.getElementById("load-more").addEventListener("click", function () {
-    // Increase the offset by the limit and fetch the next batch of playlists
-    offset += limit;
+    // Call fetchPlaylists after successful authentication
     fetchPlaylists(offset);
+
+    // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
+    playlistsSection.style.display = 'block';
+    loginButton.style.display = 'none';
+    readmeSection.style.display = 'none';
+    document.getElementById('show-duplicates').style.display = 'inline-block';
+    document.getElementById('instruction-text').style.display = 'block';
+
+    // Show the search bar
+    document.getElementById('search-container').style.display = 'block';
+
+    // At the beginning or after the page reloads, hide the "Start Over" button
+    document.getElementById('start-over-button').style.display = 'none';
+  };
+
+  // Listen for the callback message from the authentication window
+  window.addEventListener("message", handleCallback);
+});
+
+// Event listener for the "Load More" button click
+document.getElementById("load-more").addEventListener("click", function () {
+  // Increase the offset by the limit and fetch the next batch of playlists
+  offset += limit;
+  fetchPlaylists(offset);
+});
+
+// Event listeners after DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  // Update the button state initially
+  updateRemoveDuplicatesButtonState();
+
+  // Assign the element to the startOverButton variable
+  startOverButton = document.getElementById('start-over-button');
+  if (startOverButton) {
+    startOverButton.addEventListener('click', function () {
+      window.location.reload();
+    });
+  }
+
+  // Add the event listener for the "Show Duplicates" button click
+  document.getElementById('show-duplicates').addEventListener('click', function () {
+    // Hide the instruction text
+    document.getElementById('instruction-text').style.display = 'none';
+
+    // Call the function to handle showing duplicates
+    handleShowDuplicatesButtonClick();
   });
 
-  // Event listeners after DOMContentLoaded
-  document.addEventListener('DOMContentLoaded', () => {
-    // Update the button state initially
-    updateRemoveDuplicatesButtonState();
+  // Hide the dropdown and title
+  document.getElementById('removal-playlist-dropdown').style.display = 'none';
+  document.getElementById('dropdown-title').style.display = 'none';
 
-    // Assign the element to the startOverButton variable
-    startOverButton = document.getElementById('start-over-button');
-    if (startOverButton) {
-      startOverButton.addEventListener('click', function () {
-        window.location.reload();
-      });
+  // Real-time search with debounce using event delegation
+  document.body.addEventListener('input', debounce(function (event) {
+    if (event.target.id === 'playlist-search') {
+      // Show the loading graphic when using the search functionality
+      const loadingGraphic = document.getElementById('loading-graphic');
+      loadingGraphic.style.display = 'block';
+
+      filterPlaylists();
+    }
+  }, 300)); // 300ms delay
+
+  // Event listener for changes within the #duplicates container
+  document.getElementById('duplicates').addEventListener('change', function (event) {
+    const allDuplicateCheckboxes = document.querySelectorAll('#duplicates input[name="duplicate"]');
+
+    // Check if the changed element is the "Select All" checkbox
+    if (event.target.id === 'select-all-duplicates') {
+      if (event.target.checked) {
+        allDuplicateCheckboxes.forEach(checkbox => {
+          checkbox.checked = true;
+          if (!selectedDuplicates.includes(checkbox.value)) {
+            selectedDuplicates.push(checkbox.value);
+          }
+        });
+      } else {
+        allDuplicateCheckboxes.forEach(checkbox => {
+          checkbox.checked = false;
+          const index = selectedDuplicates.indexOf(checkbox.value);
+          if (index > -1) {
+            selectedDuplicates.splice(index, 1);
+          }
+        });
+      }
+    }
+    // Logic for individual checkboxes (if needed)
+    else if (event.target.name === 'duplicate') {
+      // You can add logic here to handle changes to individual checkboxes
+      // For example, updating the selectedDuplicates array based on the checkbox's state
     }
 
-    // Add the event listener for the "Show Duplicates" button click
-    document.getElementById('show-duplicates').addEventListener('click', function () {
-      // Hide the instruction text
-      document.getElementById('instruction-text').style.display = 'none';
+    updateRemoveDuplicatesButtonState();
+  });
 
-      // Call the function to handle showing duplicates
-      handleShowDuplicatesButtonClick();
-    });
-
-    // Hide the dropdown and title
-    document.getElementById('removal-playlist-dropdown').style.display = 'none';
-    document.getElementById('dropdown-title').style.display = 'none';
-
-    // Real-time search with debounce using event delegation
-    document.body.addEventListener('input', debounce(function (event) {
-      if (event.target.id === 'playlist-search') {
-        // Show the loading graphic when using the search functionality
-        const loadingGraphic = document.getElementById('loading-graphic');
-        loadingGraphic.style.display = 'block';
-
-        filterPlaylists();
+  function pauseCurrentAudio() {
+    if (currentAudio && currentAudio.audio) {
+      currentAudio.audio.pause();
+      currentAudio.audio = null;
+      if (currentAudio.button) {
+        currentAudio.button.classList.remove('playing');
       }
-    }, 300)); // 300ms delay
+      currentAudio.button = null;
+    }
+  }
+  
+  // Attach an event listener to a parent element, e.g., the body
+  document.addEventListener('click', function (event) {
+    // Check if the clicked element or its parent is the "Remove Duplicates" button
+    let targetElement = event.target;
+    while (targetElement != null) {
+      if (targetElement.id === 'remove-duplicates') {
 
-    // Event listener for changes within the #duplicates container
-    document.getElementById('duplicates').addEventListener('change', function (event) {
-      const allDuplicateCheckboxes = document.querySelectorAll('#duplicates input[name="duplicate"]');
+        // Fetch the selected playlist ID
+        let dropdown = document.getElementById('removal-playlist-dropdown');
+        let selectedPlaylistId = dropdown.value;
 
-      // Check if the changed element is the "Select All" checkbox
-      if (event.target.id === 'select-all-duplicates') {
-        if (event.target.checked) {
-          allDuplicateCheckboxes.forEach(checkbox => {
-            checkbox.checked = true;
-            if (!selectedDuplicates.includes(checkbox.value)) {
-              selectedDuplicates.push(checkbox.value);
-            }
-          });
-        } else {
-          allDuplicateCheckboxes.forEach(checkbox => {
-            checkbox.checked = false;
-            const index = selectedDuplicates.indexOf(checkbox.value);
-            if (index > -1) {
-              selectedDuplicates.splice(index, 1);
-            }
-          });
-        }
-      }
-      // Logic for individual checkboxes (if needed)
-      else if (event.target.name === 'duplicate') {
-        // You can add logic here to handle changes to individual checkboxes
-        // For example, updating the selectedDuplicates array based on the checkbox's state
-      }
+        // Execute the logic for removing duplicates
+        removeDuplicatesFromPlaylist(selectedPlaylistId, selectedDuplicates)
+          .then(() => {
 
-      updateRemoveDuplicatesButtonState();
-    });
+            // Pause current audio
+            pauseCurrentAudio();
 
+            // Hide any previous error messages
+            document.getElementById('error-message').style.display = 'none';
+            
+            // Clear the selectedDuplicates array
+            selectedDuplicates = [];
 
-    // Attach an event listener to a parent element, e.g., the body
-    document.addEventListener('click', function (event) {
-      // Check if the clicked element or its parent is the "Remove Duplicates" button
-      let targetElement = event.target;
-      while (targetElement != null) {
-        if (targetElement.id === 'remove-duplicates') {
+            // Clear the duplicates section
+            document.getElementById('duplicates').innerHTML = '';
 
-          // Fetch the selected playlist ID
-          let dropdown = document.getElementById('removal-playlist-dropdown');
-          let selectedPlaylistId = dropdown.value;
+            // Fetch and compare tracks again
+            const playlist1Id = selectedPlaylists[0];
+            const playlist2Id = selectedPlaylists[1];
+            return fetchAndCompareTracks(playlist1Id, playlist2Id);
+          })
+          .then(duplicates => {
+            // Display the updated list of duplicates
+            displayDuplicates(duplicates);
 
-          // Execute the logic for removing duplicates
-          removeDuplicatesFromPlaylist(selectedPlaylistId, selectedDuplicates)
-            .then(() => {
-              // Hide any previous error messages
-              document.getElementById('error-message').style.display = 'none';
-
-              // Clear the selectedDuplicates array
-              selectedDuplicates = [];
-
-              // Clear the duplicates section
-              document.getElementById('duplicates').innerHTML = '';
-
-              // Fetch and compare tracks again
-              const playlist1Id = selectedPlaylists[0];
-              const playlist2Id = selectedPlaylists[1];
-              return fetchAndCompareTracks(playlist1Id, playlist2Id);
-            })
-            .then(duplicates => {
-              // Display the updated list of duplicates
-              displayDuplicates(duplicates);
-
-              // Fetch updated details for both playlists
-              const playlist1Id = selectedPlaylists[0];
-              const playlist2Id = selectedPlaylists[1];
-              return Promise.all([fetchPlaylistDetails(playlist1Id), fetchPlaylistDetails(playlist2Id)]);
-            })
-            .then(([playlist1Details, playlist2Details]) => {
-              // Update the dropdown options with the new playlist names and track counts
-              const dropdown = document.getElementById('removal-playlist-dropdown');
-              dropdown.innerHTML = `
+            // Fetch updated details for both playlists
+            const playlist1Id = selectedPlaylists[0];
+            const playlist2Id = selectedPlaylists[1];
+            return Promise.all([fetchPlaylistDetails(playlist1Id), fetchPlaylistDetails(playlist2Id)]);
+          })
+          .then(([playlist1Details, playlist2Details]) => {
+            // Update the dropdown options with the new playlist names and track counts
+            const dropdown = document.getElementById('removal-playlist-dropdown');
+            dropdown.innerHTML = `
                       <option value="${playlist1Details.id}">${playlist1Details.name} - ${playlist1Details.tracks.total} tracks</option>
                       <option value="${playlist2Details.id}">${playlist2Details.name} - ${playlist2Details.tracks.total} tracks</option>
                   `;
-            })
-            .catch(error => {
-              console.error('Error:', error.message);
+          })
+          .catch(error => {
+            console.error('Error:', error.message);
 
-              // Display the error message
-              const errorMessageDiv = document.getElementById('error-message');
-              errorMessageDiv.textContent = "Failed to remove duplicates. Ensure you have the necessary permissions for this playlist.";
-              errorMessageDiv.style.display = 'block';
-            });
-          break; // Exit the loop
-        }
-        targetElement = targetElement.parentElement;
+            // Display the error message
+            const errorMessageDiv = document.getElementById('error-message');
+            errorMessageDiv.textContent = "Failed to remove duplicates. Ensure you have the necessary permissions for this playlist.";
+            errorMessageDiv.style.display = 'block';
+          });
+        break; // Exit the loop
       }
-    });
+      targetElement = targetElement.parentElement;
+    }
   });
+});

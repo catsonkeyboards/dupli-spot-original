@@ -271,19 +271,69 @@ footer {
 }
 
 .checkbox-container,
-.image-container,
 .text-container {
-  display: flex;
   align-items: center;
   /* Vertically center the content */
   justify-content: center;
   /* Horizontally center the content */
 }
 
+.image-container {
+  position: relative;
+  width: 60px; /* Adjust as needed */
+  height: 60px; /* Adjust as needed */
+}
+
 .image-container img {
   max-width: 60px;
   /* Adjust the image size if necessary */
   height: auto;
+}
+
+.play-pause {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.play-icon, .pause-icon {
+  color: white;
+  font-size: 24px; /* Adjust as needed */
+  display: none;
+  text-shadow: 
+  -1px -1px 0 #242324,
+  1px -1px 0 #242324,
+  -1px 1px 0 #242324,
+  1px 1px 0 #242324;
+}
+
+.play-pause .play-icon {
+  display: block;
+  text-shadow: 
+  -1px -1px 0 #242324,
+  1px -1px 0 #242324,
+  -1px 1px 0 #242324,
+  1px 1px 0 #242324;
+}
+
+.play-pause.playing .play-icon {
+  display: none;
+  text-shadow: 
+  -1px -1px 0 #242324,
+  1px -1px 0 #242324,
+  -1px 1px 0 #242324,
+  1px 1px 0 #242324;
+}
+
+.play-pause.playing .pause-icon {
+  display: block;
+  text-shadow: 
+  -1px -1px 0 #242324,
+  1px -1px 0 #242324,
+  -1px 1px 0 #242324,
+  1px 1px 0 #242324;
 }
 
 #start-over-button {
@@ -307,7 +357,8 @@ footer {
 }
 
 #start-over-button:hover {
-  background-color: #ae6a35;
+  color: #f9e2f9;
+  background-color: #bb298a;
   /* Lighter shade of green on hover */
 }
 
