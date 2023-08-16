@@ -346,19 +346,28 @@ function displayDuplicates(duplicates) {
   }
 
   duplicates.forEach(track => {
+    let playPauseButton = ''; // Initialize an empty string for the play/pause button
+
+    // Check if the track has a valid preview URL
+    if (track.preview_url) {
+      playPauseButton = `<button class="play-pause" data-preview="${track.preview_url}">Play</button>`;
+    }
+
     html += `
-    <div class="duplicate-track">
-      <div class="checkbox-container">
-        <input type="checkbox" id="${track.id}" value="${track.id}" name="duplicate">
-      </div>
-      <div class="image-container">
-        <img src="${track.album.images[2].url}" alt="${track.name} cover">
-      </div>
-      <div class="text-container">
-        <strong>${track.name}</strong> by ${track.artists[0].name}
-      </div>
-    </div>`;
+      <div class="duplicate-track">
+        <div class="checkbox-container">
+          <input type="checkbox" id="${track.id}" value="${track.id}" name="duplicate">
+        </div>
+        <div class="image-container">
+          <img src="${track.album.images[2].url}" alt="${track.name} cover">
+          ${playPauseButton} <!-- Insert the play/pause button only if there's a valid preview URL -->
+        </div>
+        <div class="text-container">
+          <strong>${track.name}</strong> by ${track.artists[0].name}
+        </div>
+      </div>`;
   });
+
 
   // Set the HTML string to the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
@@ -380,7 +389,37 @@ function displayDuplicates(duplicates) {
       updateRemoveDuplicatesButtonState();
     });
   });
+
+  // Reference to the currently playing audio object
+  let currentAudio = null;
+
+  // Add event listener for play/pause buttons
+  document.querySelectorAll('.play-pause').forEach(button => {
+    button.addEventListener('click', (event) => {
+      const previewUrl = event.target.getAttribute('data-preview');
+
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+        event.target.textContent = 'Play';
+        return;
+      }
+
+      if (previewUrl) {
+        currentAudio = new Audio(previewUrl);
+        currentAudio.play();
+        event.target.textContent = 'Pause';
+
+        currentAudio.onended = () => {
+          event.target.textContent = 'Play';
+          currentAudio = null;
+        };
+      }
+    });
+  });
 }
+
+
 
 // Define the handleShowDuplicatesButtonClick function separately
 function handleShowDuplicatesButtonClick() {
@@ -488,7 +527,7 @@ document.getElementById("login-button").addEventListener("click", function () {
   // Replace YOUR_CLIENT_ID with your actual Spotify API client ID
 
   // Define the Spotify authorization URL
-  const scope = 'playlist-read-private playlist-modify-private';
+  const scope = 'playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private';
   const authUrl = `https://accounts.spotify.com/authorize?client_id=9fdba1a5111447ebad9b2213859f814a&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=https://dupli-spot-original.vercel.app/redirect.html`;
 
   // Calculate the window size based on the content
