@@ -1,11 +1,13 @@
 // Global variables
 let accessToken;
 let offset = 0;
-const limit = 50;
 let selectedPlaylists = [];
 let selectedDuplicates = [];
 let startOverButton;
 let allPlaylists = [];
+let allPlaylistsFetched = false;
+const limit = 50;
+const loadingGraphic = document.getElementById('loading-graphic');
 
 // Utility functions
 
@@ -53,72 +55,97 @@ function updateRemoveDuplicatesButtonState() {
 
 // Function to fetch playlists from Spotify API
 function fetchPlaylists(offset = 0) {
-  // Fetch the playlists from the Spotify API
-  fetch(`https://api.spotify.com/v1/me/playlists?limit=${limit}&offset=${offset}`, {
-      headers: {
-        'Authorization': 'Bearer ' + accessToken
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
+  // Return a new Promise
+  return new Promise((resolve, reject) => {
+    // Introduce a delay of 1 second (1000 milliseconds) before fetching playlists
+    setTimeout(() => {
+      // Fetch the playlists from the Spotify API
+      fetch(`https://api.spotify.com/v1/me/playlists?limit=${limit}&offset=${offset}`, {
+        headers: {
+          'Authorization': 'Bearer ' + accessToken
+        }
+      })
+        .then(response => {
+          // Check if the response is successful
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json(); // Parse the JSON from the response
+        })
+        .then(data => {
+          console.log(data);
 
-      // Add fetched playlists to the allPlaylists array
-      allPlaylists = allPlaylists.concat(data.items);
+          // Add fetched playlists to the allPlaylists array
+          allPlaylists = allPlaylists.concat(data.items);
+          console.log("All Playlists:", allPlaylists);
 
-      // Create an HTML string with the playlist data
-      let html = '';
-      data.items.forEach(playlist => {
-        html += `
+          // Create an HTML string with the playlist data
+          let html = '';
+          data.items.forEach(playlist => {
+            html += `
         <div class="playlist-item">
           <input type="checkbox" id="${playlist.id}" value="${playlist.id}" name="playlist">
           <label for="${playlist.id}"><strong>${playlist.name}</strong> - ${playlist.tracks.total} tracks</label>
         </div>`;
-      });
+          });
 
-      // Get the playlists section
-      const playlistsSection = document.getElementById('playlists');
+          // Get the playlists section
+          const playlistsSection = document.getElementById('playlists');
 
-      // Append the HTML string to the playlists section
-      playlistsSection.innerHTML += html;
+          // Append the HTML string to the playlists section
+          playlistsSection.innerHTML += html;
 
-      // Hide the playlists section
-      playlistsSection.style.display = 'none';
+          // Hide the playlists section
+          playlistsSection.style.display = 'none';
 
-      // Get the checkboxes and add event listeners
-      const checkboxes = document.getElementsByName('playlist');
-      checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', (event) => {
-          if (event.target.checked) {
-            selectedPlaylists.push(event.target.value);
+          // Get the checkboxes and add event listeners
+          const checkboxes = document.getElementsByName('playlist');
+          checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (event) => {
+              if (event.target.checked) {
+                selectedPlaylists.push(event.target.value);
+              } else {
+                const index = selectedPlaylists.indexOf(event.target.value);
+                if (index > -1) {
+                  selectedPlaylists.splice(index, 1);
+                }
+              }
+
+              // Call updateDuplicatesButtonState after a checkbox's state changes
+              updateDuplicatesButtonState();
+            });
+          });
+
+          // Get the Load More button
+          const loadMoreButton = document.getElementById('load-more');
+
+          // If there are more playlists to fetch, show the Load More button. Otherwise, hide it.
+          if (data.items.length === limit) {
+            loadMoreButton.style.display = 'inline-block';
           } else {
-            const index = selectedPlaylists.indexOf(event.target.value);
-            if (index > -1) {
-              selectedPlaylists.splice(index, 1);
-            }
+            loadMoreButton.style.display = 'none';
           }
 
-          // Call updateDuplicatesButtonState after a checkbox's state changes
-          updateDuplicatesButtonState();
+          // Show the playlists section after fetching and appending the playlists
+          playlistsSection.style.display = 'block';
+
+          // Hide the loading graphic when all playlists have been loaded
+          if (data.items.length !== limit) {
+            loadingGraphic.style.display = 'none';
+          }
+
+          resolve(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          // Hide the loading graphic in case of an error
+          loadingGraphic.style.display = 'none';
+
+          // Reject the Promise in case of an error
+          reject(error);
         });
-      });
-
-      // Get the Load More button
-      const loadMoreButton = document.getElementById('load-more');
-
-      // If there are more playlists to fetch, show the Load More button. Otherwise, hide it.
-      if (data.items.length === limit) {
-        loadMoreButton.style.display = 'inline-block';
-      } else {
-        loadMoreButton.style.display = 'none';
-      }
-
-      // Show the playlists section after fetching and appending the playlists
-      playlistsSection.style.display = 'block';
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+    }, 1000);
+  });
 }
 
 // Display Playlists function to take filtered playlists as an argument and display them in the UI
@@ -158,18 +185,54 @@ function displayPlaylists(playlists) {
 
 
 // Function to filter playlists in the Search Bar
+// Function to filter playlists in the Search Bar
 function filterPlaylists() {
   const searchTerm = document.getElementById('playlist-search').value.toLowerCase();
+  console.log("Search Term:", searchTerm);
+  const loadingGraphic = document.getElementById('loading-graphic');
+
+  // Clear the playlist display at the start of the search
+  document.getElementById('playlists').innerHTML = '';
+
+  // Show the loading graphic at the start of the search
+  loadingGraphic.style.display = 'block';
+
   const filteredPlaylists = allPlaylists.filter(playlist => {
     const playlistName = playlist.name.toLowerCase();
     return playlistName.includes(searchTerm);
   });
-  displayPlaylists(filteredPlaylists);
+
+  // Log the filtered playlists to the console
+  console.log("Filtered Playlists:", filteredPlaylists);
+
+  if (filteredPlaylists.length === 0 && searchTerm !== '') {
+    // If no matching playlists are found, fetch more playlists
+    offset += limit;
+    fetchPlaylists(offset).then((data) => {
+      // Check if all playlists have been fetched
+      if (data.items.length === 0) {
+        // All playlists have been fetched and there are no matches
+        allPlaylistsFetched = true; // Update the variable
+        loadingGraphic.style.display = 'none'; // Hide the loading graphic
+      } else {
+        filterPlaylists(); // Recursive call to filter again after fetching more playlists
+      }
+    });
+  } else {
+    displayPlaylists(filteredPlaylists);
+    // Hide the loading graphic once the search is complete
+    loadingGraphic.style.display = 'none';
+  }
 
   // Check if the search bar is empty
   if (searchTerm === '') {
-    // Show the 'Load More' button
-    document.getElementById('load-more').style.display = 'inline-block';
+    // If all playlists have been fetched, hide the 'Load More' button
+    if (allPlaylistsFetched) {
+      document.getElementById('load-more').style.display = 'none';
+    } else {
+      // Otherwise, show the 'Load More' button
+      document.getElementById('load-more').style.display = 'inline-block';
+    }
   } else {
     // Hide the 'Load More' button
     document.getElementById('load-more').style.display = 'none';
@@ -194,10 +257,10 @@ document.getElementById('dropdown-title').style.display = 'none';
 // Function to fetch all tracks from a playlist
 function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`, {
-      headers: {
-        'Authorization': 'Bearer ' + accessToken
-      }
-    })
+    headers: {
+      'Authorization': 'Bearer ' + accessToken
+    }
+  })
     .then(response => response.json())
     .then(data => {
       const tracks = data.items.map(item => ({
@@ -232,10 +295,10 @@ function removeDuplicatesFromPlaylist(playlistId, trackIds) {
   };
 
   return fetch(url, {
-      method: 'DELETE',
-      headers: headers,
-      body: JSON.stringify(requestBody)
-    })
+    method: 'DELETE',
+    headers: headers,
+    body: JSON.stringify(requestBody)
+  })
     .then(response => {
       if (!response.ok) {
         throw new Error('Failed to remove duplicates from playlist.');
@@ -318,7 +381,6 @@ function displayDuplicates(duplicates) {
     });
   });
 }
-
 
 // Define the handleShowDuplicatesButtonClick function separately
 function handleShowDuplicatesButtonClick() {
@@ -412,14 +474,13 @@ function updateUIAfterComparison() {
 // Function for updating playlist numvers after track removal
 function fetchPlaylistDetails(playlistId) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-      headers: {
-        'Authorization': 'Bearer ' + accessToken
-      }
-    })
+    headers: {
+      'Authorization': 'Bearer ' + accessToken
+    }
+  })
     .then(response => response.json())
     .catch(error => console.error('Error fetching playlist details:', error));
 }
-
 
 // Event listener for the login button click
 document.getElementById("login-button").addEventListener("click", function () {
@@ -482,7 +543,7 @@ document.getElementById("load-more").addEventListener("click", function () {
   fetchPlaylists(offset);
 });
 
-
+// Event listeners after DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   // Update the button state initially
   updateRemoveDuplicatesButtonState();
@@ -511,6 +572,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Real-time search with debounce using event delegation
   document.body.addEventListener('input', debounce(function (event) {
     if (event.target.id === 'playlist-search') {
+      // Show the loading graphic when using the search functionality
+      const loadingGraphic = document.getElementById('loading-graphic');
+      loadingGraphic.style.display = 'block';
+
       filterPlaylists();
     }
   }, 300)); // 300ms delay
