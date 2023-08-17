@@ -12,6 +12,16 @@ Dupli-Spot is a web application created to manage duplicate tracks between diffe
 
 For data protection, the Spotify Login token refreshes after every use of the application since no user data is stored. Users can also manually refresh the webpage to start over.
 
+Who it's designed for: 
+
+Casual users who enjoy curating personal playlists and ensuring diversity in their music selection; 
+
+Enthusiasts aiming for diverse and unique playlists, ensuring they always have a fresh listening experience; 
+
+Playlist Professionals who are Individuals or companies managing large volumes of playlists, ensuring their content remains original and broad; 
+
+Music Industry Researchers: Professionals analysing the similarity of certain playlists primarily for research, including playlist editors, labels, and others in the music industry. 
+
 Know Issues: There could be issues with handling playlists with 1000+ tracks in each playlist, please be aware that if the Web Application freezes, you can refresh and analyse playlists with fewer amount of tracks. We are working to fix the issue.
 
 🎵 Happy playlist cleaning! 🎶
