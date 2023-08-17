@@ -595,7 +595,7 @@ document.getElementById("login-button").addEventListener("click", function () {
   // Replace YOUR_CLIENT_ID with your actual Spotify API client ID
 
   // Define the Spotify authorization URL
-  const scope = 'user-library-modify playlist-modify-public playlist-modify-private user-library-read user-top-read playlist-read-private playlist-read-collaborative';
+  const scope = 'playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative';
   const authUrl = `https://accounts.spotify.com/authorize?client_id=9fdba1a5111447ebad9b2213859f814a&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=https://dupli-spot-original.vercel.app/redirect.html`;
 
   // Calculate the window size based on the content
