@@ -10,6 +10,8 @@ Dupli-Spot is a web application created to manage duplicate tracks between diffe
 
 4. **Remove Duplicates:** You will have the option to remove the duplicate tracks from your selected playlist. You can select the playlist to remove the selected tracks from by selecting the playlist from the drop-down menu under the 'Remove Duplicates' button. If there are no duplicates or once all duplicates between the two lists have been removed the success message will show along with the 'Start Over' button to go back to the beginning.
 
-Since we do not store any of your data, your Spotify Login token refreshes after every use of the application. This ensures maximum data protection. To go back to the start, you can refresh your webpage manually.
+For data protection, the Spotify Login token refreshes after every use of the application since no user data is stored. Users can also manually refresh the webpage to start over.
+
+Know Issues: There could be issues with handling playlists with 1000+ tracks in each playlist, please be aware that if the Web Application freezes, you can refresh and analyse playlists with fewer amount of tracks. We are working to fix the issue.
 
 🎵 Happy playlist cleaning! 🎶

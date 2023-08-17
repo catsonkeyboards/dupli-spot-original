@@ -172,6 +172,7 @@ function fetchPlaylists(offset = 0) {
 // Display Playlists function to take filtered playlists as an argument and display them in the UI
 function displayPlaylists(playlists) {
   // Create an HTML string with the playlist data
+  const checkedPlaylists = selectedPlaylists.slice(); // Store the current state
   let html = '';
   playlists.forEach(playlist => {
     html += `
@@ -202,6 +203,16 @@ function displayPlaylists(playlists) {
       updateDuplicatesButtonState();
     });
   });
+
+  // Check the checkboxes based on the checkedPlaylists array
+  checkboxes.forEach(checkbox => {
+    if (checkedPlaylists.includes(checkbox.value)) {
+      checkbox.checked = true;
+    }
+  });
+
+  // Update the button's state after the playlists are displayed and checkboxes are set up
+  updateDuplicatesButtonState();
 }
 
 // Function to filter playlists in the Search Bar
@@ -209,6 +220,7 @@ function filterPlaylists() {
   const searchTerm = document.getElementById('playlist-search').value.toLowerCase();
   console.log("Search Term:", searchTerm);
   const loadingGraphic = document.getElementById('loading-graphic');
+  const checkedPlaylists = selectedPlaylists.slice(); // Store the current state
 
   // Clear the playlist display at the start of the search
   document.getElementById('playlists').innerHTML = '';
