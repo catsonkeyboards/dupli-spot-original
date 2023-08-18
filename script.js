@@ -136,7 +136,7 @@ function fetchPlaylists(offset = 0) {
               updateDuplicatesButtonState();
             });
           });
-          
+
 
           // Hide the loading graphic when playlists have dsiplayed
           loadingGraphic.style.display = 'none';
@@ -468,7 +468,7 @@ function displayDuplicates(duplicates) {
     });
   });
 
-  
+
 
   // Add event listener for play/pause buttons
   document.querySelectorAll('.play-pause').forEach(button => {
@@ -748,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
       currentAudio.button = null;
     }
   }
-  
+
   // Attach an event listener to a parent element, e.g., the body
   document.addEventListener('click', function (event) {
     // Check if the clicked element or its parent is the "Remove Duplicates" button
@@ -759,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch the selected playlist ID
         let dropdown = document.getElementById('removal-playlist-dropdown');
         let selectedPlaylistId = dropdown.value;
-        
+
         // Show the loading graphic after clicking the Remove Duplicates button to indicate the list of tracks is refreshing to then then show what tracks are left for removal.
         loadingGraphic.style.display = 'block';
 
@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Hide any previous error messages
             document.getElementById('error-message').style.display = 'none';
-            
+
             // Clear the selectedDuplicates array
             selectedDuplicates = [];
 
