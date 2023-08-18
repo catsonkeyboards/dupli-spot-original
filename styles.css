@@ -15,6 +15,18 @@ body {
   font-family: Arial, sans-serif;
   background-color: #242324;
   color: #f9e2f9;
+  display: flex;
+  /* Make body a flex container */
+  flex-direction: column;
+  /* Set the main axis to vertical */
+  min-height: 100vh;
+  /* Ensure it takes up the full viewport height */
+}
+
+/* Adding a wrapper around my main content (exlucding header and footer) */
+.main-content {
+  flex: 1;
+  /* This will make it grow to take up any available space */
 }
 
 /* Header styles */
@@ -280,8 +292,10 @@ footer {
 
 .image-container {
   position: relative;
-  width: 60px; /* Adjust as needed */
-  height: 60px; /* Adjust as needed */
+  width: 60px;
+  /* Adjust as needed */
+  height: 60px;
+  /* Adjust as needed */
 }
 
 .image-container img {
@@ -298,42 +312,44 @@ footer {
   cursor: pointer;
 }
 
-.play-icon, .pause-icon {
+.play-icon,
+.pause-icon {
   color: white;
-  font-size: 24px; /* Adjust as needed */
+  font-size: 24px;
+  /* Adjust as needed */
   display: none;
-  text-shadow: 
-  -1px -1px 0 #242324,
-  1px -1px 0 #242324,
-  -1px 1px 0 #242324,
-  1px 1px 0 #242324;
+  text-shadow:
+    -1px -1px 0 #242324,
+    1px -1px 0 #242324,
+    -1px 1px 0 #242324,
+    1px 1px 0 #242324;
 }
 
 .play-pause .play-icon {
   display: block;
-  text-shadow: 
-  -1px -1px 0 #242324,
-  1px -1px 0 #242324,
-  -1px 1px 0 #242324,
-  1px 1px 0 #242324;
+  text-shadow:
+    -1px -1px 0 #242324,
+    1px -1px 0 #242324,
+    -1px 1px 0 #242324,
+    1px 1px 0 #242324;
 }
 
 .play-pause.playing .play-icon {
   display: none;
-  text-shadow: 
-  -1px -1px 0 #242324,
-  1px -1px 0 #242324,
-  -1px 1px 0 #242324,
-  1px 1px 0 #242324;
+  text-shadow:
+    -1px -1px 0 #242324,
+    1px -1px 0 #242324,
+    -1px 1px 0 #242324,
+    1px 1px 0 #242324;
 }
 
 .play-pause.playing .pause-icon {
   display: block;
-  text-shadow: 
-  -1px -1px 0 #242324,
-  1px -1px 0 #242324,
-  -1px 1px 0 #242324,
-  1px 1px 0 #242324;
+  text-shadow:
+    -1px -1px 0 #242324,
+    1px -1px 0 #242324,
+    -1px 1px 0 #242324,
+    1px 1px 0 #242324;
 }
 
 #start-over-button {

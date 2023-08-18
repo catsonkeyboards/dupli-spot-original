@@ -760,6 +760,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let dropdown = document.getElementById('removal-playlist-dropdown');
         let selectedPlaylistId = dropdown.value;
 
+        // Hide the Start Over button and show the loading graphic instead
+        document.getElementById('start-over-button').style.display = 'none';
+
         // Show the loading graphic after clicking the Remove Duplicates button to indicate the list of tracks is refreshing to then then show what tracks are left for removal.
         loadingGraphic.style.display = 'block';
 
@@ -785,6 +788,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return fetchAndCompareTracks(playlist1Id, playlist2Id);
           })
           .then(duplicates => {
+
             // Display the updated list of duplicates
             displayDuplicates(duplicates);
 
@@ -797,6 +801,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Hide the loading graphic to make space for the updated list of tracks that have been updated after removal of other duplicates that were selected using the checkboxes.
             loadingGraphic.style.display = 'none';
+            
+            // Show the Start Over button again after loading all the tracks and hiding the loading graphic
+            document.getElementById('start-over-button').style.display = 'block';
 
             // Update the dropdown options with the new playlist names and track counts
             const dropdown = document.getElementById('removal-playlist-dropdown');
