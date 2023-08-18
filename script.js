@@ -81,9 +81,9 @@ function fetchPlaylists(offset = 0) {
           return response.json(); // Parse the JSON from the response
         })
         .catch(error => {
-          if (error.status === 429 && retries < maxRetries) {
+          if (error.message.includes("Network response was not ok") && retries < maxRetries) {
             retries++;
-            const delay = Math.min(Math.pow(2, retries) * 1000, 30000); // Exponential backoff with a max delay of 30 seconds
+            const delay = Math.min(Math.pow(2, retries) * 30000, 40000); // Exponential backoff with a max delay of 40 seconds
             setTimeout(() => {
               fetchPlaylists(offset);
             }, delay);
@@ -137,8 +137,7 @@ function fetchPlaylists(offset = 0) {
             });
           });
 
-
-          // Hide the loading graphic when playlists have dsiplayed
+          // Hide the loading graphic when playlists have displayed
           loadingGraphic.style.display = 'none';
 
           // Get the Load More button
