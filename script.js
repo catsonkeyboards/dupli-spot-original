@@ -136,6 +136,10 @@ function fetchPlaylists(offset = 0) {
               updateDuplicatesButtonState();
             });
           });
+          
+
+          // Hide the loading graphic when playlists have dsiplayed
+          loadingGraphic.style.display = 'none';
 
           // Get the Load More button
           const loadMoreButton = document.getElementById('load-more');
@@ -346,22 +350,33 @@ function removeDuplicatesFromPlaylist(playlistId, trackIds) {
     'Content-Type': 'application/json'
   };
 
-  const requestBody = {
-    tracks: trackIds.map(id => ({
-      uri: `spotify:track:${id}`
-    }))
+  const batches = [];
+  while (trackIds.length) {
+    batches.push(trackIds.splice(0, 100));
+  }
+
+  const removeBatch = (batch) => {
+    const requestBody = {
+      tracks: batch.map(id => ({
+        uri: `spotify:track:${id}`
+      }))
+    };
+
+    return fetch(url, {
+      method: 'DELETE',
+      headers: headers,
+      body: JSON.stringify(requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to remove duplicates from playlist.');
+        }
+      });
   };
 
-  return fetch(url, {
-    method: 'DELETE',
-    headers: headers,
-    body: JSON.stringify(requestBody)
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to remove duplicates from playlist.');
-      }
-    });
+  return batches.reduce((promise, batch) => {
+    return promise.then(() => removeBatch(batch));
+  }, Promise.resolve());
 }
 
 // Fetch tracks from the two selected playlists and compare them to find duplicates
@@ -578,7 +593,7 @@ function updateUIAfterComparison() {
   document.getElementById('start-over-button').style.display = 'block';
 }
 
-// Function for updating playlist numvers after track removal
+// Function for updating playlist numbers after track removal
 function fetchPlaylistDetails(playlistId) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
     headers: {
@@ -625,12 +640,16 @@ document.getElementById("login-button").addEventListener("click", function () {
     // Call fetchPlaylists after successful authentication
     fetchPlaylists(offset);
 
+    // Show the loading graphic as playlists get loaded for display
+    loadingGraphic.style.display = 'block';
+
     // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
     playlistsSection.style.display = 'block';
     loginButton.style.display = 'none';
     readmeSection.style.display = 'none';
     document.getElementById('show-duplicates').style.display = 'inline-block';
     document.getElementById('instruction-text').style.display = 'block';
+
 
     // Show the search bar
     document.getElementById('search-container').style.display = 'block';
@@ -740,6 +759,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch the selected playlist ID
         let dropdown = document.getElementById('removal-playlist-dropdown');
         let selectedPlaylistId = dropdown.value;
+        
+        // Show the loading graphic after clicking the Remove Duplicates button to indicate the list of tracks is refreshing to then then show what tracks are left for removal.
+        loadingGraphic.style.display = 'block';
 
         // Execute the logic for removing duplicates
         removeDuplicatesFromPlaylist(selectedPlaylistId, selectedDuplicates)
@@ -772,6 +794,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return Promise.all([fetchPlaylistDetails(playlist1Id), fetchPlaylistDetails(playlist2Id)]);
           })
           .then(([playlist1Details, playlist2Details]) => {
+
+            // Hide the loading graphic to make space for the updated list of tracks that have been updated after removal of other duplicates that were selected using the checkboxes.
+            loadingGraphic.style.display = 'none';
+
             // Update the dropdown options with the new playlist names and track counts
             const dropdown = document.getElementById('removal-playlist-dropdown');
             dropdown.innerHTML = `
