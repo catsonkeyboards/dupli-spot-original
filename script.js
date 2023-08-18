@@ -17,10 +17,10 @@ const loadingGraphic = document.getElementById('loading-graphic');
 
 // Utility functions
 
-// Utility function: Check if a playlist is selected
+// Utility function: Checks if a playlist is selected, so that we can store this information in case we use the search bar feature or the Load More button and the checkbox selection doesn't reset if we do use those features
 function isPlaylistSelected(playlistId) {
-  const isSelected = selectedPlaylists.includes(playlistId); // Added this line
-  console.log(`Playlist ${playlistId} is selected: ${isSelected}`);
+  const isSelected = selectedPlaylists.includes(playlistId);
+  console.log(`Playlist ${playlistId} is selected: ${isSelected}`); // Logs to the console which playlists are selected
   return isSelected;
 }
 
@@ -38,7 +38,7 @@ function toggleButtonState(buttonId, enable) {
     button.classList.add(stateClass);
     button.disabled = !enable;
     if (enable) {
-      button.style.backgroundColor = 'green'; // Set the button color to green when enabled
+      button.style.backgroundColor = 'green'; // Set the button color when enabled
     } else {
       button.style.backgroundColor = ''; // Reset to default color when disabled
     }
@@ -48,16 +48,16 @@ function toggleButtonState(buttonId, enable) {
 // Function to update the "Show Duplicates" button's state
 function updateDuplicatesButtonState() {
   const showDuplicatesButton = document.getElementById('show-duplicates');
-  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 2;
-  toggleButtonState('show-duplicates', enableButton);
+  const enableButton = selectedPlaylists.length >= 2 && selectedPlaylists.length <= 2; // Number of playlists that need to be selected to enable the "Show Duplicates" button
+  toggleButtonState('show-duplicates', enableButton); // Changes the Show Duplicates button to enabled once the necesary amount of playlists are selected for us to compare playlists
 }
 
 // Function to update the "Remove Duplicates" button's state
 function updateRemoveDuplicatesButtonState() {
   const removeDuplicatesButton = document.getElementById('remove-duplicates');
   if (removeDuplicatesButton) {
-    const enableButton = selectedDuplicates.length >= 1;
-    toggleButtonState('remove-duplicates', enableButton);
+    const enableButton = selectedDuplicates.length >= 1; // Checks when at least one track has been selected
+    toggleButtonState('remove-duplicates', enableButton); // Enables the "Remove Duplicates" button after at least one track has been selected
   }
 }
 
@@ -143,11 +143,11 @@ function fetchPlaylists(offset = 0) {
           // Get the Load More button
           const loadMoreButton = document.getElementById('load-more');
 
-          // If there are more playlists to fetch, show the Load More button. Otherwise, hide it.
+          // If there are more playlists to fetch, show the Load More button. Otherwise, hide it
           if (data.items.length === limit) {
-            loadMoreButton.style.display = 'inline-block';
+            loadMoreButton.style.display = 'inline-block'; // Show the load more button
           } else {
-            loadMoreButton.style.display = 'none';
+            loadMoreButton.style.display = 'none'; // Hide the load more button
           }
 
           // Show the playlists section after fetching and appending the playlists
@@ -162,6 +162,7 @@ function fetchPlaylists(offset = 0) {
         })
         .catch(error => {
           console.error('Error:', error);
+
           // Hide the loading graphic in case of an error
           loadingGraphic.style.display = 'none';
 
@@ -555,18 +556,12 @@ function handleShowDuplicatesButtonClick() {
 // Handle UI updates after the comparison
 function updateUIAfterComparison() {
 
-  // Hide the playlists 
-  const playlistsSection = document.getElementById('playlists');
-  playlistsSection.style.display = 'none';
+  const playlistsSection = document.getElementById('playlists'); // Variable to select to hide the playlists 
+  playlistsSection.style.display = 'none'; // Hide the playlists 
 
-  // Hide the "Load More" button
-  document.getElementById('load-more').style.display = 'none';
-
-  // Hide the Loading graphic
-  document.getElementById('loading').style.display = 'none';
-
-  // Show the "Remove Duplicates" button
-  document.getElementById('remove-duplicates').style.display = 'block';
+  document.getElementById('load-more').style.display = 'none'; // Hide the "Load More" button
+  document.getElementById('loading').style.display = 'none'; // Hide the Loading graphic
+  document.getElementById('remove-duplicates').style.display = 'block'; // Show the "Remove Duplicates" button
 
   // Show the dropdown
   const playlist1Id = selectedPlaylists[0];
@@ -578,7 +573,7 @@ function updateUIAfterComparison() {
   dropdown.innerHTML = `
     <option value="${playlist1Id}">${playlist1Name}</option>
     <option value="${playlist2Id}">${playlist2Name}</option>
-`;
+    `;
   dropdown.style.display = 'block';
 
   // document.getElementById('removal-playlist-dropdown').style.display = 'block';
@@ -605,11 +600,11 @@ function fetchPlaylistDetails(playlistId) {
 
 // Event listener for the login button click
 document.getElementById("login-button").addEventListener("click", function () {
+
   // Spotify authentication process
-  // Replace YOUR_CLIENT_ID with your actual Spotify API client ID
 
   // Define the Spotify authorization URL
-  const scope = 'playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative';
+  const scope = 'playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative'; // Spotify API scopes to include in our Privacy Policy
   const authUrl = `https://accounts.spotify.com/authorize?client_id=9fdba1a5111447ebad9b2213859f814a&response_type=token&scope=${encodeURIComponent(scope)}&redirect_uri=https://dupli-spot-original.vercel.app/redirect.html`;
 
   // Calculate the window size based on the content
@@ -621,6 +616,7 @@ document.getElementById("login-button").addEventListener("click", function () {
 
   // Handle the callback from the authentication window
   const handleCallback = (event) => {
+
     // Save the access token to the accessToken variable
     accessToken = event.data.access_token;
 
@@ -629,9 +625,6 @@ document.getElementById("login-button").addEventListener("click", function () {
     const loginButton = document.getElementById('login-button');
     const readmeSection = document.querySelector('.readme');
     const showDuplicatesButton = document.getElementById('show-duplicates');
-
-    // Perform further actions with the access token
-    // Add your code here to interact with the Spotify API using the access token
 
     // Remove the event listener
     window.removeEventListener("message", handleCallback);
@@ -643,18 +636,12 @@ document.getElementById("login-button").addEventListener("click", function () {
     loadingGraphic.style.display = 'block';
 
     // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
-    playlistsSection.style.display = 'block';
-    loginButton.style.display = 'none';
-    readmeSection.style.display = 'none';
-    document.getElementById('show-duplicates').style.display = 'inline-block';
-    document.getElementById('instruction-text').style.display = 'block';
-
-
-    // Show the search bar
-    document.getElementById('search-container').style.display = 'block';
-
-    // At the beginning or after the page reloads, hide the "Start Over" button
-    document.getElementById('start-over-button').style.display = 'none';
+    loginButton.style.display = 'none'; // Hide the Spotify login button
+    readmeSection.style.display = 'none'; // Hide the Readme section in the body
+    playlistsSection.style.display = 'block'; // Display the list of playlists in place of the Readme section
+    document.getElementById('show-duplicates').style.display = 'inline-block'; // Show the 'Show Duplicates' button in place of the Login Button
+    document.getElementById('search-container').style.display = 'block'; // Show the search bar
+    document.getElementById('instruction-text').style.display = 'block'; // Show the instruction text under the search bar
   };
 
   // Listen for the callback message from the authentication window
@@ -800,7 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Hide the loading graphic to make space for the updated list of tracks that have been updated after removal of other duplicates that were selected using the checkboxes.
             loadingGraphic.style.display = 'none';
-            
+
             // Show the Start Over button again after loading all the tracks and hiding the loading graphic
             document.getElementById('start-over-button').style.display = 'block';
 
