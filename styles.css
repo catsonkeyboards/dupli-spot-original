@@ -131,6 +131,11 @@ footer {
   text-align: center;
 }
 
+/* Button to buy a gelato - Support Button Styling */
+#buymeacoffeefooter {
+  padding-bottom: 20px;
+}
+
 /* Playlists section styles */
 #playlists {
   padding: 20px;

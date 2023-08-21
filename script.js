@@ -621,10 +621,11 @@ document.getElementById("login-button").addEventListener("click", function () {
     accessToken = event.data.access_token;
 
     // Get references to the 'Playlists' section, the login button, the README section
+    const readmeSection = document.querySelector('.readme');
     const playlistsSection = document.getElementById('playlists');
     const loginButton = document.getElementById('login-button');
-    const readmeSection = document.querySelector('.readme');
     const showDuplicatesButton = document.getElementById('show-duplicates');
+    const buymeacoffeefooter = document.getElementById('buymeacoffeefooter');
 
     // Remove the event listener
     window.removeEventListener("message", handleCallback);
@@ -638,6 +639,7 @@ document.getElementById("login-button").addEventListener("click", function () {
     // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
     loginButton.style.display = 'none'; // Hide the Spotify login button
     readmeSection.style.display = 'none'; // Hide the Readme section in the body
+    buymeacoffeefooter.style.display = 'none'; // Hide the Buy Me A Coffee/Gelato section in the body
     playlistsSection.style.display = 'block'; // Display the list of playlists in place of the Readme section
     document.getElementById('show-duplicates').style.display = 'inline-block'; // Show the 'Show Duplicates' button in place of the Login Button
     document.getElementById('search-container').style.display = 'block'; // Show the search bar
