@@ -15,6 +15,15 @@ const maxRetries = 5;
 const limit = 50;
 const loadingGraphic = document.getElementById('loading-graphic');
 
+
+// Promise Throttle variable
+
+var promiseThrottle = new PromiseThrottle({
+  requestsPerSecond: 1, // 1 request per second
+  promiseImplementation: Promise
+});
+
+
 // Utility functions
 
 // Utility function: Checks if a playlist is selected, so that we can store this information in case we use the search bar feature or the Load More button and the checkbox selection doesn't reset if we do use those features
@@ -102,7 +111,7 @@ function fetchPlaylists(offset = 0) {
 
           // Set the initial playlist count
           const playlistCountContainer = document.getElementById('playlist-count');
-          playlistCountContainer.innerHTML = `( 0 of 2 playlists selected )`;
+          playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected for comparison )`;
 
           // Call the displayPlaylists function
           displayPlaylists(allPlaylists);
@@ -156,7 +165,7 @@ function displayPlaylists(playlists) {
 
   // Update the playlist count
   const playlistCountContainer = document.getElementById('playlist-count');
-  playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected )`;
+  playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected for comparison )`;
 
   // Add event listeners for the checkboxes
   const checkboxes = document.getElementsByName('playlist');
@@ -172,7 +181,7 @@ function displayPlaylists(playlists) {
       }
 
       // Update the displayed count
-      playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected )`;
+      playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected for comparison )`;
 
       // Call updateDuplicatesButtonState after a checkbox's state changes
       updateDuplicatesButtonState();
@@ -262,13 +271,14 @@ document.getElementById('dropdown-title').style.display = 'none';
 
 // Function to fetch all tracks from a playlist
 function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
-  return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`, {
-    headers: {
-      'Authorization': 'Bearer ' + accessToken
-    }
-  })
-    .then(response => response.json())
-    .then(data => {
+  return promiseThrottle.add(() => {
+    return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`, {
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
       const trackPromises = data.items.map(item => {
         return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { // Fetch artist details instead of album
           headers: {
@@ -311,6 +321,7 @@ function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
       }
     })
     .catch(error => console.error('Error:', error));
+});
 }
 
 // Function to remove duplicates from a playlist
