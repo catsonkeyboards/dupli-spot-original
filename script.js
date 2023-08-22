@@ -15,7 +15,6 @@ const maxRetries = 5;
 const limit = 50;
 const loadingGraphic = document.getElementById('loading-graphic');
 
-
 // Promise Throttle variable
 
 var promiseThrottle = new PromiseThrottle({
@@ -279,49 +278,49 @@ function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
     })
       .then(response => response.json())
       .then(data => {
-      const trackPromises = data.items.map(item => {
-        return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { // Fetch artist details instead of album
-          headers: {
-            'Authorization': 'Bearer ' + accessToken
-          }
-        })
-          .then(response => {
-            if (!response.ok) {
-              console.warn(`Artist not found for track ${item.track.name}`);
-              return null; // Return null if artist is not found
+        const trackPromises = data.items.map(item => {
+          return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { // Fetch artist details instead of album
+            headers: {
+              'Authorization': 'Bearer ' + accessToken
             }
-            return response.json();
           })
-          .then(artistData => {
-            if (!artistData) {
+            .then(response => {
+              if (!response.ok) {
+                console.warn(`Artist not found for track ${item.track.name}`);
+                return null; // Return null if artist is not found
+              }
+              return response.json();
+            })
+            .then(artistData => {
+              if (!artistData) {
+                return {
+                  ...item.track,
+                  playlistName: playlistName,
+                  genres: [] // Empty genres array if artist is not found
+                };
+              }
               return {
                 ...item.track,
                 playlistName: playlistName,
-                genres: [] // Empty genres array if artist is not found
+                genres: artistData.genres.length ? artistData.genres : [] // Use the genres from artist details
               };
-            }
-            return {
-              ...item.track,
-              playlistName: playlistName,
-              genres: artistData.genres.length ? artistData.genres : [] // Use the genres from artist details
-            };
-          });
-      });
+            });
+        });
 
-      return Promise.all(trackPromises).then(tracks => ({ tracks, data }));
-    })
-    .then(({ tracks, data }) => {
-      if (data.next) {
-        // If there are more tracks, fetch the next page
-        return fetchAllTracks(playlistId, playlistName, offset + limit, limit)
-          .then(nextTracks => tracks.concat(nextTracks));
-      } else {
-        // Otherwise, return the tracks
-        return tracks;
-      }
-    })
-    .catch(error => console.error('Error:', error));
-});
+        return Promise.all(trackPromises).then(tracks => ({ tracks, data }));
+      })
+      .then(({ tracks, data }) => {
+        if (data.next) {
+          // If there are more tracks, fetch the next page
+          return fetchAllTracks(playlistId, playlistName, offset + limit, limit)
+            .then(nextTracks => tracks.concat(nextTracks));
+        } else {
+          // Otherwise, return the tracks
+          return tracks;
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  });
 }
 
 // Function to remove duplicates from a playlist
@@ -449,8 +448,6 @@ function displayDuplicates(duplicates) {
       updateRemoveDuplicatesButtonState();
     });
   });
-
-
 
   // Add event listener for play/pause buttons
   document.querySelectorAll('.play-pause').forEach(button => {
