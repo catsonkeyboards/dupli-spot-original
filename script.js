@@ -100,45 +100,12 @@ function fetchPlaylists(offset = 0) {
           allPlaylists = allPlaylists.concat(data.items);
           console.log("All Playlists:", allPlaylists);
 
-          // Create an HTML string with the playlist data
-          let html = '';
-          data.items.forEach(playlist => {
-            html += `
-        <div class="playlist-item">
-          <input type="checkbox" id="${playlist.id}" value="${playlist.id}" name="playlist">
-          <label for="${playlist.id}"><strong>${playlist.name}</strong> - ${playlist.tracks.total} tracks</label>
-        </div>`;
-          });
+          // Set the initial playlist count
+          const playlistCountContainer = document.getElementById('playlist-count');
+          playlistCountContainer.innerHTML = `( 0 of 2 playlists selected )`;
 
-          // Get the playlists section
-          const playlistsSection = document.getElementById('playlists');
-
-          // Append the HTML string to the playlists section
-          playlistsSection.innerHTML += html;
-
-          // Hide the playlists section
-          playlistsSection.style.display = 'none';
-
-          // Get the checkboxes and add event listeners
-          const checkboxes = document.getElementsByName('playlist');
-          checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', (event) => {
-              if (event.target.checked) {
-                selectedPlaylists.push(event.target.value);
-              } else {
-                const index = selectedPlaylists.indexOf(event.target.value);
-                if (index > -1) {
-                  selectedPlaylists.splice(index, 1);
-                }
-              }
-
-              // Call updateDuplicatesButtonState after a checkbox's state changes
-              updateDuplicatesButtonState();
-            });
-          });
-
-          // Hide the loading graphic when playlists have displayed
-          loadingGraphic.style.display = 'none';
+          // Call the displayPlaylists function
+          displayPlaylists(allPlaylists);
 
           // Get the Load More button
           const loadMoreButton = document.getElementById('load-more');
@@ -148,14 +115,6 @@ function fetchPlaylists(offset = 0) {
             loadMoreButton.style.display = 'inline-block'; // Show the load more button
           } else {
             loadMoreButton.style.display = 'none'; // Hide the load more button
-          }
-
-          // Show the playlists section after fetching and appending the playlists
-          playlistsSection.style.display = 'block';
-
-          // Hide the loading graphic when all playlists have been loaded
-          if (data.items.length !== limit) {
-            loadingGraphic.style.display = 'none';
           }
 
           resolve(data);
@@ -173,22 +132,31 @@ function fetchPlaylists(offset = 0) {
   });
 }
 
-// Display Playlists function to take filtered playlists as an argument and display them in the UI
 function displayPlaylists(playlists) {
+
+  // Hide the loading graphic at the start of the display
+  const loadingGraphic = document.getElementById('loading-graphic');
+  loadingGraphic.style.display = 'none';
+
   // Create an HTML string with the playlist data
   const checkedPlaylists = selectedPlaylists.slice(); // Store the current state
   let html = '';
   playlists.forEach(playlist => {
     html += `
-      <div class="playlist-item">
-        <input type="checkbox" id="${playlist.id}" value="${playlist.id}" name="playlist">
-        <label for="${playlist.id}"><strong>${playlist.name}</strong> - ${playlist.tracks.total} tracks</label>
-      </div>`;
+    <div class="playlist-item">
+      <input type="checkbox" id="${playlist.id}" value="${playlist.id}" name="playlist">
+      <img src="${playlist.images[0]?.url || 'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2'}" alt="${playlist.name} artwork" class="playlist-artwork">
+      <label for="${playlist.id}"><strong>${playlist.name}</strong> - ${playlist.tracks.total} tracks</label>
+    </div>`;
   });
 
   // Set the HTML string to the playlists container
   const playlistsContainer = document.getElementById('playlists');
   playlistsContainer.innerHTML = html;
+
+  // Update the playlist count
+  const playlistCountContainer = document.getElementById('playlist-count');
+  playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected )`;
 
   // Add event listeners for the checkboxes
   const checkboxes = document.getElementsByName('playlist');
@@ -202,6 +170,9 @@ function displayPlaylists(playlists) {
           selectedPlaylists.splice(index, 1);
         }
       }
+
+      // Update the displayed count
+      playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected )`;
 
       // Call updateDuplicatesButtonState after a checkbox's state changes
       updateDuplicatesButtonState();
@@ -512,6 +483,7 @@ function handleShowDuplicatesButtonClick() {
 
   // Hide the playlists section
   document.getElementById('playlists').style.display = 'none';
+  document.getElementById('playlist-count').style.display = 'none';
 
   // Remove the event listener to prevent unintended triggering of the button click
   this.removeEventListener('click', handleShowDuplicatesButtonClick);
