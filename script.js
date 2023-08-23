@@ -771,6 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Fetch and compare tracks again
             const playlist1Id = selectedPlaylists[0];
             const playlist2Id = selectedPlaylists[1];
+            
             return fetchAndCompareTracks(playlist1Id, playlist2Id);
           })
           .then(duplicates => {
