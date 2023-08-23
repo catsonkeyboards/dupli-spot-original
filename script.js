@@ -18,7 +18,7 @@ const loadingGraphic = document.getElementById('loading-graphic');
 // Promise Throttle variable
 
 var promiseThrottle = new PromiseThrottle({
-  requestsPerSecond: 100, // 100 requests per second
+  requestsPerSecond: 50, // 50 requests per second
   promiseImplementation: Promise
 });
 
@@ -269,6 +269,10 @@ document.getElementById('dropdown-title').style.display = 'none';
 
 // Function to fetch all tracks from a playlist
 function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
+  // Update the loading text
+  const loadingText = document.getElementById('loading-status');
+  loadingText.innerHTML = `Loading.. ${offset} tracks`; // Update this line with the correct totalTracks value
+
   return promiseThrottle.add(() => {
     return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`, {
       headers: {
