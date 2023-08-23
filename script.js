@@ -18,10 +18,9 @@ const loadingGraphic = document.getElementById('loading-graphic');
 // Promise Throttle variable
 
 var promiseThrottle = new PromiseThrottle({
-  requestsPerSecond: 1, // 1 request per second
+  requestsPerSecond: 50, // 50 requests per second
   promiseImplementation: Promise
 });
-
 
 // Utility functions
 
@@ -276,22 +275,38 @@ function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
         'Authorization': 'Bearer ' + accessToken
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        const trackPromises = data.items.map(item => {
-          return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { // Fetch artist details instead of album
+    .then(response => {
+      if (response.status === 429) {
+        // Handle rate-limiting error
+        console.warn('Rate-limited. Retrying...');
+        return new Promise((resolve) => setTimeout(() => resolve(fetchAllTracks(playlistId, playlistName, offset, limit)), 1000)); // Retry after 1 second
+      }
+      if (!response.ok) {
+        throw new Error(`Failed to fetch tracks for playlist ${playlistId}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      const trackPromises = data.items.map(item => {
+        return promiseThrottle.add(() => {
+          return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, {
             headers: {
               'Authorization': 'Bearer ' + accessToken
             }
           })
-            .then(response => {
-              if (!response.ok) {
-                console.warn(`Artist not found for track ${item.track.name}`);
-                return null; // Return null if artist is not found
-              }
-              return response.json();
-            })
-            .then(artistData => {
+          .then(response => {
+            if (response.status === 429) {
+              // Handle rate-limiting error for inner fetch
+              console.warn('Rate-limited on artist fetch. Retrying...');
+              return new Promise((resolve) => setTimeout(() => resolve(promiseThrottle.add(() => fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { headers: { 'Authorization': 'Bearer ' + accessToken } }))), 1000));
+            }
+            if (!response.ok) {
+              console.warn(`Artist not found for track ${item.track.name}`);
+              return null; // Return null if artist is not found
+            }
+            return response.json();
+          })
+          .then(artistData => {
               if (!artistData) {
                 return {
                   ...item.track,
@@ -305,6 +320,7 @@ function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
                 genres: artistData.genres.length ? artistData.genres : [] // Use the genres from artist details
               };
             });
+          });
         });
 
         return Promise.all(trackPromises).then(tracks => ({ tracks, data }));
