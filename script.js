@@ -279,51 +279,51 @@ function fetchAllTracks(playlistId, playlistName, offset = 0, limit = 100) {
         'Authorization': 'Bearer ' + accessToken
       }
     })
-    .then(response => {
-      if (response.status === 429) {
-        // Handle rate-limiting error
-        console.warn('Rate-limited. Retrying...');
-        return new Promise((resolve) => setTimeout(() => resolve(fetchAllTracks(playlistId, playlistName, offset, limit)), 1000)); // Retry after 1 second
-      }
-      if (!response.ok) {
-        throw new Error(`Failed to fetch tracks for playlist ${playlistId}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      const trackPromises = data.items.map(item => {
-        return promiseThrottle.add(() => {
-          return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, {
-            headers: {
-              'Authorization': 'Bearer ' + accessToken
-            }
-          })
-          .then(response => {
-            if (response.status === 429) {
-              // Handle rate-limiting error for inner fetch
-              console.warn('Rate-limited on artist fetch. Retrying...');
-              return new Promise((resolve) => setTimeout(() => resolve(promiseThrottle.add(() => fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { headers: { 'Authorization': 'Bearer ' + accessToken } }))), 1000));
-            }
-            if (!response.ok) {
-              console.warn(`Artist not found for track ${item.track.name}`);
-              return null; // Return null if artist is not found
-            }
-            return response.json();
-          })
-          .then(artistData => {
-              if (!artistData) {
+      .then(response => {
+        if (response.status === 429) {
+          // Handle rate-limiting error
+          console.warn('Rate-limited. Retrying...');
+          return new Promise((resolve) => setTimeout(() => resolve(fetchAllTracks(playlistId, playlistName, offset, limit)), 1000)); // Retry after 1 second
+        }
+        if (!response.ok) {
+          throw new Error(`Failed to fetch tracks for playlist ${playlistId}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const trackPromises = data.items.map(item => {
+          return promiseThrottle.add(() => {
+            return fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, {
+              headers: {
+                'Authorization': 'Bearer ' + accessToken
+              }
+            })
+              .then(response => {
+                if (response.status === 429) {
+                  // Handle rate-limiting error for inner fetch
+                  console.warn('Rate-limited on artist fetch. Retrying...');
+                  return new Promise((resolve) => setTimeout(() => resolve(promiseThrottle.add(() => fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, { headers: { 'Authorization': 'Bearer ' + accessToken } }))), 1000));
+                }
+                if (!response.ok) {
+                  console.warn(`Artist not found for track ${item.track.name}`);
+                  return null; // Return null if artist is not found
+                }
+                return response.json();
+              })
+              .then(artistData => {
+                if (!artistData) {
+                  return {
+                    ...item.track,
+                    playlistName: playlistName,
+                    genres: [] // Empty genres array if artist is not found
+                  };
+                }
                 return {
                   ...item.track,
                   playlistName: playlistName,
-                  genres: [] // Empty genres array if artist is not found
+                  genres: artistData.genres.length ? artistData.genres : [] // Use the genres from artist details
                 };
-              }
-              return {
-                ...item.track,
-                playlistName: playlistName,
-                genres: artistData.genres.length ? artistData.genres : [] // Use the genres from artist details
-              };
-            });
+              });
           });
         });
 
@@ -655,6 +655,41 @@ document.getElementById("load-more").addEventListener("click", function () {
   fetchPlaylists(offset);
 });
 
+// Function to reset the UI after clicking Start-Over-Button
+function resetUI() {
+  // Reset global variables
+  offset = 0;
+  selectedPlaylists = [];
+  selectedDuplicates = [];
+  allPlaylists = [];
+  allPlaylistsFetched = false;
+  retries = 0;
+
+  // Hide specific elements
+  document.getElementById('removal-playlist-dropdown').style.display = 'none';
+  document.getElementById('dropdown-title').style.display = 'none';
+  document.getElementById('duplicates').style.display = 'none';
+  document.getElementById('remove-duplicates').style.display = 'none';
+  document.getElementById('start-over-button').style.display = 'none';
+  document.getElementById('success-message').style.display = 'none';
+
+  // Show specific elements
+  document.getElementById('playlists').style.display = 'block';
+  document.getElementById('playlist-count').style.display = 'block';
+  document.getElementById('show-duplicates').style.display = 'inline-block';
+  document.getElementById('search-container').style.display = 'block';
+  document.getElementById('instruction-text').style.display = 'block';
+  document.getElementById('load-more').style.display = 'inline-block';
+
+  // Clear specific elements
+  document.getElementById('playlists').innerHTML = '';
+  document.getElementById('duplicates').innerHTML = '';
+
+  // Call fetchPlaylists to reload the playlists
+  fetchPlaylists(offset);
+}
+
+
 // Event listeners after DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   // Update the button state initially
@@ -664,9 +699,10 @@ document.addEventListener('DOMContentLoaded', () => {
   startOverButton = document.getElementById('start-over-button');
   if (startOverButton) {
     startOverButton.addEventListener('click', function () {
-      window.location.reload();
+      resetUI(); // Call the resetUI function instead of reloading the page
     });
   }
+
 
   // Add the event listener for the "Show Duplicates" button click
   document.getElementById('show-duplicates').addEventListener('click', function () {
@@ -771,7 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Fetch and compare tracks again
             const playlist1Id = selectedPlaylists[0];
             const playlist2Id = selectedPlaylists[1];
-            
+
             return fetchAndCompareTracks(playlist1Id, playlist2Id);
           })
           .then(duplicates => {
