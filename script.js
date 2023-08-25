@@ -633,12 +633,13 @@ document.getElementById("login-button").addEventListener("click", function () {
 
     // Show the loading graphic as playlists get loaded for display
     loadingGraphic.style.display = 'block';
+    playlistsSection.style.display = 'block'; // Display the list of playlists in place of the Readme section
+
 
     // Show the 'Playlists' section, the 'Show Duplicates' button, and hide the login button and the README section
     document.getElementById('show-duplicates').style.display = 'inline-block'; // Show the 'Show Duplicates' button in place of the Login Button
     loginButton.style.display = 'none'; // Hide the Spotify login button
     readmeSection.style.display = 'none'; // Hide the Readme section in the body
-    playlistsSection.style.display = 'block'; // Display the list of playlists in place of the Readme section
     document.getElementById('search-container').style.display = 'block'; // Show the search bar
     document.getElementById('instruction-text').style.display = 'block'; // Show the instruction text under the search bar
   };

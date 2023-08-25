@@ -319,19 +319,21 @@ footer {
 #removal-playlist-dropdown {
   color: #242324;
   background-color: #f9e2f9;
-  padding: 8px 12px;
+  padding: 20px;
   font-size: 1.2rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   outline: none;
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
   /* Adjust as needed */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* Optional: Adds a subtle shadow for depth */
   transition: background-color 0.3s ease;
-  margin: auto;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
   /* This helps in centering if the parent uses flexbox */
 }
 
