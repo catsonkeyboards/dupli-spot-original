@@ -18,7 +18,7 @@ const loadingGraphic = document.getElementById('loading-graphic');
 // Promise Throttle variable
 
 var promiseThrottle = new PromiseThrottle({
-  requestsPerSecond: 50, // 50 requests per second
+  requestsPerSecond: 100, // 50 requests per second
   promiseImplementation: Promise
 });
 
