@@ -139,11 +139,6 @@ footer {
   text-align: center;
 }
 
-.footer-link {
-  color: #1DB954; /* Spotify Green */
-  text-decoration: none;
-}
-
 .footer-link:hover {
   text-decoration: underline;
 }

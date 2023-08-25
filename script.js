@@ -576,7 +576,6 @@ function updateUIAfterComparison() {
     `;
   dropdown.style.display = 'block';
 
-  // document.getElementById('removal-playlist-dropdown').style.display = 'block';
   document.getElementById('dropdown-title').style.display = 'block';
 
   // Show the duplicates section
