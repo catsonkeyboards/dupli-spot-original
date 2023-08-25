@@ -356,13 +356,9 @@ footer {
 #dropdown-title {
   display: block;
   font-size: 0.8rem;
-  /* Adjust to make it small */
-  color: #242324;
-  /* Color from your palette */
+  color: #e0cde0;
   margin-top: 8px;
-  /* Space between the dropdown and the label */
   text-align: center;
-  /* Center the text */
 }
 
 
