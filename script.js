@@ -510,7 +510,8 @@ function handleShowDuplicatesButtonClick() {
   const duplicatesSection = document.getElementById('duplicates');
 
   // Prepend the selected playlists HTML to the duplicates section
-  duplicatesSection.innerHTML = selectedPlaylistsHTML;
+  const sanitizedHTML = DOMPurify.sanitize(selectedPlaylistsHTML);
+  duplicatesSection.innerHTML = sanitizedHTML;
 
   // Hide the "Show Duplicates" button and display the loading graphic
   document.getElementById('show-duplicates').style.display = 'none';
