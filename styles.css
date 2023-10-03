@@ -9,24 +9,31 @@
   src: url('fonts/Gazpacho Regular.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'circular-medium';
+  src: url('fonts/Circular/CircularStd-Medium.otf') format('truetype');
+}
+
+@font-face {
+  font-family: 'circular-light';
+  src: url('fonts/Circular/CircularStd-Light.otf') format('truetype');
+}
+
+
 /* Global styles */
 body {
+  font-family: 'circular-light', sans-serif;
   text-align: center;
-  font-family: Arial, sans-serif;
   background-color: #242324;
   color: #f9e2f9;
   display: flex;
-  /* Make body a flex container */
   flex-direction: column;
-  /* Set the main axis to vertical */
   min-height: 100vh;
-  /* Ensure it takes up the full viewport height */
 }
 
 /* Adding a wrapper around my main content (exlucding header and footer) */
 .main-content {
   flex: 1;
-  /* This will make it grow to take up any available space */
 }
 
 /* Header styles */
@@ -34,12 +41,7 @@ header {
   background-color: #f9e2f9;
   background-image: url('images/cherry.png');
   background-repeat: no-repeat;
-  background-position: center 10%;
-  /* Position the image above the title */
-  background-size: 100px 100px;
-  /* Set the desired size for the image */
   padding: 120px 20px 50px 20px;
-  /* Provide space above the title for the image */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -49,9 +51,7 @@ header {
 @media (max-width: 768px) {
   header {
     background-size: 80px 80px;
-    /* Adjust the size for medium screens */
     background-position: center 10%;
-    /* Keep the image above the title */
   }
 }
 
@@ -59,9 +59,7 @@ header {
 @media (max-width: 480px) {
   header {
     background-size: 60px 60px;
-    /* Adjust the size for small screens */
     background-position: center 10%;
-    /* Keep the image above the title */
   }
 }
 
@@ -82,23 +80,19 @@ header {
 .main-title {
   font-size: 6rem;
   margin-bottom: 10px;
-  /* Adjust this value to reduce the space below the main title */
-
 }
 
 .title {
   font-size: 2.5rem;
   margin-top: 10px;
-  /* Adjust this value to reduce the space above the subtitle */
 }
 
 /* Login button styles */
-
 .spotify-logo {
   width: 24px;
   height: 24px;
-  margin-right: 10px; /* Space between the logo and the text */
-  vertical-align: middle; /* Align the logo with the text */
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
 .login-button {
@@ -119,7 +113,7 @@ header {
 }
 
 .login-button button:hover {
-  background-color: #bb298a;
+  background-color: #1DB954;
 }
 
 .login-button svg {
