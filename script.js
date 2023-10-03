@@ -547,10 +547,22 @@ function updateUIAfterComparison() {
   const playlist2Name = document.querySelector(`label[for="${playlist2Id}"]`).textContent;
 
   const dropdown = document.getElementById('removal-playlist-dropdown');
-  dropdown.innerHTML = `
-    <option value="${playlist1Id}">${playlist1Name}</option>
-    <option value="${playlist2Id}">${playlist2Name}</option>
-    `;
+
+  // Clear existing options
+  dropdown.innerHTML = '';
+
+  // Create and append the first option
+  const option1 = document.createElement('option');
+  option1.value = playlist1Id;
+  option1.textContent = playlist1Name;
+  dropdown.appendChild(option1);
+
+  // Create and append the second option
+  const option2 = document.createElement('option');
+  option2.value = playlist2Id;
+  option2.textContent = playlist2Name;
+  dropdown.appendChild(option2);
+
   dropdown.style.display = 'block';
 
   document.getElementById('dropdown-title').style.display = 'block';
