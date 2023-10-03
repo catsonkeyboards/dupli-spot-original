@@ -1,0 +1,3 @@
+name: "Default setup"
+queries:
+  - uses: github/codeql-javascript-queries@v1
