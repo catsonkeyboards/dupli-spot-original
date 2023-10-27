@@ -1,4 +1,4 @@
-// Utility function: Enable or disable a button
+//Added to utilityFunctions.js // Utility function: Enable or disable a button
 function toggleButtonState(buttonId, enable) {
     const button = document.getElementById(buttonId);
     if (button) {
