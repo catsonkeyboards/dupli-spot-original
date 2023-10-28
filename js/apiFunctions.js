@@ -1,5 +1,8 @@
 // */js/apiFunctions.js
 
+import { limit, accessToken, allPlaylists, selectedPlaylists } from './globalVariables.js';
+import { displayPlaylists } from './displayFunctions.js';
+
 // Function to fetch playlists from Spotify API
 export function fetchPlaylists(offset = 0) {
   // Return a new Promise
@@ -44,7 +47,7 @@ export function fetchPlaylists(offset = 0) {
           console.log(data);
 
           // Add fetched playlists to the allPlaylists array
-          allPlaylists = allPlaylists.concat(data.items);
+          allPlaylists.push(...data.items);
           console.log("All Playlists:", allPlaylists);
 
           // Set the initial playlist count
