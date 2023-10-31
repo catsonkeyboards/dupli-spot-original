@@ -12,8 +12,8 @@
 /* Global styles */
 body {
   text-align: center;
-  font-family: Arial, sans-serif;
-  background-color: #242324;
+  font-family: Helvetica, sans-serif;
+  background-color: #191414;
   color: #f9e2f9;
   display: flex;
   /* Make body a flex container */
@@ -144,12 +144,10 @@ footer {
 }
 
 /* Basic styling for enabled checkboxes */
-
 [type=checkbox] {
   width: 2rem;
   height: 2rem;
   color: #bb298a;
-  /* Updated color */
   vertical-align: middle;
   -webkit-appearance: none;
   background: none;
@@ -158,7 +156,6 @@ footer {
   flex-grow: 0;
   border-radius: 50%;
   background-color: #f9e2f9;
-  /* Updated background color */
   transition: background 300ms;
   cursor: pointer;
 }
@@ -183,11 +180,9 @@ footer {
 [type=checkbox]:checked::before {
   box-shadow: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23f9e2f9'/%3E %3C/svg%3E");
-  /* Updated fill color */
 }
 
 /* Disabled */
-
 [type=checkbox]:disabled {
   background-color: #CCD3D8;
   opacity: 0.84;
@@ -209,11 +204,8 @@ footer {
 
 .playlist-artwork {
   width: 60px;
-  /* Adjusted to match the .image-container size */
   height: 60px;
-  /* Adjusted to match the .image-container size */
-  border-radius: 4px;
-  margin-right: 10px;
+  /* border-radius: 4px; */
 }
 
 .playlist-item {
@@ -327,24 +319,19 @@ footer {
   outline: none;
   width: 100%;
   max-width: 400px;
-  /* Adjust as needed */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Optional: Adds a subtle shadow for depth */
   transition: background-color 0.3s ease;
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
-  /* This helps in centering if the parent uses flexbox */
 }
 
 #removal-playlist-dropdown:hover {
   background-color: #e0cde0;
-  /* A slightly lighter shade for hover */
 }
 
 #removal-playlist-dropdown:focus {
   border-color: #9b75da;
-  /* A border color when the dropdown is focused */
 }
 
 #removal-playlist-dropdown option {
@@ -361,96 +348,80 @@ footer {
   text-align: center;
 }
 
-
 /* Display of duplicate tracks list */
-
-.duplicate-track {
-  display: flex;
-  color: #f9e2f9;
-  align-items: center;
-  /* Vertically center the child elements */
-  padding: 10px 0;
-  /* Add some vertical padding for spacing */
+#duplicates {
+padding: 20px;
+color: #f9e2f9;
+text-align: left;
+max-width: 800px;
+margin: 0 auto;
 }
 
-.duplicate-track>*:not(:last-child) {
-  margin-right: 10px;
-  /* Add spacing to the right of every child except the last one */
+/* Duplicate tracks styles */
+.duplicate-track-item {
+display: flex;
+color: #f9e2f9;
+align-items: center;
+padding: 10px 0;
 }
 
-.checkbox-container,
-.text-container {
-  align-items: center;
-  /* Vertically center the content */
-  justify-content: center;
-  /* Horizontally center the content */
+.duplicate-track-item>*:not(:last-child) {
+margin-right: 10px;
 }
 
-.image-container {
-  position: relative;
-  width: 60px;
-  /* Adjusted to match the .image-container size */
-  height: 60px;
-  /* Adjusted to match the .image-container size */
-  border-radius: 4px;
-  margin-right: 10px;
+.track-artwork {
+width: 60px;
+height: 60px;
+/* border-radius: 4px; */
 }
 
-.image-container img {
-  max-width: 60px;
-  /* Adjust the image size if necessary */
-  height: auto;
-  border-radius: 4px;
-  margin-right: 10px;
+.spotify-link {
+font-size: 0.9rem;
+display: flex;
+align-items: center;
+padding: 2px 5px;
+color: #1DB954;
+text-decoration: none;
+}
+
+.spotify-icon {
+width: 20px;
+height: 20px;
+margin-right: 5px;
+color: #1DB954;
 }
 
 .play-pause {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
+display: flex;
+align-items: center;
+cursor: pointer;
 }
 
 .play-icon,
 .pause-icon {
-  color: white;
-  font-size: 24px;
-  /* Adjust as needed */
-  display: none;
-  text-shadow:
-    -1px -1px 0 #242324,
-    1px -1px 0 #242324,
-    -1px 1px 0 #242324,
-    1px 1px 0 #242324;
+color: white;
+font-size: 24px;
+display: none;
+text-shadow:
+  -1px -1px 0 #242324,
+  1px -1px 0 #242324,
+  -1px 1px 0 #242324,
+  1px 1px 0 #242324;
 }
 
 .play-pause .play-icon {
-  display: block;
-  text-shadow:
-    -1px -1px 0 #242324,
-    1px -1px 0 #242324,
-    -1px 1px 0 #242324,
-    1px 1px 0 #242324;
+display: block;
 }
 
 .play-pause.playing .play-icon {
-  display: none;
-  text-shadow:
-    -1px -1px 0 #242324,
-    1px -1px 0 #242324,
-    -1px 1px 0 #242324,
-    1px 1px 0 #242324;
+display: none;
 }
 
 .play-pause.playing .pause-icon {
-  display: block;
-  text-shadow:
-    -1px -1px 0 #242324,
-    1px -1px 0 #242324,
-    -1px 1px 0 #242324,
-    1px 1px 0 #242324;
+display: block;
 }
+
+/* Start Over Button */
 
 #start-over-button {
   background-color: #f9e2f9;

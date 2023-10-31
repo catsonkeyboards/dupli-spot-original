@@ -1,5 +1,9 @@
 // */js/displayFunctions.js
 
+import { updateDuplicatesButtonState, updateRemoveDuplicatesButtonState } from './uiFunctions.js'
+import { currentAudio, allPlaylists, selectedPlaylists, setOffset, allPlaylistsFetched, limit, selectedDuplicates } from './globalVariables.js';
+import { fetchPlaylists } from './apiFunctions.js';
+
 // Function to display user's fetched playlists
 export function displayPlaylists(playlists) {
   // Hide the loading graphic at the start of the display
@@ -19,9 +23,14 @@ export function displayPlaylists(playlists) {
         playlist.images[0]?.url ||
         "https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2"
       }" alt="${playlist.name} artwork" class="playlist-artwork">
+      
       <label for="${playlist.id}"><strong>${playlist.name}</strong> - ${
       playlist.tracks.total
     } tracks</label>
+    <a href="${playlist.uri}" target="_blank" class="spotify-link">
+      <img src="./images/spotify-logo-green.svg" alt="Spotify Logo" class="spotify-icon">
+      PLAY ON SPOTIFY
+    </a>
     </div>`;
   });
 
@@ -90,8 +99,8 @@ export function filterPlaylists() {
 
   if (filteredPlaylists.length === 0 && searchTerm !== "") {
     // If no matching playlists are found, fetch more playlists
-    offset += limit;
-    fetchPlaylists(offset).then((data) => {
+    setOffset(value => value + limit);
+    fetchPlaylists(setOffset).then((data) => {
       // Check if all playlists have been fetched
       if (data.items.length === 0) {
         // All playlists have been fetched and there are no matches
@@ -101,7 +110,7 @@ export function filterPlaylists() {
         filterPlaylists(); // Recursive call to filter again after fetching more playlists
       }
     });
-  } else {
+} else {
     displayPlaylists(filteredPlaylists);
     // Hide the loading graphic once the search is complete
     loadingGraphic.style.display = "none";
@@ -156,29 +165,32 @@ export function displayDuplicates(duplicates) {
 
   duplicates.forEach(track => {
     let playPauseButton = ''; // Initialize an empty string for the play/pause button
-
+  
     // Check if the track has a valid preview URL
     if (track.preview_url) {
-      playPauseButton = `<button class="play-pause" data-preview="${track.preview_url}">Play</button>`;
-    }
-
-    html += `
-      <div class="duplicate-track">
-        <div class="checkbox-container">
-          <input type="checkbox" id="${track.id}" value="${track.id}" name="duplicate">
-        </div>
-        <div class="image-container">
-        <img src="${track.album.images[2].url}" alt="${track.name} cover">
-        <div class="play-pause" data-preview="${track.preview_url}">
-          <i class="play-icon">&#9658;</i>
-          <i class="pause-icon">&#10074;&#10074;</i>
-        </div>
-      </div>
-      <div class="text-container">
-      <strong>${track.name}</strong> by ${track.artists[0].name}
-      <br>Genres: ${track.genres.join(', ')}
-    </div>
+      playPauseButton = `<div class="play-pause" data-preview="${track.preview_url}">
+        <i class="play-icon">&#9658;</i>
+        <i class="pause-icon">&#10074;&#10074;</i>
       </div>`;
+    }
+  
+    html += `
+    <div class="duplicate-track-item">
+      <input type="checkbox" id="${track.id}" value="${track.id}" name="duplicate">
+      <div class="artwork-container">
+        <img src="${track.album.images[2].url}" alt="${track.name} cover" class="track-artwork">
+      </div>
+      ${playPauseButton}
+     
+      <label for="${track.id}">
+        <strong>${track.name}</strong> by ${track.artists[0].name}
+        <br>Genres: ${track.genres.join(", ")}
+      </label>
+      <a href="${track.external_urls.spotify}" target="_blank" class="spotify-link">
+      <img src="./images/spotify-logo-green.svg" alt="Spotify Logo" class="spotify-icon">
+      PLAY ON SPOTIFY
+    </a>
+    </div>`;
   });
 
   // Set the HTML string to the duplicates section

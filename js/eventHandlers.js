@@ -1,5 +1,10 @@
 // */js/eventHandlers.js
 
+import { selectedPlaylists } from './globalVariables.js';
+import { fetchAndCompareTracks } from './apiFunctions.js';
+import { displayDuplicates,   } from './displayFunctions.js';
+import { updateUIAfterComparison } from './uiFunctions.js';
+
 // Define the handleShowDuplicatesButtonClick function separately
 export function handleShowDuplicatesButtonClick() {
 
@@ -9,9 +14,6 @@ export function handleShowDuplicatesButtonClick() {
   // Hide the playlists section
   document.getElementById('playlists').style.display = 'none';
   document.getElementById('playlist-count').style.display = 'none';
-
-  // Remove the event listener to prevent unintended triggering of the button click
-  this.removeEventListener('click', handleShowDuplicatesButtonClick);
 
   const playlist1Id = selectedPlaylists[0];
   const playlist2Id = selectedPlaylists[1];

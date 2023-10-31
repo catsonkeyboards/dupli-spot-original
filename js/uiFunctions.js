@@ -1,7 +1,10 @@
 // */js/uiFunctions.js
 
-import { selectedDuplicates } from './globalVariables.js';
+import { offset as importedOffset, currentAudio, selectedDuplicates, selectedPlaylists, setSelectedPlaylists, setSelectedDuplicates, setAllPlaylistsFetched, setAllPlaylists, setRetries } from './globalVariables.js';
 import { toggleButtonState } from './utilityFunctions.js'
+import { fetchPlaylists } from './apiFunctions.js';
+
+let resetUIOffset = importedOffset;
 
 // Function to update the "Show Duplicates" button's state
 export function updateDuplicatesButtonState() {
@@ -68,13 +71,23 @@ export function updateUIAfterComparison() {
 // Function to reset the UI after clicking Start-Over-Button
 export function resetUI() {
   // Reset global variables
-  offset = 0;
-  selectedPlaylists = [];
-  selectedDuplicates = [];
-  allPlaylists = [];
-  allPlaylistsFetched = false;
-  retries = 0;
+  resetUIOffset = 0;
+  setSelectedPlaylists([]);
+  setSelectedDuplicates([]);
+  setAllPlaylists([]);
+  setAllPlaylistsFetched(false);
+  setRetries(0);
 
+  // Pause any playing audio
+  if (currentAudio && currentAudio.audio) {
+    currentAudio.audio.pause();
+    currentAudio.audio = null;
+    if (currentAudio.button) {
+      currentAudio.button.classList.remove("playing");
+    }
+    currentAudio.button = null;
+  }
+  
   // Hide specific elements
   document.getElementById('removal-playlist-dropdown').style.display = 'none';
   document.getElementById('dropdown-title').style.display = 'none';
@@ -96,6 +109,5 @@ export function resetUI() {
   document.getElementById('duplicates').innerHTML = '';
 
   // Call fetchPlaylists to reload the playlists
-  fetchPlaylists(offset);
+  fetchPlaylists(resetUIOffset);
 }
-

@@ -2,12 +2,31 @@
 
 export let accessToken;
 export let offset = 0;
+export function setOffset(value) {
+  offset = value;
+}
 export let selectedPlaylists = [];
+export function setSelectedPlaylists(newPlaylists) {
+  selectedPlaylists = newPlaylists;
+}
+
 export let selectedDuplicates = [];
+export function setSelectedDuplicates(newDuplicates) {
+  selectedDuplicates = newDuplicates;
+}
 export let startOverButton;
 export let allPlaylists = [];
+export function setAllPlaylists(allPlaylistsStart) {
+  setAllPlaylists = allPlaylistsStart;
+}
 export let allPlaylistsFetched = false;
+export function setAllPlaylistsFetched(value) {
+  allPlaylistsFetched = value;
+}
 export let retries = 0;
+export function setRetries(value) {
+  retries = value;
+}
 export let currentAudio = {
   audio: null,
   button: null

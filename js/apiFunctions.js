@@ -94,7 +94,7 @@ export function fetchAllTracks(
   const loadingText = document.getElementById("loading-status");
   loadingText.innerHTML = `Loading.. ${offset} tracks`; // Update this line with the correct totalTracks value
 
-  return promiseThrottle.add(() => {
+  return promiseThrottleInstance.add(() => {
     return fetch(
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`,
       {
@@ -124,7 +124,7 @@ export function fetchAllTracks(
       })
       .then((data) => {
         const trackPromises = data.items.map((item) => {
-          return promiseThrottle.add(() => {
+          return promiseThrottleInstance.add(() => {
             return fetch(
               `https://api.spotify.com/v1/artists/${item.track.artists[0].id}`,
               {
@@ -141,7 +141,7 @@ export function fetchAllTracks(
                     setTimeout(
                       () =>
                         resolve(
-                          promiseThrottle.add(() =>
+                          promiseThrottleInstance.add(() =>
                             fetch(
                               `https://api.spotify.com/v1/artists/${item.track.artists[0].id}`,
                               {
