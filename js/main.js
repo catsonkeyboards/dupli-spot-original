@@ -68,6 +68,9 @@ document.getElementById("login-button").addEventListener("click", function () {
     // Remove the event listener
     window.removeEventListener("message", handleCallback);
 
+    // Hide the title of the app to make more space
+    document.querySelector(".title").style.display = "none";
+
     // Call fetchPlaylists after successful authentication
     API.fetchPlaylists(currentOffset);
 
@@ -81,6 +84,9 @@ document.getElementById("login-button").addEventListener("click", function () {
     readmeSection.style.display = "none"; // Hide the Readme section in the body
     document.getElementById("search-container").style.display = "block"; // Show the search bar
     document.getElementById("instruction-text").style.display = "block"; // Show the instruction text under the search bar
+
+     // Show the log-out button after successful authentication
+     document.getElementById("logout-button").style.display = "inline-block";
   };
 
   // Listen for the callback message from the authentication window
@@ -96,6 +102,26 @@ document.getElementById("load-more").addEventListener("click", function () {
 
 // Event listeners after DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
+  // Event listener for the log-out button click
+document.getElementById("logout-button").addEventListener("click", function () {
+  // Clear the access token
+  setAccessToken(null);
+
+  // Hide all sections and show only the login button
+  document.getElementById("playlists").style.display = "none";
+  document.getElementById("show-duplicates").style.display = "none";
+  document.getElementById("search-container").style.display = "none";
+  document.getElementById("instruction-text").style.display = "none";
+  document.getElementById("removal-playlist-dropdown").style.display = "none";
+  document.getElementById("dropdown-title").style.display = "none";
+  document.getElementById("logout-button").style.display = "none";
+  document.querySelector(".readme").style.display = "block";
+  document.getElementById("login-button").style.display = "inline-block";
+  document.getElementById("load-more").style.display = "none";
+  document.getElementById("playlist-count").style.display = "none";
+
+});
+
   // Update the button state initially
   UI.updateRemoveDuplicatesButtonState();
 

@@ -1,45 +1,98 @@
-/* Custom Fonts */
+/* Main Font Family */
+
 @font-face {
-  font-family: 'groovy';
-  src: url('fonts/Morsan-4BDo4.ttf') format('truetype');
+  font-family: 'Main';
+  src: url('fonts/main/Std-Black.otf') format('opentype');
+  font-weight: 900;
 }
 
 @font-face {
-  font-family: 'gazpacho';
-  src: url('fonts/Gazpacho Regular.ttf') format('truetype');
+  font-family: 'Main';
+  src: url('fonts/main/Std-BlackItalic.otf') format('opentype');
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-Bold.otf') format('opentype');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-Book.otf') format('opentype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-BookItalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-Light.otf') format('opentype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-Medium.otf') format('opentype');
+  font-weight: 500; 
+}
+
+@font-face {
+  font-family: 'Main';
+  src: url('fonts/main/Std-MediumItalic.otf') format('opentype');
+  font-weight: 500; 
+  font-style: italic;
 }
 
 /* Global styles */
 body {
+  margin: 0;
   text-align: center;
-  font-family: Helvetica, sans-serif;
-  background-color: #191414;
-  color: #f9e2f9;
+  font-family: 'Main', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  background-color: #212121;
+  color: #ffffff;
   display: flex;
-  /* Make body a flex container */
   flex-direction: column;
-  /* Set the main axis to vertical */
   min-height: 100vh;
-  /* Ensure it takes up the full viewport height */
 }
 
 /* Adding a wrapper around my main content (exlucding header and footer) */
 .main-content {
   flex: 1;
-  /* This will make it grow to take up any available space */
+  background: linear-gradient(#212121,#000000);
 }
 
 /* Header styles */
 header {
-  background-color: #f9e2f9;
+  background-color: #212121;
   background-image: url('images/cherry.png');
   background-repeat: no-repeat;
   background-position: center 10%;
-  /* Position the image above the title */
   background-size: 100px 100px;
-  /* Set the desired size for the image */
-  padding: 120px 20px 50px 20px;
-  /* Provide space above the title for the image */
+  padding: 100px 20px 30px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -49,9 +102,7 @@ header {
 @media (max-width: 768px) {
   header {
     background-size: 80px 80px;
-    /* Adjust the size for medium screens */
     background-position: center 10%;
-    /* Keep the image above the title */
   }
 }
 
@@ -59,57 +110,50 @@ header {
 @media (max-width: 480px) {
   header {
     background-size: 60px 60px;
-    /* Adjust the size for small screens */
     background-position: center 10%;
-    /* Keep the image above the title */
   }
 }
 
 /* Title styles */
 .main-title,
 .title {
-  font-family: 'groovy', Arial, sans-serif;
-  font-weight: bold;
-  color: #242324;
+  font-family: 'Main', sans-serif;
+  color: #ffffff;
   line-height: 1;
-  margin-top: 5px;
-  text-shadow: -2px -2px 0 #f9e2f9,
-    2px -2px 0 #f9e2f9,
-    -2px 2px 0 #f9e2f9,
-    2px 2px 0 #f9e2f9;
+  margin-top: 0.5rem;
+  text-decoration: none;
 }
 
 .main-title {
-  font-size: 6rem;
-  margin-bottom: 10px;
-  /* Adjust this value to reduce the space below the main title */
-
+  font-size: 3.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
 }
 
 .title {
-  font-size: 2.5rem;
-  margin-top: 10px;
-  /* Adjust this value to reduce the space above the subtitle */
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: normal;
 }
 
 /* Login button styles */
 
 .spotify-logo {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px; /* Space between the logo and the text */
-  vertical-align: middle; /* Align the logo with the text */
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
 .login-button {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .login-button button {
-  background-color: #242324;
-  color: #f9e2f9;
+  background-color: #cb337a;
+  color: hsl(0, 0%, 100%);
   padding: 10px 20px;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: bold;
   border: none;
   border-radius: 4px;
@@ -119,7 +163,7 @@ header {
 }
 
 .login-button button:hover {
-  background-color: #bb298a;
+  background-color: #1db954;
 }
 
 .login-button svg {
@@ -131,22 +175,32 @@ header {
 
 /* Footer styles */
 footer {
-  background-color: #f9e2f9;
-  padding: 10px;
-  font-size: 10px;
-  color: #242324;
-  border-top: 1px solid #ccc;
+  background-color: #000000;
+  padding: 1rem;
+  font-size: 0.6rem;
+  color: #afafaf;
   text-align: center;
+}
+
+.footer-link {
+  text-decoration: none;
+  color: #1DB954;
+}
+
+.footer-link:visited {
+  text-decoration: none;
+  color: #1DB954;
 }
 
 .footer-link:hover {
   text-decoration: underline;
+  color: #1DB954;
 }
 
 /* Basic styling for enabled checkboxes */
 [type=checkbox] {
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   color: #bb298a;
   vertical-align: middle;
   -webkit-appearance: none;
@@ -158,6 +212,10 @@ footer {
   background-color: #f9e2f9;
   transition: background 300ms;
   cursor: pointer;
+}
+
+[type=checkbox]:hover {
+  background-color: #cf74b1;
 }
 
 [type=checkbox]::before {
@@ -195,8 +253,8 @@ footer {
 
 /* Playlists section styles */
 #playlists {
-  padding: 20px;
-  color: #f9e2f9;
+  padding: 30px 60px 30px 60px;
+  color: #ffffff;
   text-align: left;
   max-width: 800px;
   margin: 0 auto;
@@ -205,14 +263,25 @@ footer {
 .playlist-artwork {
   width: 60px;
   height: 60px;
-  /* border-radius: 4px; */
+  border-radius: 1px;
 }
 
 .playlist-item {
   display: flex;
-  color: #f9e2f9;
+  color: #ffffff;
   align-items: center;
   padding: 10px 0;
+  transition: opacity 0.3s;
+}
+
+.playlist-item.hidden {
+  opacity: 0;
+  pointer-events: none; /* This ensures that the hidden items are not clickable */
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  border: none; /* Adjust as needed */
 }
 
 .playlist-item>*:not(:last-child) {
@@ -231,39 +300,42 @@ footer {
 }
 
 /* Duplicate buttons styles */
+
+
 .disabled {
   background-color: #707070 !important;
-  color: #d0bcd0 !important;
+  color: #ffffff !important;
   cursor: not-allowed !important;
 }
 
 .enabled {
-  background-color: #d6309f !important;
-  color: #f9e2f9 !important;
+  background-color: #cb337a !important;
+  color: #ffffff !important;
   cursor: pointer !important;
 }
 
 .enabled:hover {
-  background-color: #bb298a !important;
-  color: #f9e2f9 !important;
+  background-color: #1db954 !important;
+  color: #ffffff !important;
   cursor: pointer !important;
 }
 
 /* Readme section styles */
 .readme {
-  font-family: 'gazpacho';
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-bottom: 40px;
+  font-family: 'main';
+  font-weight: 300;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  padding-bottom: 2.5rem;
   text-align: left;
-  max-width: 800px;
+  max-width: 50rem;
   margin: 0 auto;
-  color: #f9e2f9;
+  color: #ffffff;
 }
 
 .selected-playlists {
-  color: #242324;
-  background-color: #f9e2f9;
+  color: #212121;
+  background-color: #ffffff;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -276,7 +348,7 @@ footer {
 }
 
 .loader {
-  border: 6px solid #f9e2f9;
+  border: 6px solid #ffffff;
   border-top: 6px solid #242324;
   border-radius: 50%;
   width: 20px;
@@ -285,7 +357,7 @@ footer {
 }
 
 .loader-small {
-  border: 3px solid #f9e2f9;
+  border: 3px solid #ffffff;
   border-top: 3px solid #242324;
   border-radius: 50%;
   width: 10px;
@@ -309,41 +381,42 @@ footer {
 }
 
 #removal-playlist-dropdown {
-  color: #242324;
-  background-color: #f9e2f9;
-  padding: 20px;
+  color: #212121;
+  background-color: #ffffff;
+  padding: 1.25rem;
   font-size: 1.2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
   outline: none;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease;
-  margin-top: 50px;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
   margin-left: auto;
   margin-right: auto;
 }
 
 #removal-playlist-dropdown:hover {
-  background-color: #e0cde0;
+  background-color: #ffffff;
 }
 
 #removal-playlist-dropdown:focus {
-  border-color: #9b75da;
+  border-color: #b3b3b3;
 }
 
 #removal-playlist-dropdown option {
   color: #242324;
-  background-color: #f9e2f9;
+  background-color: #ffffff;
   padding: 8px 12px;
 }
 
 #dropdown-title {
   display: block;
   font-size: 0.8rem;
-  color: #e0cde0;
+  color: #ffffff;
   margin-top: 8px;
   text-align: center;
 }
@@ -351,7 +424,7 @@ footer {
 /* Display of duplicate tracks list */
 #duplicates {
 padding: 20px;
-color: #f9e2f9;
+color: #ffffff;
 text-align: left;
 max-width: 800px;
 margin: 0 auto;
@@ -360,7 +433,7 @@ margin: 0 auto;
 /* Duplicate tracks styles */
 .duplicate-track-item {
 display: flex;
-color: #f9e2f9;
+color: #ffffff;
 align-items: center;
 padding: 10px 0;
 }
@@ -372,21 +445,20 @@ margin-right: 10px;
 .track-artwork {
 width: 60px;
 height: 60px;
-/* border-radius: 4px; */
+border-radius: 1px;
 }
 
 .spotify-link {
-font-size: 0.9rem;
+font-size: 0.6rem;
 display: flex;
 align-items: center;
-padding: 2px 5px;
 color: #1DB954;
 text-decoration: none;
 }
 
 .spotify-icon {
-width: 20px;
-height: 20px;
+width: 15px;
+height: 15px;
 margin-right: 5px;
 color: #1DB954;
 }
@@ -399,14 +471,9 @@ cursor: pointer;
 
 .play-icon,
 .pause-icon {
-color: white;
-font-size: 24px;
+color: #ffffff;
+font-size: 20px;
 display: none;
-text-shadow:
-  -1px -1px 0 #242324,
-  1px -1px 0 #242324,
-  -1px 1px 0 #242324,
-  1px 1px 0 #242324;
 }
 
 .play-pause .play-icon {
@@ -424,85 +491,130 @@ display: block;
 /* Start Over Button */
 
 #start-over-button {
-  background-color: #f9e2f9;
-  color: #242324;
-  padding: 8px 16px;
-  /* Smaller padding than the Show Duplicates button */
-  font-size: 1.2rem;
-  /* Adjust font size as needed */
+  background-color: #ffffff;
+  color: #212121;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
   font-weight: bold;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   transition: background-color 0.3s ease;
   cursor: pointer;
   display: none;
-  /* Initially hidden */
-  margin: 20px auto;
-  /* Center the button and add margin at the top */
-  max-width: 200px;
-  /* Adjust width as needed */
+  margin: 1.25rem auto; 
+  max-width: 12.5rem; 
 }
 
 #start-over-button:hover {
-  color: #f9e2f9;
-  background-color: #bb298a;
+  color: #ffffff;
+  background-color: #1db954;
   /* Lighter shade of green on hover */
 }
 
 #select-all-duplicates {
   margin: 2px;
   margin-bottom: 10px;
-  /* Adjust as needed */
 }
 
 #load-more {
-  background-color: #f9e2f9;
-  color: #242324;
+  background-color: #ffffff;
+  color: #212121;
   padding: 8px 16px;
-  /* Smaller padding than the Show Duplicates button */
-  font-size: 1.2rem;
-  /* Adjust font size as needed */
+  font-size: 0.8rem;
   font-weight: bold;
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s ease;
   cursor: pointer;
   display: none;
-  /* Initially hidden */
   margin: 20px auto;
-  /* Center the button and add margin at the top */
   max-width: 200px;
-  /* Adjust width as needed */
 }
 
 #load-more:hover {
-  background-color: #bb298a;
-  /* Lighter shade of green on hover */
-  color: #f9e2f9;
+  background-color: #1db954;
+  color: #ffffff;
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block; /* This will make the wrapper only as wide as its content */
+}
+
+#playlist-search {
+  /* ... existing styles ... */
+  width: 100%; /* Make the input take up the full width of its parent */
+  box-sizing: border-box; /* This ensures padding and border are included in the width */
 }
 
 #search-container {
   display: none;
   padding-top: 30px;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
+  position: relative;
 }
 
 #search-container input[type="text"] {
-  border-radius: 8px;
-  /* This gives the input field rounded corners */
-  background-color: #f9e2f9;
-  /* This sets the background color of the input field */
-  border: 1px solid #ccc;
-  /* This gives a border to the input field */
-  padding: 8px 12px;
-  /* This gives some padding inside the input field */
-  font-size: 16px;
-  /* This sets the font size inside the input field */
+  border-radius: 1.2rem;  
+  background-color: #ffffff;
+  border: 0.0625rem solid #ffffff;  
+  padding: 0.5rem 1.5rem 0.5rem 0.75rem;  /* Adjust the right padding */
+  font-size: 0.8rem;  
+  font-weight: 300;
   outline: none;
-  /* This removes the browser's default outline on focus */
 }
 
 #search-container input[type="text"]:focus {
   border-color: #9b75da;
   /* This changes the border color when the input field is focused */
+}
+
+/* Logout Button */
+#logout-button {
+  position: absolute; /* Fixed position */
+  top: 20px; /* 10px from the top */
+  right: 20px; /* 10px from the right */
+  background-color: #535353;
+  color: #fff;
+  padding: 5px 10px; /* Smaller padding for a smaller button */
+  font-size: 0.8rem; /* Smaller font size */
+  font-weight: bold;
+  border: none;
+  border-radius: 4px; /* Fully rounded corners for a pill shape */
+  display: none; /* Initially hidden */
+  z-index: 1000; /* Ensure it's above other elements */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#logout-button:hover {
+  background-color: #cb337a;
+}
+
+/* Clear Playlist Selection Button */
+#clear-selected {
+  background-color: #FF5733; /* Red color */
+  color: white;
+  border: none;
+  padding: 3px 8px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 0.5rem;
+  border-radius: 1rem;
+  transition: background-color 0.3s;
+}
+
+#clear-selected:hover {
+  background-color: #FF2E00; /* Darker red on hover */
+}
+
+/* Clear Search button */
+#clear-search {
+  background: none;
+  border: none;
+  position: absolute; 
+  right: 10px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }

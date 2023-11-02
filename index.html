@@ -4,28 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dupli-Spot: The ultimate Spotify Cross-Playlist De-Duplicator. Easily find and remove duplicate tracks across your playlists.">
+  <meta name="description"
+    content="Dupli-Spot: The ultimate Spotify Cross-Playlist De-Duplicator. Easily find and remove duplicate tracks across your playlists.">
   <link rel="icon" href="/images/fav_new.ico">
   <title>Dupli-Spot</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+  <!-- Logout Button -->
+  <button id="logout-button" style="display: none;">Log Out</button>
+
   <!-- Header -->
   <header>
     <!-- Main title -->
-    <h1 class="main-title"><a href="index.html" style="text-decoration: none; color: #242324;">Dupli-Spot</a></h1>
+    <h2 class="main-title">DUPLI-SPOT</h2>
     <!-- Page title -->
-    <h1 class="title">Spotify Cross-Playlist<br>De-Duplicator</h1>
+    <h3 class="title">Spot and remove duplicate tracks between different playlists.<br>Analyse by track name, preview,
+      title, album release date and genre.<br>Keep your playlist organised, clean and curated.</h3>
     <!-- Login button section -->
     <div class="login-button">
       <!-- Login button with Spotify logo -->
       <button id="login-button">
         <img src="images/spotify-logo.svg" alt="Spotify Logo" class="spotify-logo">
         Log in with Spotify
-      </button>      
+      </button>
       <!-- Show Duplicates Button -->
-      <button id="show-duplicates" class="disabled" disabled style="display: none;">Show Duplicates</button>
+      
+
+    <button id="show-duplicates" class="disabled" disabled style="display: none;">Show Duplicates</button>
+    
+
       <div>
         <!-- Remove Duplicates Button -->
         <button id="remove-duplicates" style="display: none;">Remove Duplicates</button>
@@ -44,9 +53,6 @@
       <div id="error-message" style="color: red; display: none;"></div>
 
       <!-- Playlists section -->
-      <div id="search-container">
-        <input type="text" id="playlist-search" placeholder="Search for a playlist...">
-      </div>
 
       <!-- Instruction text -->
       <div id="instruction-text" style="display: none;">
@@ -55,11 +61,23 @@
         You can load more playlists by scrolling to the bottom and clicking 'Load More'.<br>
       </div>
 
-      <div id="playlist-count">
-        <!-- A count of how many playlists are selected, starting with "0 of 2 Playlists Selected"-->
+      <div id="search-container">
+        <div class="input-wrapper">
+        <input type="text" id="playlist-search" placeholder="Search for a playlist...">
+        <button id="clear-search" style="display: none;">X</button>
       </div>
+    </div>
 
-      <div id="playlists">
+      <!-- Playlist Count Display -->
+      <div id="displayed-playlist-count"></div>
+
+      <!-- A count of how many playlists are selected, starting with "0 of 2 Playlists Selected"-->
+      <div id="playlist-count" style="display: none;">
+        <span id="playlist-count-text">( 0 of 2 playlists selected for comparison )</span>
+        <button id="clear-selected" style="display: none;">Clear</button>
+    </div>
+    
+      <div id="playlists" style="display: none;">
         <!-- Playlists will be appended here -->
       </div>
 
@@ -78,8 +96,8 @@
       </div>
 
       <!-- Duplicates section -->
-      <div id="duplicates">
-          <!-- List of duplicate tracks will be inserted here -->
+      <div id="duplicates" style="display: none;">
+        <!-- List of duplicate tracks will be inserted here -->
       </div>
 
       <!-- Success message -->
@@ -87,11 +105,11 @@
         Duplicates have been removed!
       </div>
 
-      <div id="loading-graphic" style="display: none; padding: 30px;">
+      <div id="loading-graphic" style="display: none; padding: 5px;">
         <center>
           <div class="loader-small" style="padding: 20px;"></div>
         </center>
-        <div id="loading-status" style="margin: 20px;">Loading tracks, please wait...</div>
+        <div id="loading-status" style="margin: 10px;">Loading...</div>
       </div>
 
       <!-- Start Over Button -->
@@ -113,32 +131,32 @@
   <!-- Footer -->
   <footer>
     <section>
-      <p>This web app uses the <a class="footer-link" href="https://developer.spotify.com/documentation/web-api">Spotify Web API</a> to manage user's playlists and saved tracks.</p>
+      <p>This web app uses the <a class="footer-link" href="https://developer.spotify.com/documentation/web-api">Spotify
+          Web API</a> to manage user's playlists and saved tracks.</p>
       <p>Dupli-Spot will only remove user-selected tracks, leaving other playlists and saved songs untouched.</p>
     </section>
     <nav>
-      <p>&copy; 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved. <a class="footer-link" href="privacy-policy.html">Privacy Policy</a></p>
+      <p>&copy; 2023 Dupli-Spot by Sound Niccolò Studios All Rights Reserved. <a class="footer-link"
+          href="privacy-policy.html">Privacy Policy</a></p>
     </nav>
   </footer>
 
-<!-- Scripts -->
-<script type="text/javascript" src="lib/DOMPurify-main/dist/purify.js"></script>
-<script src="/js/marked.js"></script>
-<script src="lib/promise-throttle-master/dist/promise-throttle.js"></script>
-<script type="module" src="/js/main.js"></script>
-<script>
-  fetch('README.md')
-    .then(response => response.text())
-    .then(text => {
-      const readmeContent = document.getElementById('readme-content');
-      readmeContent.innerHTML = marked(text);
-    })
-    .catch(error => {
-      console.error('Error loading README:', error);
-    });
-</script>
-
-
+  <!-- Scripts -->
+  <script type="text/javascript" src="lib/DOMPurify-main/dist/purify.js"></script>
+  <script src="/js/marked.js"></script>
+  <script src="lib/promise-throttle-master/dist/promise-throttle.js"></script>
+  <script>
+    fetch('README.md')
+      .then(response => response.text())
+      .then(text => {
+        const readmeContent = document.getElementById('readme-content');
+        readmeContent.innerHTML = marked(text);
+      })
+      .catch(error => {
+        console.error('Error loading README:', error);
+      });
+  </script>
+  <script type="module" src="/js/main.js"></script>
 </body>
 
 </html>

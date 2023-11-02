@@ -1,7 +1,12 @@
 // */js/apiFunctions.js
 
-import { limit, accessToken, allPlaylists, selectedPlaylists } from './globalVariables.js';
-import { displayPlaylists } from './displayFunctions.js';
+import {
+  limit,
+  accessToken,
+  allPlaylists,
+  selectedPlaylists, setTotalUserPlaylists, loadingGraphic
+} from "./globalVariables.js";
+import { displayPlaylists } from "./displayFunctions.js";
 
 // Function to fetch playlists from Spotify API
 export function fetchPlaylists(offset = 0) {
@@ -48,11 +53,13 @@ export function fetchPlaylists(offset = 0) {
 
           // Add fetched playlists to the allPlaylists array
           allPlaylists.push(...data.items);
-          console.log("All Playlists:", allPlaylists);
+
+           // Store the total number of user playlists
+  setTotalUserPlaylists(data.total);
 
           // Set the initial playlist count
           const playlistCountContainer =
-            document.getElementById("playlist-count");
+            document.getElementById("playlist-count-text");
           playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected for comparison )`;
 
           // Call the displayPlaylists function
@@ -199,6 +206,17 @@ export function fetchAllTracks(
   });
 }
 
+// Fetch tracks from the two selected playlists and compare them to find duplicates
+export function fetchAndCompareTracks(playlist1Id, playlist2Id) {
+  return Promise.all([
+    fetchAllTracks(playlist1Id),
+    fetchAllTracks(playlist2Id),
+  ]).then(([tracks1 = [], tracks2 = []]) => {
+    const track1Ids = new Set(tracks1.map((track) => track.id));
+    return tracks2.filter((track) => track1Ids.has(track.id));
+  });
+}
+
 // Function to remove duplicates from a playlist
 export function removeDuplicatesFromPlaylist(playlistId, trackIds) {
   const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
@@ -233,17 +251,6 @@ export function removeDuplicatesFromPlaylist(playlistId, trackIds) {
   return batches.reduce((promise, batch) => {
     return promise.then(() => removeBatch(batch));
   }, Promise.resolve());
-}
-
-// Fetch tracks from the two selected playlists and compare them to find duplicates
-export function fetchAndCompareTracks(playlist1Id, playlist2Id) {
-  return Promise.all([
-    fetchAllTracks(playlist1Id),
-    fetchAllTracks(playlist2Id),
-  ]).then(([tracks1 = [], tracks2 = []]) => {
-    const track1Ids = new Set(tracks1.map((track) => track.id));
-    return tracks2.filter((track) => track1Ids.has(track.id));
-  });
 }
 
 // Function for updating playlist numbers after track removal

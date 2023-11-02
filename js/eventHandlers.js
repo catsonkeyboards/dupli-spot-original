@@ -12,6 +12,8 @@ export function handleShowDuplicatesButtonClick() {
   document.getElementById('instruction-text').style.display = 'none';
 
   // Hide the playlists section
+  document.getElementById("playlist-count").style.display = "none";
+  document.getElementById("displayed-playlist-count").style.display = "none";
   document.getElementById('playlists').style.display = 'none';
   document.getElementById('playlist-count').style.display = 'none';
 
@@ -52,4 +54,5 @@ export function handleShowDuplicatesButtonClick() {
   // Hide the "Load More" button
   document.getElementById('load-more').style.display = 'none';
 }
+
   

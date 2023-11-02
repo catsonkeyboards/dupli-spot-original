@@ -42,3 +42,8 @@ export function setAccessToken(token) {
 export function setStartOverButton(element) {
   startOverButton = element;
 }
+// Variable to store amount of user playlists to show on the top of the list of playlists
+export let totalUserPlaylists = 0;
+export function setTotalUserPlaylists(value) {
+  totalUserPlaylists = value;
+}
