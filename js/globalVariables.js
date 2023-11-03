@@ -47,3 +47,11 @@ export let totalUserPlaylists = 0;
 export function setTotalUserPlaylists(value) {
   totalUserPlaylists = value;
 }
+
+// Variable to track whether all duplicates have been removed
+export let allDuplicatesRemoved = false;
+
+// Setter function for allDuplicatesRemoved
+export function setAllDuplicatesRemoved(value) {
+  allDuplicatesRemoved = value;
+}

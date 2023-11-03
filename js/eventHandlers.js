@@ -17,6 +17,13 @@ export function handleShowDuplicatesButtonClick() {
   document.getElementById('playlists').style.display = 'none';
   document.getElementById('playlist-count').style.display = 'none';
 
+  // Hide the "Show Duplicates" button and display the loading graphic
+  document.getElementById('show-duplicates').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+
+  // Hide the search bar
+  document.getElementById('search-container').style.display = 'none';
+
   const playlist1Id = selectedPlaylists[0];
   const playlist2Id = selectedPlaylists[1];
 
@@ -36,13 +43,6 @@ export function handleShowDuplicatesButtonClick() {
   // Prepend the selected playlists HTML to the duplicates section
   const sanitizedHTML = DOMPurify.sanitize(selectedPlaylistsHTML);
   duplicatesSection.innerHTML = sanitizedHTML;
-
-  // Hide the "Show Duplicates" button and display the loading graphic
-  document.getElementById('show-duplicates').style.display = 'none';
-  document.getElementById('loading').style.display = 'block';
-
-  // Hide the search bar
-  document.getElementById('search-container').style.display = 'none';
 
   fetchAndCompareTracks(playlist1Id, playlist2Id)
     .then(duplicates => {
