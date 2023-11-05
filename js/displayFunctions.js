@@ -196,7 +196,6 @@ setTimeout(() => {
   }
 }
 
-
 // Display the duplicate tracks in the UI, create an HTML string with the duplicate track data
 export function displayDuplicates(duplicates) {
   let html = "";
@@ -212,11 +211,15 @@ export function displayDuplicates(duplicates) {
   const playlist1Name = selectedPlaylists[0] ? allPlaylists.find(p => p.id === selectedPlaylists[0]).name : '';
   const playlist2Name = selectedPlaylists[1] ? allPlaylists.find(p => p.id === selectedPlaylists[1]).name : '';
   const selectedPlaylistsHTML = `
-    <div class="selected-playlists">
-      <strong>Compared Playlists:</strong><br>${playlist1Name}<br>${playlist2Name}
-    </div>
+  <div class="selected-playlists">
+    <strong>Compared Playlists:</strong><br>${playlist1Name}<br>${playlist2Name}
+  </div>
   `;
 
+  // // Append the selectedPlaylistsHTML to the duplicates section
+  const duplicatesSection = document.getElementById("duplicates");
+  duplicatesSection.innerHTML = html;
+  
   // Check if there are any duplicates
   if (duplicates.length > 0) {
     console.log("Duplicate Tracks:", duplicates); // This line logs the duplicate tracks
@@ -229,7 +232,7 @@ export function displayDuplicates(duplicates) {
     dropdownTitle.style.display = "block";
   } else {
     // Update and display the success message to indicate no duplicates
-    successMessage.innerHTML = "No duplicates found!" + selectedPlaylistsHTML;
+    successMessage.innerHTML = "No duplicates found!";
     successMessage.style.display = "block";
 
     // Hide the dropdown and its title
@@ -274,9 +277,7 @@ export function displayDuplicates(duplicates) {
     </div>`;
   });
 
-  // Set the HTML string to the duplicates section
-  const duplicatesSection = document.getElementById("duplicates");
-  duplicatesSection.innerHTML = html;
+  
 
   // Add event listener for checkboxes in the duplicates section
   document

@@ -37,20 +37,20 @@ export function handleShowDuplicatesButtonClick() {
   </div>
   `;
 
+
   // Get the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
-
-  // Prepend the selected playlists HTML to the duplicates section
-  const sanitizedHTML = DOMPurify.sanitize(selectedPlaylistsHTML);
-  duplicatesSection.innerHTML = sanitizedHTML;
-
+\
   fetchAndCompareTracks(playlist1Id, playlist2Id)
     .then(duplicates => {
       displayDuplicates(duplicates);
       updateUIAfterComparison();
     });
 
-
+  // Prepend the selected playlists HTML to the duplicates section
+  const sanitizedHTML = DOMPurify.sanitize(selectedPlaylistsHTML);
+  duplicatesSection.innerHTML = sanitizedHTML;
+  
   // Hide the "Load More" button
   document.getElementById('load-more').style.display = 'none';
 }

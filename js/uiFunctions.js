@@ -26,6 +26,8 @@ export function updateRemoveDuplicatesButtonState() {
 // Handle UI updates after the comparison
 export function updateUIAfterComparison() {
 
+  console.log("updateUiAfterComparison Function called.")
+
   const playlistsSection = document.getElementById('playlists'); // Variable to select to hide the playlists 
   playlistsSection.style.display = 'none'; // Hide the playlists 
 
@@ -63,6 +65,9 @@ export function updateUIAfterComparison() {
   // Show the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
   duplicatesSection.style.display = 'block';
+
+  // Log a message to the console
+console.log("The duplicates section is now displayed.");
 
   // Show the "Start Over" button after displaying the duplicates
   document.getElementById('start-over-button').style.display = 'block';
