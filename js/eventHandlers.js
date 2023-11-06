@@ -7,7 +7,6 @@ import { updateUIAfterComparison } from './uiFunctions.js';
 
 // Define the handleShowDuplicatesButtonClick function separately
 export function handleShowDuplicatesButtonClick() {
-
   // Hide the instruction text
   document.getElementById('instruction-text').style.display = 'none';
 
@@ -23,7 +22,7 @@ export function handleShowDuplicatesButtonClick() {
 
   // Hide the search bar
   document.getElementById('search-container').style.display = 'none';
-
+  
   const playlist1Id = selectedPlaylists[0];
   const playlist2Id = selectedPlaylists[1];
 
@@ -40,7 +39,7 @@ export function handleShowDuplicatesButtonClick() {
 
   // Get the duplicates section
   const duplicatesSection = document.getElementById('duplicates');
-\
+
   fetchAndCompareTracks(playlist1Id, playlist2Id)
     .then(duplicates => {
       displayDuplicates(duplicates);
