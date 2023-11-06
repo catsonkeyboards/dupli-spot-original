@@ -12,7 +12,7 @@ import {
   allPlaylistsFetched,
   limit,
   selectedDuplicates,
-  totalUserPlaylists,
+  totalUserPlaylists, loadingGraphic
 } from "./globalVariables.js";
 import { fetchPlaylists } from "./apiFunctions.js";
 
@@ -208,15 +208,6 @@ export function displayDuplicates(duplicates) {
   // Success Message if there are no duplicates
   const successMessage = document.getElementById("success-message");
 
-  // Create an HTML string for the selected playlists
-  const playlist1Name = selectedPlaylists[0] ? allPlaylists.find(p => p.id === selectedPlaylists[0]).name : '';
-  const playlist2Name = selectedPlaylists[1] ? allPlaylists.find(p => p.id === selectedPlaylists[1]).name : '';
-  const selectedPlaylistsHTML = `
-    <div class="selected-playlists">
-      <strong>Compared Playlists:</strong><br>${playlist1Name}<br>${playlist2Name}
-    </div>
-  `;
-
   // Check if there are any duplicates
   if (duplicates.length > 0) {
     console.log("Duplicate Tracks:", duplicates); // This line logs the duplicate tracks
@@ -229,7 +220,7 @@ export function displayDuplicates(duplicates) {
     dropdownTitle.style.display = "block";
   } else {
     // Update and display the success message to indicate no duplicates
-    successMessage.innerHTML = "No duplicates found!" + selectedPlaylistsHTML;
+    successMessage.textContent = "No duplicates found!";
     successMessage.style.display = "block";
 
     // Hide the dropdown and its title

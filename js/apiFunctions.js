@@ -4,11 +4,7 @@ import {
   limit,
   accessToken,
   allPlaylists,
-  selectedPlaylists,
-  setTotalUserPlaylists,
-  loadingGraphic,
-  allDuplicatesRemoved,
-  setAllDuplicatesRemoved,
+  selectedPlaylists, setTotalUserPlaylists, loadingGraphic
 } from "./globalVariables.js";
 import { displayPlaylists } from "./displayFunctions.js";
 
@@ -58,13 +54,12 @@ export function fetchPlaylists(offset = 0) {
           // Add fetched playlists to the allPlaylists array
           allPlaylists.push(...data.items);
 
-          // Store the total number of user playlists
-          setTotalUserPlaylists(data.total);
+           // Store the total number of user playlists
+  setTotalUserPlaylists(data.total);
 
           // Set the initial playlist count
-          const playlistCountContainer = document.getElementById(
-            "playlist-count-text"
-          );
+          const playlistCountContainer =
+            document.getElementById("playlist-count-text");
           playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected for comparison )`;
 
           // Call the displayPlaylists function
@@ -213,15 +208,6 @@ export function fetchAllTracks(
 
 // Fetch tracks from the two selected playlists and compare them to find duplicates
 export function fetchAndCompareTracks(playlist1Id, playlist2Id) {
-  // Check if all duplicates have already been removed
-  if (allDuplicatesRemoved) {
-    // Display the 'No duplicates found' message and exit the function
-    const successMessage = document.getElementById("success-message");
-    successMessage.textContent = "No duplicates found!";
-    successMessage.style.display = "block";
-    return Promise.resolve([]); // Resolve with an empty array
-  }
-
   return Promise.all([
     fetchAllTracks(playlist1Id),
     fetchAllTracks(playlist2Id),
@@ -264,10 +250,7 @@ export function removeDuplicatesFromPlaylist(playlistId, trackIds) {
 
   return batches.reduce((promise, batch) => {
     return promise.then(() => removeBatch(batch));
-  }, Promise.resolve()).then(() => {
-    // After successfully removing duplicates, set allDuplicatesRemoved to true
-    setAllDuplicatesRemoved(true);
-  });
+  }, Promise.resolve());
 }
 
 // Function for updating playlist numbers after track removal
