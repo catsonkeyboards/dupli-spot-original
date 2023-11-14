@@ -119,6 +119,13 @@ document.getElementById("logout-button").addEventListener("click", function () {
   document.getElementById("login-button").style.display = "inline-block";
   document.getElementById("load-more").style.display = "none";
   document.getElementById("playlist-count").style.display = "none";
+  document.getElementById("displayed-playlist-count").style.display = "none";
+  document.getElementById("loading-graphic").style.display = "none";
+  document.getElementById("compared-playlists").style.display = "none";
+  document.getElementById("duplicates").style.display = "none";
+  document.getElementById("success-message").style.display = "none";
+  document.getElementById("start-over-button").style.display = "none";
+  document.getElementById("remove-duplicates").style.display = "none";
 
 });
 
