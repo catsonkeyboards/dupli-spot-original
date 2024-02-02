@@ -6,7 +6,6 @@ import {
   getRetries,
   maxRetries,
   setRetries,
-  retries,
   allPlaylists,
   selectedPlaylists,
   setTotalUserPlaylists,
@@ -28,30 +27,26 @@ export function fetchPlaylists(offset = 0) {
         },
       }
     )
-      .then((response) => {
-        if (!response.ok) {
-          if (response.status === 429 && retries < maxRetries) {
-            // Read the Retry-After header if present or default to a fallback delay
-            const retryAfterHeader = response.headers.get("Retry-After");
-            const retryAfter = retryAfterHeader
-              ? parseInt(retryAfterHeader) * 1000
-              : 5000;
-            console.warn(
-              `Rate limited. Retrying after ${retryAfter / 1000} seconds.`
-            );
-            setTimeout(() => {
-              setRetries(getRetries() + 1);
-              fetchPlaylists(offset).then(resolve).catch(reject);
-            }, retryAfter);
-          } else {
-            throw new Error("Failed to fetch playlists."); // Throw an error to be caught by the catch block
-          }
+    .then((response) => {
+      if (!response.ok) {
+        if (response.status === 429 && getRetries() < maxRetries) {
+          // Use getRetries() instead of directly accessing retries
+          const retryAfterHeader = response.headers.get("Retry-After");
+          const retryAfter = retryAfterHeader ? parseInt(retryAfterHeader) * 1000 : 5000;
+          console.warn(`Rate limited. Retrying after ${retryAfter / 1000} seconds.`);
+          setTimeout(() => {
+            setRetries(getRetries() + 1); // Correctly using setRetries here
+            fetchPlaylists(offset).then(resolve).catch(reject);
+          }, retryAfter);
         } else {
-          setRetries(0); // Reset retries on a successful request
-          return response.json();
+          throw new Error("Failed to fetch playlists.");
         }
-      })
-      .then((data) => {
+      } else {
+        setRetries(0); // Reset retries on a successful request
+        return response.json();
+      }
+    })
+    .then((data) => {
         console.log(data);
 
         // Add fetched playlists to the allPlaylists array
@@ -85,100 +80,47 @@ export function fetchPlaylists(offset = 0) {
         loadingGraphic.style.display = "none";
         reject(error);
       });
-  });
+    });
+  }
+
+// Function to fetch all tracks from a playlist and their artist data
+export function fetchAllTracks(playlistId, offset = 0, limit = 100) {
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`;
+  const options = {
+    headers: { Authorization: "Bearer " + accessToken },
+  };
+
+  return fetchWithRetry(url, options)
+    .then(response => response.json()) // Moved JSON parsing here
+    .then(data => {
+      const artistPromises = data.items.map(item => {
+        const artistId = item.track.artists[0].id;
+        return fetchArtistData(artistId).then(artistData => ({
+          ...item.track,
+          artistName: artistData.name,
+          genres: artistData.genres,
+        }));
+      });
+      return Promise.all(artistPromises);
+    })
+    .catch(error => console.error("Error:", error));
 }
 
-// Function to fetch all tracks from a playlist
-export function fetchAllTracks(
-  playlistId,
-  playlistName,
-  offset = 0,
-  limit = 100
-) {
-  // Update the loading text
-  const loadingText = document.getElementById("loading-status");
-  loadingText.innerHTML = `Loading... ${offset} tracks`;
-
-  return requestQueueManager.enqueueRequest(() => {
-    return fetch(
-      `https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`,
-      {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      }
-    )
-      .then((response) => {
-        if (response.status === 429) {
-          // Handle rate-limiting error
-          console.warn("Rate-limited. Retrying...");
-          const retryAfter =
-            parseInt(response.headers.get("Retry-After")) * 1000;
-          return new Promise((resolve) =>
-            setTimeout(
-              () =>
-                resolve(
-                  fetchAllTracks(playlistId, playlistName, offset, limit)
-                ),
-              retryAfter
-            )
-          );
-        }
-        if (!response.ok) {
-          throw new Error(`Failed to fetch tracks for playlist ${playlistId}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const trackPromises = data.items.map((item) => {
-          const artistId = item.track.artists[0].id;
-
-          if (artistCache[artistId]) {
-            return Promise.resolve({
-              ...item.track,
-              playlistName: playlistName,
-              genres: artistCache[artistId].genres,
-            });
-          } else {
-            return fetchArtistData(artistId).then((artistData) => {
-              if (artistData) {
-                artistCache[artistId] = artistData; // Cache the fetched artist data
-              }
-              return {
-                ...item.track,
-                playlistName: playlistName,
-                genres: artistData ? artistData.genres : [],
-              };
-            });
-          }
-        });
-
-        return Promise.all(trackPromises).then((tracks) => ({ tracks, data }));
-      })
-      .catch((error) => console.error("Error:", error));
-  });
-}
-
+// Artist data fetching with caching
 function fetchArtistData(artistId) {
-  return fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
-    headers: {
-      Authorization: "Bearer " + accessToken,
-    },
-  }).then((response) => {
-    if (response.status === 429) {
-      // Handle rate-limiting error
-      console.warn("Rate-limited on artist fetch. Retrying...");
-      const retryAfter = parseInt(response.headers.get("Retry-After")) * 1000;
-      return new Promise((resolve) =>
-        setTimeout(() => resolve(fetchArtistData(artistId)), retryAfter)
-      );
-    }
-    if (!response.ok) {
-      console.warn(`Artist not found for track id ${artistId}`);
-      return null;
-    }
-    return response.json();
-  });
+  if (artistCache[artistId]) {
+    return Promise.resolve(artistCache[artistId]);
+  }
+
+  const url = `https://api.spotify.com/v1/artists/${artistId}`;
+  const options = { headers: { Authorization: "Bearer " + accessToken } };
+
+  return fetchWithRetry(url, options)
+    .then(response => response.json()) // Ensure JSON parsing here
+    .then(data => {
+      artistCache[artistId] = data;
+      return data;
+    });
 }
 
 // Fetch tracks from the two selected playlists and compare them to find duplicates
@@ -191,6 +133,46 @@ export function fetchAndCompareTracks(playlist1Id, playlist2Id) {
     return tracks2.filter((track) => track1Ids.has(track.id));
   });
 }
+
+
+//Global request handler that automatically handles rate limiting for all your API calls
+function handleApiResponse(response) {
+  if (response.status === 429) {
+    const retryAfter = parseInt(response.headers.get("Retry-After")) * 1000;
+    return new Promise(resolve => setTimeout(resolve, retryAfter)).then(() => {
+      // Re-execute the failed request
+    });
+  } else if (!response.ok) {
+    throw new Error('API request failed');
+  }
+  return response.json();
+}
+
+//Wrapped fetch funtion with retry logic
+async function fetchWithRetry(url, options, retriesLeft = maxRetries) {
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      if (response.status === 429 && retriesLeft > 0) {
+        const retryAfter = parseInt(response.headers.get("Retry-After")) * 1000 || 5000;
+        console.warn(`Rate limited. Retrying in ${retryAfter / 1000} seconds.`);
+        await new Promise(resolve => setTimeout(resolve, retryAfter));
+        return fetchWithRetry(url, options, retriesLeft - 1);
+      } else {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+    }
+    return response; // Return response for further processing
+  } catch (error) {
+    if (retriesLeft > 0) {
+      console.warn(`Error encountered. Retrying... Attempts left: ${retriesLeft - 1}`);
+      return fetchWithRetry(url, options, retriesLeft - 1);
+    } else {
+      throw error;
+    }
+  }
+}
+
 
 // Function to remove duplicates from a playlist
 export function removeDuplicatesFromPlaylist(playlistId, trackIds) {

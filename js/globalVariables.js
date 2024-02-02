@@ -58,8 +58,6 @@ export function setTotalUserPlaylists(value) {
 }
 
 // New throtting mechanism
-export const requestQueueManager = new RequestQueueManager(5); // Adjust the number to your needs
-
 class RequestQueueManager {
   constructor(maxConcurrentRequests) {
       this.maxConcurrentRequests = maxConcurrentRequests;
@@ -90,6 +88,9 @@ class RequestQueueManager {
       }
   }
 }
+
+// Then, after the class is declared, create an instance of it
+export const requestQueueManager = new RequestQueueManager(5); // Adjust the number to your needs
 
 //Artist Data Fetching cache object where keys are artist IDs and values are artist data
 export const artistCache = {};
