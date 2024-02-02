@@ -3,90 +3,88 @@
 import {
   limit,
   accessToken,
+  getRetries,
+  maxRetries,
+  setRetries,
+  retries,
   allPlaylists,
-  selectedPlaylists, setTotalUserPlaylists, loadingGraphic
+  selectedPlaylists,
+  setTotalUserPlaylists,
+  loadingGraphic,
+  requestQueueManager,
+  artistCache,
 } from "./globalVariables.js";
 import { displayPlaylists } from "./displayFunctions.js";
 
 // Function to fetch playlists from Spotify API
 export function fetchPlaylists(offset = 0) {
-  // Return a new Promise
   return new Promise((resolve, reject) => {
-    // Introduce a delay of 1 second (1000 milliseconds) before fetching playlists
-    setTimeout(() => {
-      // Fetch the playlists from the Spotify API
-      fetch(
-        `https://api.spotify.com/v1/me/playlists?limit=${limit}&offset=${offset}`,
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
-        }
-      )
-        .then((response) => {
-          // Check if the response is successful
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json(); // Parse the JSON from the response
-        })
-        .catch((error) => {
-          if (
-            error.message.includes("Network response was not ok") &&
-            retries < maxRetries
-          ) {
-            retries++;
-            const delay = Math.min(Math.pow(2, retries) * 30000, 40000); // Exponential backoff with a max delay of 40 seconds
-            setTimeout(() => {
-              fetchPlaylists(offset);
-            }, delay);
-          } else {
-            console.error(
-              "Failed to fetch data from Spotify API after multiple retries."
+    // Fetch the playlists from the Spotify API
+    fetch(
+      `https://api.spotify.com/v1/me/playlists?limit=${limit}&offset=${offset}`,
+      {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status === 429 && retries < maxRetries) {
+            // Read the Retry-After header if present or default to a fallback delay
+            const retryAfterHeader = response.headers.get("Retry-After");
+            const retryAfter = retryAfterHeader
+              ? parseInt(retryAfterHeader) * 1000
+              : 5000;
+            console.warn(
+              `Rate limited. Retrying after ${retryAfter / 1000} seconds.`
             );
-            loadingGraphic.style.display = "none";
-            reject(error);
-          }
-        })
-        .then((data) => {
-          console.log(data);
-
-          // Add fetched playlists to the allPlaylists array
-          allPlaylists.push(...data.items);
-
-           // Store the total number of user playlists
-  setTotalUserPlaylists(data.total);
-
-          // Set the initial playlist count
-          const playlistCountContainer =
-            document.getElementById("playlist-count-text");
-          playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected for comparison )`;
-
-          // Call the displayPlaylists function
-          displayPlaylists(allPlaylists);
-
-          // Get the Load More button
-          const loadMoreButton = document.getElementById("load-more");
-
-          // If there are more playlists to fetch, show the Load More button. Otherwise, hide it
-          if (data.items.length === limit) {
-            loadMoreButton.style.display = "inline-block"; // Show the load more button
+            setTimeout(() => {
+              setRetries(getRetries() + 1);
+              fetchPlaylists(offset).then(resolve).catch(reject);
+            }, retryAfter);
           } else {
-            loadMoreButton.style.display = "none"; // Hide the load more button
+            throw new Error("Failed to fetch playlists."); // Throw an error to be caught by the catch block
           }
+        } else {
+          setRetries(0); // Reset retries on a successful request
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
 
-          resolve(data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+        // Add fetched playlists to the allPlaylists array
+        allPlaylists.push(...data.items);
 
-          // Hide the loading graphic in case of an error
-          loadingGraphic.style.display = "none";
+        // Store the total number of user playlists
+        setTotalUserPlaylists(data.total);
 
-          // Reject the Promise in case of an error
-          reject(error);
-        });
-    }, 1000);
+        // Set the initial playlist count
+        const playlistCountContainer = document.getElementById(
+          "playlist-count-text"
+        );
+        playlistCountContainer.innerHTML = `( ${selectedPlaylists.length} of 2 playlists selected for comparison )`;
+
+        // Call the displayPlaylists function
+        displayPlaylists(allPlaylists);
+
+        // Get the Load More button
+        const loadMoreButton = document.getElementById("load-more");
+
+        // If there are more playlists to fetch, show the Load More button. Otherwise, hide it
+        if (data.items.length === limit) {
+          loadMoreButton.style.display = "inline-block"; // Show the load more button
+        } else {
+          loadMoreButton.style.display = "none"; // Hide the load more button
+        }
+        resolve(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching playlists:", error);
+        loadingGraphic.style.display = "none";
+        reject(error);
+      });
   });
 }
 
@@ -99,9 +97,9 @@ export function fetchAllTracks(
 ) {
   // Update the loading text
   const loadingText = document.getElementById("loading-status");
-  loadingText.innerHTML = `Loading.. ${offset} tracks`; // Update this line with the correct totalTracks value
+  loadingText.innerHTML = `Loading... ${offset} tracks`;
 
-  return promiseThrottleInstance.add(() => {
+  return requestQueueManager.enqueueRequest(() => {
     return fetch(
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}`,
       {
@@ -114,15 +112,17 @@ export function fetchAllTracks(
         if (response.status === 429) {
           // Handle rate-limiting error
           console.warn("Rate-limited. Retrying...");
+          const retryAfter =
+            parseInt(response.headers.get("Retry-After")) * 1000;
           return new Promise((resolve) =>
             setTimeout(
               () =>
                 resolve(
                   fetchAllTracks(playlistId, playlistName, offset, limit)
                 ),
-              1000
+              retryAfter
             )
-          ); // Retry after 1 second
+          );
         }
         if (!response.ok) {
           throw new Error(`Failed to fetch tracks for playlist ${playlistId}`);
@@ -131,78 +131,53 @@ export function fetchAllTracks(
       })
       .then((data) => {
         const trackPromises = data.items.map((item) => {
-          return promiseThrottleInstance.add(() => {
-            return fetch(
-              `https://api.spotify.com/v1/artists/${item.track.artists[0].id}`,
-              {
-                headers: {
-                  Authorization: "Bearer " + accessToken,
-                },
+          const artistId = item.track.artists[0].id;
+
+          if (artistCache[artistId]) {
+            return Promise.resolve({
+              ...item.track,
+              playlistName: playlistName,
+              genres: artistCache[artistId].genres,
+            });
+          } else {
+            return fetchArtistData(artistId).then((artistData) => {
+              if (artistData) {
+                artistCache[artistId] = artistData; // Cache the fetched artist data
               }
-            )
-              .then((response) => {
-                if (response.status === 429) {
-                  // Handle rate-limiting error for inner fetch
-                  console.warn("Rate-limited on artist fetch. Retrying...");
-                  return new Promise((resolve) =>
-                    setTimeout(
-                      () =>
-                        resolve(
-                          promiseThrottleInstance.add(() =>
-                            fetch(
-                              `https://api.spotify.com/v1/artists/${item.track.artists[0].id}`,
-                              {
-                                headers: {
-                                  Authorization: "Bearer " + accessToken,
-                                },
-                              }
-                            )
-                          )
-                        ),
-                      1000
-                    )
-                  );
-                }
-                if (!response.ok) {
-                  console.warn(`Artist not found for track ${item.track.name}`);
-                  return null; // Return null if artist is not found
-                }
-                return response.json();
-              })
-              .then((artistData) => {
-                if (!artistData) {
-                  return {
-                    ...item.track,
-                    playlistName: playlistName,
-                    genres: [], // Empty genres array if artist is not found
-                  };
-                }
-                return {
-                  ...item.track,
-                  playlistName: playlistName,
-                  genres: artistData.genres.length ? artistData.genres : [], // Use the genres from artist details
-                };
-              });
-          });
+              return {
+                ...item.track,
+                playlistName: playlistName,
+                genres: artistData ? artistData.genres : [],
+              };
+            });
+          }
         });
 
         return Promise.all(trackPromises).then((tracks) => ({ tracks, data }));
       })
-      .then(({ tracks, data }) => {
-        if (data.next) {
-          // If there are more tracks, fetch the next page
-          return fetchAllTracks(
-            playlistId,
-            playlistName,
-            offset + limit,
-            limit
-          ).then((nextTracks) => tracks.concat(nextTracks));
-        } else {
-          // Otherwise, return the tracks
-          return tracks;
-        }
-      })
       .catch((error) => console.error("Error:", error));
+  });
+}
+
+function fetchArtistData(artistId) {
+  return fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+    headers: {
+      Authorization: "Bearer " + accessToken,
+    },
+  }).then((response) => {
+    if (response.status === 429) {
+      // Handle rate-limiting error
+      console.warn("Rate-limited on artist fetch. Retrying...");
+      const retryAfter = parseInt(response.headers.get("Retry-After")) * 1000;
+      return new Promise((resolve) =>
+        setTimeout(() => resolve(fetchArtistData(artistId)), retryAfter)
+      );
+    }
+    if (!response.ok) {
+      console.warn(`Artist not found for track id ${artistId}`);
+      return null;
+    }
+    return response.json();
   });
 }
 
