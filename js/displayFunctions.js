@@ -196,7 +196,6 @@ setTimeout(() => {
   }
 }
 
-
 // Display the duplicate tracks in the UI, create an HTML string with the duplicate track data
 export function displayDuplicates(duplicates) {
   let html = "";

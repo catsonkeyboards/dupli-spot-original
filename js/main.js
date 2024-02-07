@@ -6,7 +6,8 @@ import {
   offset as importedOffset,
   limit,
   selectedDuplicates,
-  currentAudio, selectedPlaylists
+  currentAudio,
+  selectedPlaylists,
 } from "./globalVariables.js";
 import * as Utility from "./utilityFunctions.js";
 import * as UI from "./uiFunctions.js";
@@ -14,7 +15,9 @@ import { resetUI, updateRemoveDuplicatesButtonState } from "./uiFunctions.js";
 import * as API from "./apiFunctions.js";
 import {
   fetchPlaylists,
-  removeDuplicatesFromPlaylist, fetchAndCompareTracks, fetchPlaylistDetails
+  removeDuplicatesFromPlaylist,
+  fetchAndCompareTracks,
+  fetchPlaylistDetails,
 } from "./apiFunctions.js";
 import { handleShowDuplicatesButtonClick } from "./eventHandlers.js";
 import { filterPlaylists, displayDuplicates } from "./displayFunctions.js";
@@ -85,8 +88,8 @@ document.getElementById("login-button").addEventListener("click", function () {
     document.getElementById("search-container").style.display = "block"; // Show the search bar
     document.getElementById("instruction-text").style.display = "block"; // Show the instruction text under the search bar
 
-     // Show the log-out button after successful authentication
-     document.getElementById("logout-button").style.display = "inline-block";
+    // Show the log-out button after successful authentication
+    document.getElementById("logout-button").style.display = "inline-block";
   };
 
   // Listen for the callback message from the authentication window
@@ -103,31 +106,34 @@ document.getElementById("load-more").addEventListener("click", function () {
 // Event listeners after DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
   // Event listener for the log-out button click
-document.getElementById("logout-button").addEventListener("click", function () {
-  // Clear the access token
-  setAccessToken(null);
+  document
+    .getElementById("logout-button")
+    .addEventListener("click", function () {
+      // Clear the access token
+      setAccessToken(null);
 
-  // Hide all sections and show only the login button
-  document.getElementById("playlists").style.display = "none";
-  document.getElementById("show-duplicates").style.display = "none";
-  document.getElementById("search-container").style.display = "none";
-  document.getElementById("instruction-text").style.display = "none";
-  document.getElementById("removal-playlist-dropdown").style.display = "none";
-  document.getElementById("dropdown-title").style.display = "none";
-  document.getElementById("logout-button").style.display = "none";
-  document.querySelector(".readme").style.display = "block";
-  document.getElementById("login-button").style.display = "inline-block";
-  document.getElementById("load-more").style.display = "none";
-  document.getElementById("playlist-count").style.display = "none";
-  document.getElementById("displayed-playlist-count").style.display = "none";
-  document.getElementById("loading-graphic").style.display = "none";
-  document.getElementById("compared-playlists").style.display = "none";
-  document.getElementById("duplicates").style.display = "none";
-  document.getElementById("success-message").style.display = "none";
-  document.getElementById("start-over-button").style.display = "none";
-  document.getElementById("remove-duplicates").style.display = "none";
-
-});
+      // Hide all sections and show only the login button
+      document.getElementById("playlists").style.display = "none";
+      document.getElementById("show-duplicates").style.display = "none";
+      document.getElementById("search-container").style.display = "none";
+      document.getElementById("instruction-text").style.display = "none";
+      document.getElementById("removal-playlist-dropdown").style.display =
+        "none";
+      document.getElementById("dropdown-title").style.display = "none";
+      document.getElementById("logout-button").style.display = "none";
+      document.querySelector(".readme").style.display = "block";
+      document.getElementById("login-button").style.display = "inline-block";
+      document.getElementById("load-more").style.display = "none";
+      document.getElementById("playlist-count").style.display = "none";
+      document.getElementById("displayed-playlist-count").style.display =
+        "none";
+      document.getElementById("loading-graphic").style.display = "none";
+      document.getElementById("compared-playlists").style.display = "none";
+      document.getElementById("duplicates").style.display = "none";
+      document.getElementById("success-message").style.display = "none";
+      document.getElementById("start-over-button").style.display = "none";
+      document.getElementById("remove-duplicates").style.display = "none";
+    });
 
   // Update the button state initially
   UI.updateRemoveDuplicatesButtonState();
@@ -206,16 +212,18 @@ document.getElementById("logout-button").addEventListener("click", function () {
       updateRemoveDuplicatesButtonState();
     });
 
-  function pauseCurrentAudio() {
-    if (currentAudio && currentAudio.audio) {
-      currentAudio.audio.pause();
-      currentAudio.audio = null;
-      if (currentAudio.button) {
-        currentAudio.button.classList.remove("playing");
-      }
-      currentAudio.button = null;
+function pauseCurrentAudio() {
+  if (currentAudio && currentAudio.audio) {
+    console.log('Pausing current audio');
+    currentAudio.audio.pause();
+    currentAudio.audio = null;
+    if (currentAudio.button) {
+      console.log('Removing playing class from button');
+      currentAudio.button.classList.remove("playing");
     }
+    currentAudio.button = null;
   }
+}
 
   // Attach an event listener to a parent element, e.g., the body
   document.addEventListener("click", function (event) {
@@ -224,7 +232,7 @@ document.getElementById("logout-button").addEventListener("click", function () {
 
     // Check if the clicked element or its parent is the "Remove Duplicates" button
     let targetElement = event.target;
-    while (targetElement != null) {
+while (targetElement != null) {
       if (targetElement.id === "remove-duplicates") {
         // Fetch the selected playlist ID
         let dropdown = document.getElementById("removal-playlist-dropdown");
